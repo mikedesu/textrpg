@@ -2,8 +2,28 @@ from .Race import Race
 from .Job import Job
 from .Attribs import Attribs 
 
+class ZeroLevelException(Exception):
+    pass
+
+class NegativeLevelException(Exception):
+    pass
+
+class NegativeAttributeException(Exception):
+    pass
+
+
+
 class PC:
     def __init__(self, name="Unnamed", level=1, race=Race.HUMAN, job=Job.FIGHTER, attribs=[10,10,10,10,10,10]):
+        # basic checks on numeric input parameters
+        if level == 0:
+            raise ZeroLevelException 
+        elif level < 0:
+            raise NegativeLevelException 
+        for a in attribs:
+            if a < 0:
+                raise NegativeAttributeException 
+
         self.name = name
         self.level = level
         self.race = race
