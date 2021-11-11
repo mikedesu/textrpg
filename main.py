@@ -197,6 +197,7 @@ remaining: {total_rerolls - rerolls})", c(1))
         s.addstr(y+1, 0, "Using most recent roll...", c(1))
         s.refresh()
         cc = s.getch()
+        return a
     # should never get here
     return None
 
@@ -210,26 +211,26 @@ def new_game(s):
     s.clear()
     y = 0
     x = 0
-    your_name_str = "Your name:   "
+    your_name_str = "Your name: "
     s.addstr(y, x, f"{your_name_str}", c(1))
     x += len(your_name_str)
     s.addstr(y, x, f"{pc.name}", c(1)) # no formatting
     x = 0
     y += 1
-    your_race_str = "Your race:   "
+    your_race_str = "Your race: "
     s.addstr(y, x, f"{your_race_str}", c(1))
     x += len(your_race_str)
     s.addstr(y, x, f"{pc.race}" , c(1))
     x = 0
     y += 1
-    your_job_str = "Your job:    "
+    your_job_str = "Your job: "
     s.addstr(y, x, f"{your_job_str}", c(1))
     x += len(your_job_str)
     s.addstr(y, x, f"{pc.job}" , c(1))
     x = 0
     y += 1
-    stat_names = ["Strength:", "Dexterity:", "Constitution:", 
-                  "Intelligence:", "Wisdom:", "Charisma:" ]
+    stat_names = ["Strength: ", "Dexterity: ", "Constitution: ", 
+                  "Intelligence: ", "Wisdom: ", "Charisma: " ]
     for i in range(len(stats)):
         stat_name_str = stat_names[i]
         s.addstr(y+i, x, f"{stat_name_str}", c(1))
