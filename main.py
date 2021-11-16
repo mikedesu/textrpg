@@ -21,6 +21,29 @@ def main(stdscr):
     cc = get_user_input_ch(stdscr, ['n', 'q'])
     if cc=='n':
         pc = new_character(stdscr)
+        
+        stdscr.clear()
+        
+        rows, cols = stdscr.getmaxyx()
+        x = 0
+        y = 0
+        line = "-" * cols
+        stdscr.addstr(y, x, line)
+        y += 1
+        line = "|" + (" "*(cols-2)) + "|"
+        while y < rows-4:
+            stdscr.addstr(y, x, line)
+            y += 1
+        line = "-" * cols
+        stdscr.addstr(y, x, line)
+        y += 1
+        stdscr.addstr(y, x, str(pc))
+
+
+
+        #stdscr.addstr(y, x, str(pc))
+        stdscr.refresh()
+        cc2 = stdscr.getch()
     elif cc=='q':
         exit(0)
 
