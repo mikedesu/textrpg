@@ -1,10 +1,7 @@
-
 from Game import Game
-from Game.PC import PC
+from Game.NPC import NPC
 from Game.Race import Race
 from Game.Job import Job
-
-
 from curses import start_color
 from curses import echo
 from curses import noecho
@@ -14,14 +11,16 @@ from curses import COLOR_BLACK
 from curses import COLOR_RED
 from curses import COLOR_WHITE
 from curses import A_BOLD
+from curses import use_default_colors
 
 from random import randint
 
 
 def startup(s):
+    use_default_colors()
     start_color()
     s.clear()
-    init_pair(1, COLOR_WHITE, COLOR_BLACK)
+    init_pair(1, COLOR_WHITE, -1)
     init_pair(2, COLOR_RED,   COLOR_WHITE)
     init_pair(3, COLOR_BLACK, COLOR_WHITE)
 
@@ -194,7 +193,7 @@ def new_character(s):
     stats = handle_new_game_stats( s , 0, 3 )
     race = translate_race_str_to_enum( get_player_race(s) )
     job  = translate_job_str_to_enum( get_player_job(s) )
-    pc = PC(name, 1, race, job, stats)
+    pc = NPC(name, 1, race, job, stats)
     s.clear()
     y = 0
     x = 0
@@ -232,4 +231,21 @@ def new_character(s):
 
 
 
-
+def draw_main_screen(s, pc):
+    # experimental main-game drawing
+    s.clear()
+    rows, cols = s.getmaxyx()
+    x, y = 0, 0
+    line = "-" * cols
+    s.addstr(y, x, line)
+    y += 1
+    line = "|" + (" "*(cols-2)) + "|"
+    while y < rows-4:
+        s.addstr(y, x, line)
+        y += 1
+    line = "-" * cols
+    s.addstr(y, x, line)
+    y += 1
+    s.addstr(y, x, str(pc))
+    s.refresh()
+ 

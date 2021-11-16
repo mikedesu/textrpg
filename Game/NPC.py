@@ -10,7 +10,7 @@ class NegativeAttributeException(Exception):
     pass
 
 ###############################################################################
-class PC:
+class NPC:
     def __init__(self, name="Unnamed", level=1, race=Race.HUMAN, 
         job=Job.FIGHTER, attribs=[10,10,10,10,10,10]):
         # basic checks on numeric input parameters
@@ -21,7 +21,6 @@ class PC:
         for a in attribs:
             if a < 0:
                 raise NegativeAttributeException 
-
         self.name = name
         self.level = level
         self.race = race
