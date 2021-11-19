@@ -1,42 +1,25 @@
+from random import randint
 from Game import Game
 from Game.NPC import NPC
 from Game.Race import Race
 from Game.Job import Job
-from curses import start_color
-from curses import echo
-from curses import noecho
-from curses import init_pair
-from curses import color_pair as c
-from curses import COLOR_BLACK
-from curses import COLOR_RED
-from curses import COLOR_WHITE
-from curses import A_BOLD
-from curses import use_default_colors
-
-from random import randint
-
-
-#def startup(s):
-#    use_default_colors()
-#    start_color()
-#    s.clear()
-#    init_pair(1, COLOR_WHITE, -1)
-#    init_pair(2, COLOR_RED,   COLOR_WHITE)
-#    init_pair(3, COLOR_BLACK, COLOR_WHITE)
+from curses import start_color,\
+    echo,\
+    noecho,\
+    init_pair,\
+    color_pair as c,\
+    COLOR_BLACK,\
+    COLOR_RED,\
+    COLOR_WHITE,\
+    A_BOLD,\
+    use_default_colors,\
+    KEY_RESIZE 
 
 def get_user_input_ch(s, input_set):
     cc = s.getkey()
     while cc not in input_set:
         cc = s.getkey()
     return cc
-
-#def draw_titlescreen(s):
-#    s.addstr(0, 0, 'Welcome to the RPG', c(1))
-#    s.addstr(1, 0, 'By darkmage', c(1))
-#    s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
-#    s.addstr(3, 0, 'Press q to quit', c(3))
-#    s.addstr(4, 0, 'Press n for new game', c(3))
-#    s.refresh()
 
 def get_player_name(s):
     echo()
@@ -231,21 +214,52 @@ def new_character(s):
 
 
 
-def draw_main_screen(s, pc):
+#def draw_main_screen(s, pc):
     # experimental main-game drawing
-    s.clear()
-    rows, cols = s.getmaxyx()
-    x, y = 0, 0
-    line = "-" * cols
-    s.addstr(y, x, line)
-    y += 1
-    line = "|" + (" "*(cols-2)) + "|"
-    while y < rows-4:
-        s.addstr(y, x, line)
-        y += 1
-    line = "-" * cols
-    s.addstr(y, x, line)
-    y += 1
-    s.addstr(y, x, str(pc))
-    s.refresh()
+#    s.clear()
+#    rows, cols = s.getmaxyx()
+#    y, x = 2, 0
+#    line = "-" * cols
+#    s.addstr(y, x, line)
+#    y += 1
+#    line = "|" + (" "*(cols-2)) + "|"
+#    while y < rows-4:
+#        s.addstr(y, x, line)
+#        y += 1
+#    line = "-" * cols
+#    s.addstr(y, x, line)
+#    y += 1
+#    s.addstr(y, x, str(pc))
+#    s.refresh()
  
+
+def handle_input(renderer, pc, cc2):
+    rows, cols = renderer.s.getmaxyx()
+    if cc2 == 'a': # left
+        pc.x -= 1
+        if pc.x <= 1:
+            pc.x = 1
+    elif cc2 == 's': # up
+        pc.y -= 1
+        if pc.y <= 3:
+            pc.y = 3
+    elif cc2 == 'd': # down
+        pc.y += 1
+        # check for rows-5 due to the border
+        if pc.y > rows-5:
+            pc.y = rows-5
+    elif cc2 == 'f': # right
+        pc.x += 1
+        # check for cols-2 due to the border
+        if pc.x > cols-2:
+            pc.x = cols-2
+    elif cc2 == KEY_RESIZE:
+        rows, cols = renderer.s.getmaxyx()
+        renderer.s.clear()
+        renderer.s.resizeterm(rows, cols)
+        renderer.s.refresh()
+    elif cc2 == 'q' or cc2 == 'Q':
+        # exit game
+        exit(0)
+
+

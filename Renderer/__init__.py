@@ -34,7 +34,7 @@ class Renderer:
 
 
     def draw_main_screen_border(self, pc):
-        x, y = 0, 0
+        y, x = 2, 0
         rows, cols = self.s.getmaxyx()
         line = "-" * cols
         self.s.addstr(y, x, line)
