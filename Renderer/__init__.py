@@ -60,10 +60,11 @@ class Renderer:
         # approximate the middle to drop a turn counter
         # like T:999
         self.s.addstr(y, int(cols/2), f"T:{game.currentTurnCount}")
+        self.s.addstr(y+1, int(cols/2), f"y:{pc.y} x:{pc.x}")
         
     def draw_main_screen_pc(self, pc):
-        y = pc.y
-        x = pc.x
+        y = pc.y + 3
+        x = pc.x + 1
         self.s.addstr(y, x, "@", c(4) | A_BOLD )
 
     def draw_main_screen_logs(self, game):

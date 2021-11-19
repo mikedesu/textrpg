@@ -45,8 +45,11 @@ def main(stdscr):
     cc = get_user_input_ch(stdscr, ['n', 'q'])
     if cc=='n':
         pc = new_character(renderer.s)
-        pc.y = 3
-        pc.x = 1
+        pc.y = 0 # when drawing pc or anything in dungeon,
+                 # have to account for offset of borders
+        pc.x = 0
+        #pc.y = 3
+        #pc.x = 1
         # this is the beginning of the main game loop
         game_loop(game, renderer, pc)
     elif cc=='q':
