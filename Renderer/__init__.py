@@ -34,6 +34,10 @@ class Renderer:
 
 
     def draw_main_screen_border(self, game, pc):
+        if game==None:
+            raise Exception("draw_main_screen_border: game cannot be None")
+        if pc==None:
+            raise Exception("draw_main_screen_border: pc cannot be None")
         y, x = 2, 0
         rows, cols = self.s.getmaxyx()
         line = "-" * cols
@@ -46,17 +50,16 @@ class Renderer:
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
-
+    
+    def draw_main_screen_pc_info(self, game, pc):
+        rows, cols = self.s.getmaxyx()
+        y = rows-4
+        x = 0
         # draw pc info at bottom of screen
         self.s.addstr(y, x, str(pc))
         # approximate the middle to drop a turn counter
         # like T:999
         self.s.addstr(y, int(cols/2), f"T:{game.currentTurnCount}")
-
-
-
-
-
         
     def draw_main_screen_pc(self, pc):
         y = pc.y
@@ -73,16 +76,13 @@ class Renderer:
         elif a >= 2:
             self.s.addstr(y, x, game.logs[a-2])
             self.s.addstr(y+1, x, game.logs[a-1])
-            
 
     def draw_main_screen(self,game,pc):
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
-        self.draw_main_screen_border(game, pc)
+        #self.draw_main_screen_border(game, pc)
+        self.draw_main_screen_pc_info(game, pc)
         self.draw_main_screen_pc(pc)
-
-        
-        
         self.s.refresh()
      
