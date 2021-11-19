@@ -2,8 +2,8 @@
 from curses import wrapper 
 from sys import exit
 #from tools import startup 
+#from tools import draw_titlescreen
 from tools import get_user_input_ch 
-from tools import draw_titlescreen
 from tools import get_player_name
 from tools import get_player_race
 from tools import get_player_job
@@ -18,19 +18,20 @@ import Game
 import Renderer
 
 def main(stdscr):
-    # we are moving this into Game() 
     renderer = Renderer.Renderer(screen=stdscr)
     game = Game.Game()
 
     renderer.startup()
-
-    draw_titlescreen(stdscr)
+    renderer.draw_titlescreen()
 
     cc = get_user_input_ch(stdscr, ['n', 'q'])
+    
     if cc=='n':
         pc = new_character(stdscr)
+
         # this is the beginning of the main game loop
-        draw_main_screen(stdscr, pc)
+        renderer.draw_main_screen(pc)
+
         cc2 = stdscr.getch()
     elif cc=='q':
         exit(0)

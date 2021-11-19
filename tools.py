@@ -30,13 +30,13 @@ def get_user_input_ch(s, input_set):
         cc = s.getkey()
     return cc
 
-def draw_titlescreen(s):
-    s.addstr(0, 0, 'Welcome to the RPG', c(1))
-    s.addstr(1, 0, 'By darkmage', c(1))
-    s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
-    s.addstr(3, 0, 'Press q to quit', c(3))
-    s.addstr(4, 0, 'Press n for new game', c(3))
-    s.refresh()
+#def draw_titlescreen(s):
+#    s.addstr(0, 0, 'Welcome to the RPG', c(1))
+#    s.addstr(1, 0, 'By darkmage', c(1))
+#    s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
+#    s.addstr(3, 0, 'Press q to quit', c(3))
+#    s.addstr(4, 0, 'Press n for new game', c(3))
+#    s.refresh()
 
 def get_player_name(s):
     echo()
