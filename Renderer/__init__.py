@@ -53,7 +53,7 @@ class Renderer:
     
     def draw_main_screen_pc_info(self, game, pc):
         rows, cols = self.s.getmaxyx()
-        y = rows-4
+        y = rows-3
         x = 0
         # draw pc info at bottom of screen
         self.s.addstr(y, x, str(pc))
@@ -77,12 +77,30 @@ class Renderer:
             self.s.addstr(y, x, game.logs[a-2])
             self.s.addstr(y+1, x, game.logs[a-1])
 
+
+    def draw_main_screen_dungeonFloor(self, game):
+        # assuming the map is 1-to-1 with the size of screen
+        # and, this is gonna def change in the future
+        # to accomodate some autistic asshole who will 
+        # inevitably try to resize the screen on every keypress
+        # so i will have to devise a clever camera system
+        # in order to accomodate both them and to have a 
+        # convenient way to resize the viewport
+        for i in range(3, len(game.dungeonFloor.map_)):
+            self.s.addstr(i, 1, game.dungeonFloor.map_[i])
+
     def draw_main_screen(self,game,pc):
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
-        #self.draw_main_screen_border(game, pc)
+        self.draw_main_screen_border(game, pc)
         self.draw_main_screen_pc_info(game, pc)
+        
+        # order of drawing matters
+        # 1. dungeonFloor
+        # 2. in-game loot / dropped-objects
+        # 3. entities / NPCs
+        self.draw_main_screen_dungeonFloor(game)
         self.draw_main_screen_pc(pc)
         self.s.refresh()
      

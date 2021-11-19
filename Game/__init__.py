@@ -1,9 +1,20 @@
+from . import DungeonFloor 
+
 
 class Game:
-    def __init__(self, title='my game'):
+    def __init__(self, title='my game', screen=None):
         self.title = title
         self.logs = []
         self.currentTurnCount = 0
+        assert(screen != None)
+        self.screen = screen
+
+        rows, cols = self.screen.getmaxyx()
+        rows -= 4
+        cols -= 2
+        self.dungeonFloor = DungeonFloor.DungeonFloor(rows, cols)
+
+
     def __str__(self):
         return self.title
 
