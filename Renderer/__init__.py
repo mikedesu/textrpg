@@ -20,6 +20,7 @@ class Renderer:
         start_color()
         self.s.clear()
         init_pair(1, COLOR_WHITE, -1)
+        init_pair(4, COLOR_RED,   -1)
         init_pair(2, COLOR_RED,   COLOR_WHITE)
         init_pair(3, COLOR_BLACK, COLOR_WHITE)
 
@@ -31,11 +32,10 @@ class Renderer:
         self.s.addstr(4, 0, 'Press n for new game', c(3))
         self.s.refresh()
 
-    def draw_main_screen(self,pc):
-        # experimental main-game drawing
-        self.s.clear()
-        rows, cols = self.s.getmaxyx()
+
+    def draw_main_screen_border(self, pc):
         x, y = 0, 0
+        rows, cols = self.s.getmaxyx()
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
@@ -46,6 +46,19 @@ class Renderer:
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
+        
+        # draw pc info at bottom of screen
         self.s.addstr(y, x, str(pc))
+
+    def draw_main_screen_pc(self, pc):
+        y = pc.y
+        x = pc.x
+        self.s.addstr(y, x, "@", c(4) | A_BOLD )
+
+    def draw_main_screen(self,pc):
+        # experimental main-game drawing
+        self.s.clear()
+        self.draw_main_screen_border(pc)
+        self.draw_main_screen_pc(pc)
         self.s.refresh()
      

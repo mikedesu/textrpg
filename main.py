@@ -33,6 +33,7 @@ def main(stdscr):
         renderer.draw_main_screen(pc)
 
         cc2 = stdscr.getch()
+
     elif cc=='q':
         exit(0)
 
