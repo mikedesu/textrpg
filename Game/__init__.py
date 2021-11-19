@@ -3,6 +3,7 @@ class Game:
     def __init__(self, title='my game'):
         self.title = title
         self.logs = []
+        self.currentTurnCount = 0
     def __str__(self):
         return self.title
 
@@ -11,4 +12,6 @@ class Game:
             raise Exception("Log is empty or none")
         self.logs.append(log)
 
+    def incrTurns(self):
+        self.currentTurnCount += 1
     

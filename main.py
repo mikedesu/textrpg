@@ -35,6 +35,7 @@ def game_loop(game, renderer, pc):
         #######################################################################
         rows, cols = renderer.s.getmaxyx()
         handle_input(game, renderer, pc, cc2)
+        game.incrTurns()
 
 def main(stdscr):
     renderer = Renderer.Renderer(screen=stdscr)

@@ -33,7 +33,7 @@ class Renderer:
         self.s.refresh()
 
 
-    def draw_main_screen_border(self, pc):
+    def draw_main_screen_border(self, game, pc):
         y, x = 2, 0
         rows, cols = self.s.getmaxyx()
         line = "-" * cols
@@ -46,10 +46,18 @@ class Renderer:
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
-        
+
         # draw pc info at bottom of screen
         self.s.addstr(y, x, str(pc))
+        # approximate the middle to drop a turn counter
+        # like T:999
+        self.s.addstr(y, int(cols/2), f"T:{game.currentTurnCount}")
 
+
+
+
+
+        
     def draw_main_screen_pc(self, pc):
         y = pc.y
         x = pc.x
@@ -71,7 +79,10 @@ class Renderer:
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
-        self.draw_main_screen_border(pc)
+        self.draw_main_screen_border(game, pc)
         self.draw_main_screen_pc(pc)
+
+        
+        
         self.s.refresh()
      
