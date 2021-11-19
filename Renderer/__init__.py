@@ -55,9 +55,22 @@ class Renderer:
         x = pc.x
         self.s.addstr(y, x, "@", c(4) | A_BOLD )
 
-    def draw_main_screen(self,pc):
+    def draw_main_screen_logs(self, game):
+        # only enough room for last 2 logs
+        y, x = 0, 0
+        a = len(game.logs)
+        if a == 1:
+            # only 1 log
+            self.s.addstr(y, x, game.logs[a-1])
+        elif a >= 2:
+            self.s.addstr(y, x, game.logs[a-2])
+            self.s.addstr(y+1, x, game.logs[a-1])
+            
+
+    def draw_main_screen(self,game,pc):
         # experimental main-game drawing
         self.s.clear()
+        self.draw_main_screen_logs(game)
         self.draw_main_screen_border(pc)
         self.draw_main_screen_pc(pc)
         self.s.refresh()

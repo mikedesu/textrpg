@@ -15,9 +15,9 @@ from tools import get_user_input_ch, \
 import Game
 import Renderer
 
-def game_loop(renderer, pc):
+def game_loop(game, renderer, pc):
     while True:
-        renderer.draw_main_screen(pc)
+        renderer.draw_main_screen(game, pc)
         cc2 = renderer.s.getkey()
         #######################################################################
         #                                                                     #
@@ -34,7 +34,7 @@ def game_loop(renderer, pc):
         #                                                                     #
         #######################################################################
         rows, cols = renderer.s.getmaxyx()
-        handle_input(renderer, pc, cc2)
+        handle_input(game, renderer, pc, cc2)
 
 def main(stdscr):
     renderer = Renderer.Renderer(screen=stdscr)
@@ -47,7 +47,7 @@ def main(stdscr):
         pc.y = 3
         pc.x = 1
         # this is the beginning of the main game loop
-        game_loop(renderer, pc)
+        game_loop(game, renderer, pc)
     elif cc=='q':
         exit(0)
 

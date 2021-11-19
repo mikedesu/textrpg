@@ -233,26 +233,30 @@ def new_character(s):
 #    s.refresh()
  
 
-def handle_input(renderer, pc, cc2):
+def handle_input(game, renderer, pc, cc2):
     rows, cols = renderer.s.getmaxyx()
     if cc2 == 'a': # left
         pc.x -= 1
-        if pc.x <= 1:
+        if pc.x < 1:
             pc.x = 1
+            game.addLog("Bumped into the western border")
     elif cc2 == 's': # up
         pc.y -= 1
-        if pc.y <= 3:
+        if pc.y < 3:
             pc.y = 3
+            game.addLog("Bumped into the northern border")
     elif cc2 == 'd': # down
         pc.y += 1
         # check for rows-5 due to the border
         if pc.y > rows-5:
             pc.y = rows-5
+            game.addLog("Bumped into the southern border")
     elif cc2 == 'f': # right
         pc.x += 1
         # check for cols-2 due to the border
         if pc.x > cols-2:
             pc.x = cols-2
+            game.addLog("Bumped into the eastern border")
     elif cc2 == KEY_RESIZE:
         rows, cols = renderer.s.getmaxyx()
         renderer.s.clear()
