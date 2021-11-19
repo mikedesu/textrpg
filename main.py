@@ -15,11 +15,14 @@ from tools import new_character
 from tools import draw_main_screen  
 
 import Game
+import Renderer
 
 def main(stdscr):
     # we are moving this into Game() 
+    renderer = Renderer.Renderer(screen=stdscr)
     game = Game.Game()
-    game.startup(stdscr)
+
+    renderer.startup()
 
     draw_titlescreen(stdscr)
 
