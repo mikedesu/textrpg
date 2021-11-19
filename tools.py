@@ -16,13 +16,13 @@ from curses import use_default_colors
 from random import randint
 
 
-def startup(s):
-    use_default_colors()
-    start_color()
-    s.clear()
-    init_pair(1, COLOR_WHITE, -1)
-    init_pair(2, COLOR_RED,   COLOR_WHITE)
-    init_pair(3, COLOR_BLACK, COLOR_WHITE)
+#def startup(s):
+#    use_default_colors()
+#    start_color()
+#    s.clear()
+#    init_pair(1, COLOR_WHITE, -1)
+#    init_pair(2, COLOR_RED,   COLOR_WHITE)
+#    init_pair(3, COLOR_BLACK, COLOR_WHITE)
 
 def get_user_input_ch(s, input_set):
     cc = s.getkey()
