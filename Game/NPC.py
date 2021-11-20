@@ -1,6 +1,7 @@
 from .Race import Race
 from .Job import Job
 from .Attribs import Attribs as a
+from .Gender import Gender
 
 class ZeroLevelException(Exception):
     pass
@@ -12,7 +13,8 @@ class NegativeAttributeException(Exception):
 ###############################################################################
 class NPC:
     def __init__(self, name="Unnamed", level=1, race=Race.HUMAN, 
-        job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0):
+        job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0, 
+        gender=Gender.MALE):
         # basic checks on numeric input parameters
         if level == 0:
             raise ZeroLevelException 
@@ -28,6 +30,8 @@ class NPC:
         self.attribs = attribs 
         self.y = y
         self.x = x
+        self.gender = gender
+
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.race} {self.job}\n"

@@ -19,20 +19,15 @@ def game_loop(game, renderer, pc):
     while True:
         renderer.draw_main_screen(game, pc)
         cc2 = renderer.s.getkey()
-        #######################################################################
-        #                                                                     #
-        # what are our movement keys by default?                              #
-        #                                                                     #
-        # Left-handed mode:                                                   #
-        #                                                                     #
-        # A  S  D  F                                                          #
-        #                                                                     #
-        # Left  = A                                                           #
-        # Up    = S                                                           #
-        # Down  = D                                                           #
-        # Right = F                                                           #
-        #                                                                     #
-        #######################################################################
+        ##################################################################
+        # what are our movement keys by default?                         #
+        # Left-handed mode:                                              #
+        # A  S  D  F                                                     #
+        # Left  = A                                                      #
+        # Up    = S                                                      #
+        # Down  = D                                                      #
+        # Right = F                                                      #
+        ##################################################################
         rows, cols = renderer.s.getmaxyx()
         handle_input(game, renderer, pc, cc2)
         game.incrTurns()
@@ -48,8 +43,6 @@ def main(stdscr):
         pc.y = 0 # when drawing pc or anything in dungeon,
                  # have to account for offset of borders
         pc.x = 0
-        #pc.y = 3
-        #pc.x = 1
         # this is the beginning of the main game loop
         game_loop(game, renderer, pc)
     elif cc=='q':

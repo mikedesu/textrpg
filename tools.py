@@ -3,6 +3,7 @@ from Game import Game
 from Game.NPC import NPC
 from Game.Race import Race
 from Game.Job import Job
+from Game.Gender import Gender
 from curses import start_color,\
     echo,\
     noecho,\
@@ -72,6 +73,34 @@ def get_player_job(s):
     cc = s.getch()
     return a 
 
+
+def get_player_gender(s):
+    s.clear()
+    noecho()
+    input_str = 'What is your gender? Select from the following:'
+    s.addstr(0,0,input_str,c(1))
+    input_str = 'q - Male'
+    s.addstr(1,0,input_str,c(1))
+    input_str = 'w - Female'
+    s.addstr(2,0,input_str,c(1))
+    s.refresh()
+    cc = get_user_input_ch(s, ['q', 'w'])
+    out_str = f'You entered: '
+    a = ''
+    if cc=='q':
+        a='Male'
+    elif cc=='w':
+        a='Female'
+    out_str += a
+    current_line = 3
+    s.addstr(current_line,0,out_str,c(1))
+    current_line += 1
+    out_str = 'Press any key to continue'
+    s.addstr(current_line,0,out_str,c(1))
+    s.refresh()
+    cc = s.getch()
+    return a 
+
 def get_player_race(s):
     s.clear()
     noecho()
@@ -132,6 +161,15 @@ def translate_job_str_to_enum(job):
         r = Job.CLERIC 
     return r
 
+def translate_gender_str_to_enum(gender):
+    r = None
+    if gender == 'Male':
+        r = Gender.MALE
+    elif gender == 'Female':
+        r = Gender.FEMALE
+    return r
+
+
 def generate_random_stats():
     a = [ randint(3,18), randint(3,18), randint(3,18), randint(3,18), 
           randint(3,18), randint(3,18) ]
@@ -171,77 +209,56 @@ remaining: {total_rerolls - rerolls})", c(1))
     return None
 
 
+
+def new_character_display(s, pc):
+    s.clear()
+    stats = pc.attribs
+    y = 0
+    x = 0
+    s.addstr(y,   x, f"Your name: {pc.name}",  c(1))
+    s.addstr(y+1, x, f"Your race: {pc.race}" , c(1))
+    s.addstr(y+2, x, f"Gender: {pc.gender}",   c(1))
+    s.addstr(y+3, x, f"Your job: {pc.job}" ,   c(1))
+    y += 4
+    stat_names = ["Strength: ", "Dexterity: ", "Constitution: ", 
+                  "Intelligence: ", "Wisdom: ", "Charisma: " ]
+    for i in range(len(stats)):
+        stat_name_str = stat_names[i]
+        s.addstr(y+i, x, f"{stat_name_str} {stats[i]}", c(1))
+    y += len(stats)
+    s.addstr(y+1, x, f"Press any key to continue", c(1))
+    s.refresh()
+    cc = s.getch()
+
+
+
+
+
 def new_character(s):
     name = get_player_name(s)
     stats = handle_new_game_stats( s , 0, 3 )
     race = translate_race_str_to_enum( get_player_race(s) )
     job  = translate_job_str_to_enum( get_player_job(s) )
-    pc = NPC(name, 1, race, job, stats)
-    s.clear()
-    y = 0
-    x = 0
-    your_name_str = "Your name: "
-    s.addstr(y, x, f"{your_name_str}", c(1))
-    x += len(your_name_str)
-    s.addstr(y, x, f"{pc.name}", c(1)) # no formatting
-    x = 0
-    y += 1
-    your_race_str = "Your race: "
-    s.addstr(y, x, f"{your_race_str}", c(1))
-    x += len(your_race_str)
-    s.addstr(y, x, f"{pc.race}" , c(1))
-    x = 0
-    y += 1
-    your_job_str = "Your job: "
-    s.addstr(y, x, f"{your_job_str}", c(1))
-    x += len(your_job_str)
-    s.addstr(y, x, f"{pc.job}" , c(1))
-    x = 0
-    y += 1
-    stat_names = ["Strength: ", "Dexterity: ", "Constitution: ", 
-                  "Intelligence: ", "Wisdom: ", "Charisma: " ]
-    for i in range(len(stats)):
-        stat_name_str = stat_names[i]
-        s.addstr(y+i, x, f"{stat_name_str}", c(1))
-        x += len(stat_name_str)
-        s.addstr(y+i, x, f"{stats[i]}" , c(1))
-        x = 0
-    y += len(stats)
-    s.addstr(y+1, x, f"Press any key to continue", c(1))
-    s.refresh()
-    cc = s.getch()
+    gender = translate_gender_str_to_enum( get_player_gender(s) )
+    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, 
+        gender=gender)
+    new_character_display(s, pc)
     return pc 
 
 
 
-#def draw_main_screen(s, pc):
-    # experimental main-game drawing
-#    s.clear()
-#    rows, cols = s.getmaxyx()
-#    y, x = 2, 0
-#    line = "-" * cols
-#    s.addstr(y, x, line)
-#    y += 1
-#    line = "|" + (" "*(cols-2)) + "|"
-#    while y < rows-4:
-#        s.addstr(y, x, line)
-#        y += 1
-#    line = "-" * cols
-#    s.addstr(y, x, line)
-#    y += 1
-#    s.addstr(y, x, str(pc))
-#    s.refresh()
- 
+
+
 
 def handle_input(game, renderer, pc, cc2):
     rows, cols = renderer.s.getmaxyx()
-    if cc2 == 'a': # left
+    if cc2 == '?': # help menu
+        game.addLog("Help menu not yet implemented")
+    elif cc2 == 'a': # left
         pc.x -= 1
         if pc.x < 0:
             pc.x = 0
             game.addLog("cannot go left outside dungeon")
-        #if pc.x < 1:
-        #    pc.x = 1
     elif cc2 == 's': # up
         pc.y -= 1
         if pc.y < 0:
@@ -259,6 +276,8 @@ def handle_input(game, renderer, pc, cc2):
         if pc.x > len(game.dungeonFloor.map_[0])-1:
             pc.x = len(game.dungeonFloor.map_[0])-1
             game.addLog("cannot go right outside dungeon")
+    
+
     elif cc2 == KEY_RESIZE:
         handle_resize(renderer)
     elif cc2 == 'q' or cc2 == 'Q':
