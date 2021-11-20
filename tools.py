@@ -4,6 +4,7 @@ from Game.NPC import NPC
 from Game.Race import Race
 from Game.Job import Job
 from Game.Gender import Gender
+from Game.Alignment import Alignment
 from curses import start_color,\
     echo,\
     noecho,\
@@ -72,6 +73,58 @@ def get_player_job(s):
     s.refresh()
     cc = s.getch()
     return a 
+
+def get_player_alignment(s):
+    s.clear()
+    noecho()
+    a = [
+        "What is your alignment?",
+        "",
+        "1 - Lawful Good",
+        "2 - Lawful Neutral",
+        "3 - Lawful Evil",
+        "4 - Neutral Good",
+        "5 - True Neutral",
+        "6 - Neutral Evil",
+        "7 - Chaotic Good",
+        "8 - Chaotic Neutral",
+        "9 - Chaotic Evil"
+    ]
+    y=0
+    for line in a:
+        s.addstr(y,0,line,c(1))
+        y+=1
+    s.refresh()
+    cc = get_user_input_ch(s, ['1','2','3','4','5','6','7','8','9'])
+    
+    b = None # this is causing a bug atm
+    #b = Alignment.LAWFUL_GOOD 
+
+    if cc=='1':
+        b=Alignment.LAWFUL_GOOD
+    elif cc=='2':
+        b=Alignment.LAWFUL_NEUTRAL
+    elif cc=='3':
+        b=Alignment.LAWFUL_EVIL
+    elif cc=='4':
+        b=Alignment.NEUTRAL_GOOD
+    elif cc=='5':
+        b=Alignment.TRUE_NEUTRAL
+    elif cc=='6':
+        b=Alignment.NEUTRAL_EVIL
+    elif cc=='7':
+        b=Alignment.CHAOTIC_GOOD
+    elif cc=='8':
+        b=Alignment.CHAOTIC_NEUTRAL
+    elif cc=='9':
+        b=Alignment.CHAOTIC_EVIL
+
+    s.addstr(y, 0, f"You entered: {b}", c(1))
+    s.addstr(y+1, 0, f"Press any key to continue", c(1))
+    s.getkey()
+    return b
+
+
 
 
 def get_player_gender(s):
@@ -168,6 +221,28 @@ def translate_gender_str_to_enum(gender):
     elif gender == 'Female':
         r = Gender.FEMALE
     return r
+def translate_alignment_str_to_enum(alignment):
+    r = None
+    if alignment == 'Lawful Good':
+        r = Alignment.LAWFUL_GOOD
+    elif alignment == 'Lawful Neutral':
+        r = Alignment.LAWFUL_NEUTRAL
+    elif alignment == 'Lawful Evil':
+        r = Alignment.LAWFUL_EVIL
+    elif alignment == 'Chaotic Good':
+        r = Alignment.CHAOTIC_GOOD
+    elif alignment == 'Chaotic Neutral':
+        r = Alignment.CHAOTIC_NEUTRAL
+    elif alignment == 'Chaotic Evil':
+        r = Alignment.CHAOTIC_EVIL
+    elif alignment == 'Neutral Good':
+        r = Alignment.NEUTRAL_GOOD
+    elif alignment == 'True Neutral':
+        r = Alignment.TRUE_NEUTRAL
+    elif alignment == 'Neutral Evil':
+        r = Alignment.NEUTRAL_EVIL
+    return r
+
 
 
 def generate_random_stats():
@@ -218,8 +293,9 @@ def new_character_display(s, pc):
     s.addstr(y,   x, f"Your name: {pc.name}",  c(1))
     s.addstr(y+1, x, f"Your race: {pc.race}" , c(1))
     s.addstr(y+2, x, f"Gender: {pc.gender}",   c(1))
-    s.addstr(y+3, x, f"Your job: {pc.job}" ,   c(1))
-    y += 4
+    s.addstr(y+3, x, f"Alignment: {pc.alignment}",   c(1))
+    s.addstr(y+4, x, f"Your job: {pc.job}" ,   c(1))
+    y += 5
     stat_names = ["Strength: ", "Dexterity: ", "Constitution: ", 
                   "Intelligence: ", "Wisdom: ", "Charisma: " ]
     for i in range(len(stats)):
@@ -240,8 +316,11 @@ def new_character(s):
     race = translate_race_str_to_enum( get_player_race(s) )
     job  = translate_job_str_to_enum( get_player_job(s) )
     gender = translate_gender_str_to_enum( get_player_gender(s) )
+    #alignment = translate_alignment_str_to_enum( get_player_alignment(s) )
+    alignment =  get_player_alignment(s) 
     pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, 
-        gender=gender)
+        gender=gender, alignment=alignment)
+
     new_character_display(s, pc)
     return pc 
 
