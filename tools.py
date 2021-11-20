@@ -247,13 +247,27 @@ def new_character(s):
 
 
 
+def help_menu(renderer):
+    renderer.s.clear()
+    a = None
+    with open("txt/helpmenu.txt", "r") as infile:
+        a = infile.readlines()
+    y = 0
+    for line in a:
+        renderer.s.addstr(y, 0, line, c(1))
+        y += 1
+    renderer.s.refresh()
+    renderer.s.getkey()
+
 
 
 
 def handle_input(game, renderer, pc, cc2):
     rows, cols = renderer.s.getmaxyx()
     if cc2 == '?': # help menu
-        game.addLog("Help menu not yet implemented")
+        #game.addLog("Help menu not yet implemented")
+        help_menu(renderer)
+        return False
     elif cc2 == 'a': # left
         pc.x -= 1
         if pc.x < 0:
@@ -276,13 +290,14 @@ def handle_input(game, renderer, pc, cc2):
         if pc.x > len(game.dungeonFloor.map_[0])-1:
             pc.x = len(game.dungeonFloor.map_[0])-1
             game.addLog("cannot go right outside dungeon")
-    
-
     elif cc2 == KEY_RESIZE:
         handle_resize(renderer)
+        return False
     elif cc2 == 'q' or cc2 == 'Q':
         # exit game
         exit(0)
+    return True
+
 
 def handle_resize(renderer):
     rows, cols = renderer.s.getmaxyx()

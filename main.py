@@ -29,8 +29,9 @@ def game_loop(game, renderer, pc):
         # Right = F                                                      #
         ##################################################################
         rows, cols = renderer.s.getmaxyx()
-        handle_input(game, renderer, pc, cc2)
-        game.incrTurns()
+        do_incr_turns = handle_input(game, renderer, pc, cc2)
+        if do_incr_turns:
+            game.incrTurns()
 
 def main(stdscr):
     renderer = Renderer.Renderer(screen=stdscr)

@@ -1,0 +1,22 @@
+Help Menu:
+----------
+
+q - Quit
+
+----------
+
+a - Move left
+s - Move up
+d - Move down
+f - Move right
+
+----------
+
+Shoutouts to everyone watching this on twitch.tv/darkmage666
+
+This will be up on github soon enough <3 
+
+
+----------
+
+Press any key to continue
