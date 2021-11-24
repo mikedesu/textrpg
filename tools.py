@@ -297,35 +297,26 @@ def new_character_display(s, pc):
     s.refresh()
     cc = s.getch()
 
-
-
-
-
-def new_character(s):
+def new_character(game, s):
     name = get_player_name(s)
     stats = handle_new_game_stats( s , 0, 3 )
     race = translate_race_str_to_enum( get_player_race(s) )
     job  = translate_job_str_to_enum( get_player_job(s) )
     gender = translate_gender_str_to_enum( get_player_gender(s) )
-    alignment =  get_player_alignment(s) 
-    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, 
-        gender=gender, alignment=alignment, is_player=True)
-
+    alignment = get_player_alignment(s) 
+    pc = NPC(game=game, name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
     new_character_display(s, pc)
     return pc 
 
-
-def quick_new_character(s):
+def quick_new_character(game, s):
     name = "dm"
     stats = generate_random_stats()
     race = Race.HUMAN 
     job  = Job.MAGE
     gender = Gender.MALE
     alignment = Alignment.LAWFUL_EVIL
-    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
+    pc = NPC(game=game, name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
     return pc 
-
-
 
 def help_menu(renderer):
     renderer.s.clear()
@@ -339,7 +330,6 @@ def help_menu(renderer):
     renderer.s.refresh()
     renderer.s.getkey()
 
-
 def check_pc_dungeon_bounds(game, pc, y, x):
     retval = True 
     if pc.x+x < 0 or pc.y+y < 0 or pc.y+y > len(game.dungeonFloor.map_)-4 or pc.x+x > len(game.dungeonFloor.map_[0])-1:
@@ -352,12 +342,11 @@ def check_pc_npc_collision(game, pc, y, x):
         if pc.x + x == npc.x and pc.y + y == npc.y:
             # in other words, pc WOULD move into the npc
             # so we'd return true
-            game.addLog("bumped into npc")
-            return True
-    return False
-            
-
-
+            #game.addLog("bumped into npc")
+            # considering returning the NPC that caused the collision
+            #return True
+            return npc
+    return None
 
 def handle_input(game, renderer, pc, k):
     rows, cols = renderer.s.getmaxyx()
@@ -375,29 +364,46 @@ def handle_input(game, renderer, pc, k):
         help_menu(renderer)
         return False
     elif k in movement_keys:
-        
-
         if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
-            if not check_pc_npc_collision( game, pc, 0, -1 ):
+            result = check_pc_npc_collision( game, pc, 0, -1 ) 
+            if not result:
                 if check_pc_dungeon_bounds(game, pc, 0, -1):
                     pc.x -= 1
+            else:
+                if type(result) == NPC:
+                    npc = result
+                    pc.attack(npc)
         elif k == 's' or k == 'k' or k == 'KEY_UP': # up
-            if not check_pc_npc_collision( game, pc, -1, 0 ):
+            result = check_pc_npc_collision( game, pc, -1, 0 ) 
+            if not result:
                 if check_pc_dungeon_bounds(game, pc, -1, 0):
                     pc.y -= 1
+            else:
+                if type(result) == NPC:
+                    npc = result
+                    pc.attack(npc)
+
         elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
-            if not check_pc_npc_collision( game, pc, 1, 0 ):
+            result = check_pc_npc_collision( game, pc, 1, 0 ) 
+            if not result:
                 if check_pc_dungeon_bounds(game, pc, 1, 0):
                     pc.y += 1
+            else:
+                if type(result) == NPC:
+                    npc = result
+                    pc.attack(npc)
+
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
-            if not check_pc_npc_collision( game, pc, 0, 1 ):
+            result = check_pc_npc_collision( game, pc, 0, 1 ) 
+            if not result:
                 if check_pc_dungeon_bounds(game, pc, 0, 1 ):
                     pc.x += 1
+            else:
+                if type(result) == NPC:
+                    npc = result
+                    pc.attack(npc)
 
-
-
-        #check_pc_dungeon_bounds(game, pc)
-    elif k == KEY_RESIZE:
+    elif k == "KEY_RESIZE":
         handle_resize(renderer)
         return False
     # exit game

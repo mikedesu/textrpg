@@ -40,7 +40,7 @@ def main(stdscr):
     renderer.draw_titlescreen()
     cc = get_user_input_ch(stdscr, ['n', 'q'])
     if cc=='n':
-        pc = quick_new_character(renderer.s)
+        pc = quick_new_character(game, renderer.s)
         pc.y = 0
         pc.x = 0 # when drawing pc or anything in dungeon, have to account for offset of borders
         game_loop(game, renderer, pc)

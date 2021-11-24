@@ -3,6 +3,7 @@ from .Job import Job
 from .Attribs import Attribs as a
 from .Gender import Gender
 from .Alignment import Alignment
+from random import randint
 
 class ZeroLevelException(Exception):
     pass
@@ -13,10 +14,13 @@ class NegativeAttributeException(Exception):
 
 ###############################################################################
 class NPC:
-    def __init__(self, name="Unnamed", level=1, race=Race.HUMAN, 
+    def __init__(self, game=None, name="Unnamed", level=1, race=Race.HUMAN, 
         job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0, 
-        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, symbol="@"):
+        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, 
+        symbol="@", hp=10, maxhp=10, ac=10):
         # basic checks on numeric input parameters
+        if game == None:
+            raise Exception("Game cannot be None")
         if level == 0:
             raise ZeroLevelException 
         elif level < 0:
@@ -24,6 +28,7 @@ class NPC:
         for a in attribs:
             if a < 0:
                 raise NegativeAttributeException 
+        self.game = game
         self.name = name
         self.level = level
         self.race = race
@@ -35,6 +40,32 @@ class NPC:
         self.alignment = alignment 
         self.is_player = is_player 
         self.symbol = symbol 
+        self.ac = ac
+        self.hp = hp
+        self.maxhp = maxhp
+
+    def attack(self, npc):
+        # traditional dnd 3.0 rules
+        #
+        # 1d20 
+        roll = randint(1, 20)
+        # if the roll is >= player's ac, attack hits
+        if roll >= npc.ac:
+            # hit
+            # 
+            # for right now, lets just subtract 1 hp until we come back to 
+            # properly write the damage calc rules
+            npc.hp -= 1
+            self.game.addLog("Your attack hit!")
+        else:
+            # miss
+            # we dont need to do anything
+            # but we should log both a hit or a miss
+            # so we need a way to pass msgs to the game log
+            self.game.addLog("Your attack missed!")
+
+
+
 
 
     def __str__(self):
