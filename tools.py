@@ -5,17 +5,10 @@ from Game.Race import Race
 from Game.Job import Job
 from Game.Gender import Gender
 from Game.Alignment import Alignment
-from curses import start_color,\
-    echo,\
-    noecho,\
-    init_pair,\
-    color_pair as c,\
-    COLOR_BLACK,\
-    COLOR_RED,\
-    COLOR_WHITE,\
-    A_BOLD,\
-    use_default_colors,\
-    KEY_RESIZE 
+from curses import start_color, echo, noecho,\
+    init_pair, color_pair as c,\
+    COLOR_BLACK, COLOR_RED, COLOR_WHITE, A_BOLD, use_default_colors, \
+    KEY_RESIZE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN 
 
 def get_user_input_ch(s, input_set):
     cc = s.getkey()
@@ -246,8 +239,7 @@ def translate_alignment_str_to_enum(alignment):
 
 
 def generate_random_stats():
-    a = [ randint(3,18), randint(3,18), randint(3,18), randint(3,18), 
-          randint(3,18), randint(3,18) ]
+    a = [ randint(3,18), randint(3,18), randint(3,18), randint(3,18), randint(3,18), randint(3,18) ]
     return a
 
 def handle_new_game_stats(s, rerolls = 0, total_rerolls = 3):
@@ -316,12 +308,22 @@ def new_character(s):
     race = translate_race_str_to_enum( get_player_race(s) )
     job  = translate_job_str_to_enum( get_player_job(s) )
     gender = translate_gender_str_to_enum( get_player_gender(s) )
-    #alignment = translate_alignment_str_to_enum( get_player_alignment(s) )
     alignment =  get_player_alignment(s) 
     pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, 
         gender=gender, alignment=alignment)
 
     new_character_display(s, pc)
+    return pc 
+
+
+def quick_new_character(s):
+    name = "dm"
+    stats = generate_random_stats()
+    race = Race.HUMAN 
+    job  = Job.MAGE
+    gender = Gender.MALE
+    alignment = Alignment.LAWFUL_EVIL
+    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment)
     return pc 
 
 
@@ -341,40 +343,43 @@ def help_menu(renderer):
 
 
 
-def handle_input(game, renderer, pc, cc2):
+def handle_input(game, renderer, pc, k):
     rows, cols = renderer.s.getmaxyx()
-    if cc2 == '?': # help menu
+    if k == '?': # help menu
         #game.addLog("Help menu not yet implemented")
         help_menu(renderer)
         return False
-    elif cc2 == 'a': # left
+    elif k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
         pc.x -= 1
         if pc.x < 0:
             pc.x = 0
             game.addLog("cannot go left outside dungeon")
-    elif cc2 == 's': # up
+    elif k == 's' or k == 'k' or k == 'KEY_UP': # up
         pc.y -= 1
         if pc.y < 0:
             pc.y = 0
             game.addLog("cannot go up outside dungeon")
-    elif cc2 == 'd': # down
+    elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
         pc.y += 1
         # check for rows-5 due to the border
         if pc.y > len(game.dungeonFloor.map_)-4:
             pc.y = len(game.dungeonFloor.map_)-4
             game.addLog("cannot go down outside dungeon")
-    elif cc2 == 'f': # right
+    elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
         pc.x += 1
         # check for cols-2 due to the border
         if pc.x > len(game.dungeonFloor.map_[0])-1:
             pc.x = len(game.dungeonFloor.map_[0])-1
             game.addLog("cannot go right outside dungeon")
-    elif cc2 == KEY_RESIZE:
+    elif k == KEY_RESIZE:
         handle_resize(renderer)
         return False
-    elif cc2 == 'q' or cc2 == 'Q':
+    elif k == 'q' or k == 'Q':
         # exit game
         exit(0)
+    else:
+        game.addLog(f"Unimplemented key pressed: {k}")
+        return False
     return True
 
 

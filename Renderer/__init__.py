@@ -23,6 +23,7 @@ class Renderer:
         init_pair(4, COLOR_RED,   -1)
         init_pair(2, COLOR_RED,   COLOR_WHITE)
         init_pair(3, COLOR_BLACK, COLOR_WHITE)
+        self.s.keypad(True)
 
     def draw_titlescreen(self):
         self.s.addstr(0, 0, 'Welcome to the RPG', c(1))
