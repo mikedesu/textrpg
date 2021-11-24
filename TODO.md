@@ -1,8 +1,14 @@
 # TODO
 
+## Easy 
 - extend the top log window area by a couple lines
-- battling (attack)
 - quit message window advertising the game, the github, my website, etc
+
+## Medium
+- Basic dungeon crafting
+    - Define a room
+
+## Hard / Long
 - item class definition
     - weapon sub-class 
     - armor sub-class

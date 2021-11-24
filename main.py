@@ -35,7 +35,8 @@ def game_loop(game, renderer, pc):
 
 def main(stdscr):
     renderer = Renderer.Renderer(screen=stdscr)
-    game = Game.Game(screen=stdscr)
+    #game = Game.Game(screen=stdscr)
+    game = Game.Game(renderer=renderer)
     renderer.startup()
     renderer.draw_titlescreen()
     cc = get_user_input_ch(stdscr, ['n', 'q'])
