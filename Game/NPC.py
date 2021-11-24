@@ -18,9 +18,9 @@ class NPC:
         job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0, 
         gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, 
         symbol="@", hp=10, maxhp=10, ac=10):
-        # basic checks on numeric input parameters
         if game == None:
             raise Exception("Game cannot be None")
+        # basic checks on numeric input parameters
         if level == 0:
             raise ZeroLevelException 
         elif level < 0:
@@ -43,30 +43,22 @@ class NPC:
         self.ac = ac
         self.hp = hp
         self.maxhp = maxhp
+        self.xp = 0
 
     def attack(self, npc):
-        # traditional dnd 3.0 rules
-        #
+        # traditional dnd 3.0 rules:
         # 1d20 
         roll = randint(1, 20)
         # if the roll is >= player's ac, attack hits
         if roll >= npc.ac:
-            # hit
-            # 
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
             npc.hp -= 1
             self.game.addLog("Your attack hit!")
         else:
-            # miss
-            # we dont need to do anything
-            # but we should log both a hit or a miss
-            # so we need a way to pass msgs to the game log
+            # we dont need to do anything but we should log both a hit or a 
+            # miss so we need a way to pass msgs to the game log
             self.game.addLog("Your attack missed!")
-
-
-
-
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"
@@ -76,4 +68,5 @@ class NPC:
         s += f"Int: {self.attribs[3]} "
         s += f"Wis: {self.attribs[4]} "
         s += f"Cha: {self.attribs[5]} "
+        s += f"XP: {self.xp}"
         return s

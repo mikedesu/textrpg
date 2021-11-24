@@ -1,4 +1,5 @@
 from .NPC import NPC 
+from random import randint
 
 class DungeonFloor:
     def __init__(self, game=None, rows=0, cols=0):
@@ -13,4 +14,7 @@ class DungeonFloor:
         self.map_ = []
         for i in range(rows):
             self.map_.append("."*cols)
-        self.npcs = [ NPC( self.game, y=0, x=1 ) ]
+
+        random_y = randint(0,rows)
+        random_x = randint(0,cols)
+        self.npcs = [ NPC( self.game, y=random_y, x=random_x ) ]

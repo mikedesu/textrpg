@@ -348,6 +348,16 @@ def check_pc_npc_collision(game, pc, y, x):
             return npc
     return None
 
+def handle_pc_npc_collision(game, pc, npc):
+    if type(npc) == NPC:
+        pc.attack(npc)
+        if npc.hp <= 0:
+            game.addLog(f"You killed {npc.name}!")
+            game.dungeonFloor.npcs.remove(npc)
+            # just add 1 xp for now lol
+            pc.xp += 1
+
+
 def handle_input(game, renderer, pc, k):
     rows, cols = renderer.s.getmaxyx()
     # Help Menu
@@ -370,38 +380,28 @@ def handle_input(game, renderer, pc, k):
                 if check_pc_dungeon_bounds(game, pc, 0, -1):
                     pc.x -= 1
             else:
-                if type(result) == NPC:
-                    npc = result
-                    pc.attack(npc)
+                handle_pc_npc_collision(game, pc, result)
         elif k == 's' or k == 'k' or k == 'KEY_UP': # up
             result = check_pc_npc_collision( game, pc, -1, 0 ) 
             if not result:
                 if check_pc_dungeon_bounds(game, pc, -1, 0):
                     pc.y -= 1
             else:
-                if type(result) == NPC:
-                    npc = result
-                    pc.attack(npc)
-
+                handle_pc_npc_collision(game, pc, result)
         elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
             result = check_pc_npc_collision( game, pc, 1, 0 ) 
             if not result:
                 if check_pc_dungeon_bounds(game, pc, 1, 0):
                     pc.y += 1
             else:
-                if type(result) == NPC:
-                    npc = result
-                    pc.attack(npc)
-
+                handle_pc_npc_collision(game, pc, result)
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             result = check_pc_npc_collision( game, pc, 0, 1 ) 
             if not result:
                 if check_pc_dungeon_bounds(game, pc, 0, 1 ):
                     pc.x += 1
             else:
-                if type(result) == NPC:
-                    npc = result
-                    pc.attack(npc)
+                handle_pc_npc_collision(game, pc, result)
 
     elif k == "KEY_RESIZE":
         handle_resize(renderer)
