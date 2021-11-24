@@ -5,9 +5,8 @@ from Game.Race import Race
 from Game.Job import Job
 from Game.Gender import Gender
 from Game.Alignment import Alignment
-from curses import start_color, echo, noecho,\
-    init_pair, color_pair as c,\
-    COLOR_BLACK, COLOR_RED, COLOR_WHITE, A_BOLD, use_default_colors, \
+from curses import color_pair as c, start_color, echo, noecho, init_pair, \
+    COLOR_BLUE, COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_MAGENTA, A_BOLD, use_default_colors, \
     KEY_RESIZE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN 
 
 def get_user_input_ch(s, input_set):
@@ -310,7 +309,7 @@ def new_character(s):
     gender = translate_gender_str_to_enum( get_player_gender(s) )
     alignment =  get_player_alignment(s) 
     pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, 
-        gender=gender, alignment=alignment)
+        gender=gender, alignment=alignment, is_player=True)
 
     new_character_display(s, pc)
     return pc 
@@ -323,7 +322,7 @@ def quick_new_character(s):
     job  = Job.MAGE
     gender = Gender.MALE
     alignment = Alignment.LAWFUL_EVIL
-    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment)
+    pc = NPC(name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
     return pc 
 
 
@@ -341,47 +340,73 @@ def help_menu(renderer):
     renderer.s.getkey()
 
 
+def check_pc_dungeon_bounds(game, pc, y, x):
+    retval = True 
+    if pc.x+x < 0 or pc.y+y < 0 or pc.y+y > len(game.dungeonFloor.map_)-4 or pc.x+x > len(game.dungeonFloor.map_[0])-1:
+        game.addLog("cannot go outside dungeon walls")
+        retval = False
+    return retval
+
+def check_pc_npc_collision(game, pc, y, x):
+    for npc in game.dungeonFloor.npcs:
+        if pc.x + x == npc.x and pc.y + y == npc.y:
+            # in other words, pc WOULD move into the npc
+            # so we'd return true
+            game.addLog("bumped into npc")
+            return True
+    return False
+            
+
 
 
 def handle_input(game, renderer, pc, k):
     rows, cols = renderer.s.getmaxyx()
-    if k == '?': # help menu
-        #game.addLog("Help menu not yet implemented")
+    # Help Menu
+    help_key = '?'
+    quit_key_0 = 'q'
+    quit_key_1 = 'Q'
+    input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key ]
+    movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+    left_keys = ['a','j','KEY_LEFT']
+    up_keys =   ['s','k','KEY_UP']
+    down_keys = ['d','l','KEY_DOWN']
+    right_keys = ['f',';','KEY_RIGHT']
+    if k == '?':
         help_menu(renderer)
         return False
-    elif k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
-        pc.x -= 1
-        if pc.x < 0:
-            pc.x = 0
-            game.addLog("cannot go left outside dungeon")
-    elif k == 's' or k == 'k' or k == 'KEY_UP': # up
-        pc.y -= 1
-        if pc.y < 0:
-            pc.y = 0
-            game.addLog("cannot go up outside dungeon")
-    elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
-        pc.y += 1
-        # check for rows-5 due to the border
-        if pc.y > len(game.dungeonFloor.map_)-4:
-            pc.y = len(game.dungeonFloor.map_)-4
-            game.addLog("cannot go down outside dungeon")
-    elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
-        pc.x += 1
-        # check for cols-2 due to the border
-        if pc.x > len(game.dungeonFloor.map_[0])-1:
-            pc.x = len(game.dungeonFloor.map_[0])-1
-            game.addLog("cannot go right outside dungeon")
+    elif k in movement_keys:
+        
+
+        if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
+            if not check_pc_npc_collision( game, pc, 0, -1 ):
+                if check_pc_dungeon_bounds(game, pc, 0, -1):
+                    pc.x -= 1
+        elif k == 's' or k == 'k' or k == 'KEY_UP': # up
+            if not check_pc_npc_collision( game, pc, -1, 0 ):
+                if check_pc_dungeon_bounds(game, pc, -1, 0):
+                    pc.y -= 1
+        elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
+            if not check_pc_npc_collision( game, pc, 1, 0 ):
+                if check_pc_dungeon_bounds(game, pc, 1, 0):
+                    pc.y += 1
+        elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
+            if not check_pc_npc_collision( game, pc, 0, 1 ):
+                if check_pc_dungeon_bounds(game, pc, 0, 1 ):
+                    pc.x += 1
+
+
+
+        #check_pc_dungeon_bounds(game, pc)
     elif k == KEY_RESIZE:
         handle_resize(renderer)
         return False
-    elif k == 'q' or k == 'Q':
-        # exit game
+    # exit game
+    elif k == quit_key_0 or k == quit_key_1:
         exit(0)
     else:
         game.addLog(f"Unimplemented key pressed: {k}")
         return False
     return True
-
 
 def handle_resize(renderer):
     rows, cols = renderer.s.getmaxyx()

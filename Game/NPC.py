@@ -15,7 +15,7 @@ class NegativeAttributeException(Exception):
 class NPC:
     def __init__(self, name="Unnamed", level=1, race=Race.HUMAN, 
         job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0, 
-        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD):
+        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, symbol="@"):
         # basic checks on numeric input parameters
         if level == 0:
             raise ZeroLevelException 
@@ -33,6 +33,8 @@ class NPC:
         self.x = x
         self.gender = gender
         self.alignment = alignment 
+        self.is_player = is_player 
+        self.symbol = symbol 
 
 
     def __str__(self):

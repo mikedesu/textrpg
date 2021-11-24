@@ -1,13 +1,7 @@
-from curses import start_color
-from curses import echo
-from curses import noecho
-from curses import init_pair
+from curses import start_color, echo, noecho, init_pair
 from curses import color_pair as c
-from curses import COLOR_BLACK
-from curses import COLOR_RED
-from curses import COLOR_WHITE
-from curses import A_BOLD
-from curses import use_default_colors
+from curses import COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_BLUE, COLOR_MAGENTA 
+from curses import A_BOLD, use_default_colors
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -20,9 +14,11 @@ class Renderer:
         start_color()
         self.s.clear()
         init_pair(1, COLOR_WHITE, -1)
-        init_pair(4, COLOR_RED,   -1)
         init_pair(2, COLOR_RED,   COLOR_WHITE)
         init_pair(3, COLOR_BLACK, COLOR_WHITE)
+        init_pair(4, COLOR_RED,   -1)
+        init_pair(5, COLOR_MAGENTA, -1)
+        init_pair(6, COLOR_BLUE, -1)
         self.s.keypad(True)
 
     def draw_titlescreen(self):
@@ -32,7 +28,6 @@ class Renderer:
         self.s.addstr(3, 0, 'Press q to quit', c(3))
         self.s.addstr(4, 0, 'Press n for new game', c(3))
         self.s.refresh()
-
 
     def draw_main_screen_border(self, game, pc):
         if game==None:
@@ -64,10 +59,16 @@ class Renderer:
         self.s.addstr(y,   x, f"T:{game.currentTurnCount}")
         self.s.addstr(y+1, x, f"y:{pc.y} x:{pc.x}")
         
-    def draw_main_screen_pc(self, pc):
-        y = pc.y + 3
-        x = pc.x + 1
-        self.s.addstr(y, x, "@", c(4) | A_BOLD )
+    def draw_main_screen_npc(self, npc):
+        y = npc.y + 3
+        x = npc.x + 1
+        options = None
+        if npc.is_player:
+            options = c(4) | A_BOLD 
+        else:
+            options = c(5) | A_BOLD 
+        self.s.addstr(y, x, npc.symbol, options )
+
 
     def draw_main_screen_logs(self, game):
         # only enough room for last 2 logs
@@ -89,8 +90,17 @@ class Renderer:
         # so i will have to devise a clever camera system
         # in order to accomodate both them and to have a 
         # convenient way to resize the viewport
-        for i in range(3, len(game.dungeonFloor.map_)):
-            self.s.addstr(i, 1, game.dungeonFloor.map_[i])
+        df = game.dungeonFloor 
+        for i in range(3, len(df.map_)):
+            self.s.addstr(i, 1, df.map_[i])
+
+    def draw_main_screen_dungeonFloor_npcs(self, game):
+        npcs = game.dungeonFloor.npcs
+        for npc in npcs:
+            self.draw_main_screen_npc(npc)
+           
+
+
 
     def draw_main_screen(self,game,pc):
         # experimental main-game drawing
@@ -104,6 +114,7 @@ class Renderer:
         # 2. in-game loot / dropped-objects
         # 3. entities / NPCs
         self.draw_main_screen_dungeonFloor(game)
-        self.draw_main_screen_pc(pc)
+        self.draw_main_screen_dungeonFloor_npcs(game)
+        self.draw_main_screen_npc(pc)
         self.s.refresh()
      
