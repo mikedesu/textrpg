@@ -7,7 +7,7 @@ from Game.Gender import Gender
 from Game.Alignment import Alignment
 from curses import color_pair as c, start_color, echo, noecho, init_pair, \
     COLOR_BLUE, COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_MAGENTA, A_BOLD, use_default_colors, \
-    KEY_RESIZE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN 
+    KEY_RESIZE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, resizeterm, is_term_resized
 
 def get_user_input_ch(s, input_set):
     cc = s.getkey()
@@ -88,10 +88,7 @@ def get_player_alignment(s):
         y+=1
     s.refresh()
     cc = get_user_input_ch(s, ['1','2','3','4','5','6','7','8','9'])
-    
     b = None # this is causing a bug atm
-    #b = Alignment.LAWFUL_GOOD 
-
     if cc=='1':
         b=Alignment.LAWFUL_GOOD
     elif cc=='2':
@@ -110,14 +107,10 @@ def get_player_alignment(s):
         b=Alignment.CHAOTIC_NEUTRAL
     elif cc=='9':
         b=Alignment.CHAOTIC_EVIL
-
     s.addstr(y, 0, f"You entered: {b}", c(1))
     s.addstr(y+1, 0, f"Press any key to continue", c(1))
     s.getkey()
     return b
-
-
-
 
 def get_player_gender(s):
     s.clear()
@@ -235,8 +228,6 @@ def translate_alignment_str_to_enum(alignment):
         r = Alignment.NEUTRAL_EVIL
     return r
 
-
-
 def generate_random_stats():
     a = [ randint(3,18), randint(3,18), randint(3,18), randint(3,18), randint(3,18), randint(3,18) ]
     return a
@@ -273,8 +264,6 @@ remaining: {total_rerolls - rerolls})", c(1))
         return a
     # should never get here
     return None
-
-
 
 def new_character_display(s, pc):
     s.clear()
@@ -359,36 +348,6 @@ def handle_pc_npc_collision(game, pc, npc):
             # just add 1 xp for now lol
             pc.xp += 1
 
-
-
-"""
-def get_direction_tuple(dir_):
-    y = 0
-    x = 0
-    if dir_ == "left":
-        y = 0
-        x = -1
-    elif dir_ == "up":
-        y = -1
-        x = 0
-    elif dir_ == "down":
-        y = 1
-        x = 0
-    elif dir_ == "right":
-        y = 0
-        x = 1
-    return (y, x)
-
-
-
-
-"""
-
-
-
-
-
-
 def check_pc_next_tile(game, pc, y, x):
     assert(game != None)
     assert(pc != None)
@@ -406,8 +365,7 @@ def check_pc_next_tile(game, pc, y, x):
                 retval = True
     return retval
 
-
-def handle_movement(game, pc, y, x):
+def check_movement(game, pc, y, x):
     assert(game != None)
     assert(pc != None)
     assert(y in [-1, 0, 1])
@@ -424,6 +382,18 @@ def handle_movement(game, pc, y, x):
     else:
         game.addLog("Cannot move in that direction")
 
+def handle_movement(game, pc, k):
+    y = 0
+    x = 0
+    if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
+        x = -1
+    elif k == 's' or k == 'k' or k == 'KEY_UP': # up
+        y = -1
+    elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
+        y = 1
+    elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
+        x = 1
+    check_movement(game, pc, y, x)
 
 
 def handle_input(game, renderer, pc, k):
@@ -442,25 +412,14 @@ def handle_input(game, renderer, pc, k):
     if k == '?':
         help_menu(renderer)
     elif k in movement_keys:
-        y = 0
-        x = 0
-        dirStr = ""
-        if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
-            #dirStr = "west"
-            x = -1
-        elif k == 's' or k == 'k' or k == 'KEY_UP': # up
-            #dirStr = "north"
-            y = -1
-        elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
-            #dirStr = "south"
-            y = 1
-        elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
-            #dirStr = "east"
-            x = 1
-        #game.addLog(f"You attempt to move {dirStr}")
-        handle_movement(game, pc, y, x)
+        handle_movement(game, pc, k)
+    
     elif k == "KEY_RESIZE":
-        handle_resize(renderer)
+        game.addLog("handle_resize")
+        resize = is_term_resized(rows, cols)
+        if resize:
+            handle_resize(renderer)
+    
     # exit game
     elif k == quit_key_0 or k == quit_key_1:
         exit(0)
@@ -472,6 +431,6 @@ def handle_input(game, renderer, pc, k):
 def handle_resize(renderer):
     rows, cols = renderer.s.getmaxyx()
     renderer.s.clear()
-    renderer.s.resizeterm(rows, cols)
+    resizeterm(rows, cols)
     renderer.s.refresh()
 

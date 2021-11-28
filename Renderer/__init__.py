@@ -63,6 +63,9 @@ class Renderer:
     def draw_main_screen_npc(self, npc):
         y = npc.y + 5
         x = npc.x + 1
+        rows, cols = self.s.getmaxyx()
+        if y > rows-5:
+            return
         options = None
         if npc.is_player:
             options = c(4) | A_BOLD 
@@ -100,10 +103,16 @@ class Renderer:
         # so i will have to devise a clever camera system
         # in order to accomodate both them and to have a 
         # convenient way to resize the viewport
-        df = game.dungeonFloor 
-        for i in range(len(df.map_)):
-            mapToDraw = df.map_[i]
-            self.s.addstr(i+5, 1, mapToDraw)
+        df = game.dungeonFloor
+        rows, cols = self.s.getmaxyx()
+        d_rows = game.dungeonFloor.rows
+        d_cols = game.dungeonFloor.cols
+        numRowsToSubtract = 9
+        mapRowOffset = 5
+        for i in range(rows-numRowsToSubtract):
+            if i < d_rows:
+                mapToDraw = df.map_[i]
+                self.s.addstr(i + mapRowOffset, 1, mapToDraw)
 
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs

@@ -1,10 +1,8 @@
 # TODO
 
 ## Easy 
-- extend the top log window area by a couple lines
 - quit message window advertising the game, the github, my website, etc
-- smaller starting sandbox room
-
+- actually get this up on github
 
 ## Medium
 - Basic dungeon crafting
@@ -21,4 +19,3 @@
         - candles
         - torches
         - etc
-- actually get this up on github
