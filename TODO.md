@@ -7,6 +7,11 @@
 ## Medium
 - Basic dungeon crafting
     - Define a room
+    - Define Tiles
+    - Compose dungeon of Tiles instead of Strings
+- Camera movement mode
+    - press 'c' to enter camera mode, or something
+- Basics of a shell/terminal for longer commands and debugging
 
 ## Hard / Long
 - item class definition
