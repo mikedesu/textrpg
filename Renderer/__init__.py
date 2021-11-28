@@ -34,7 +34,8 @@ class Renderer:
             raise Exception("draw_main_screen_border: game cannot be None")
         if pc==None:
             raise Exception("draw_main_screen_border: pc cannot be None")
-        y, x = 2, 0
+        y = 4
+        x = 0
         rows, cols = self.s.getmaxyx()
         line = "-" * cols
         self.s.addstr(y, x, line)
@@ -60,7 +61,7 @@ class Renderer:
         self.s.addstr(y+1, x, f"y:{pc.y} x:{pc.x}")
         
     def draw_main_screen_npc(self, npc):
-        y = npc.y + 3
+        y = npc.y + 5
         x = npc.x + 1
         options = None
         if npc.is_player:
@@ -77,9 +78,18 @@ class Renderer:
         if a == 1:
             # only 1 log
             self.s.addstr(y, x, game.logs[a-1])
-        elif a >= 2:
+        elif a == 2:
             self.s.addstr(y, x, game.logs[a-2])
             self.s.addstr(y+1, x, game.logs[a-1])
+        elif a == 3:
+            self.s.addstr(y, x, game.logs[a-3])
+            self.s.addstr(y+1, x, game.logs[a-2])
+            self.s.addstr(y+2, x, game.logs[a-1])
+        elif a >= 4:
+            self.s.addstr(y, x, game.logs[a-4])
+            self.s.addstr(y+1, x, game.logs[a-3])
+            self.s.addstr(y+2, x, game.logs[a-2])
+            self.s.addstr(y+3, x, game.logs[a-1])
 
 
     def draw_main_screen_dungeonFloor(self, game):
@@ -93,7 +103,7 @@ class Renderer:
         df = game.dungeonFloor 
         for i in range(len(df.map_)):
             mapToDraw = df.map_[i]
-            self.s.addstr(i+3, 1, mapToDraw)
+            self.s.addstr(i+5, 1, mapToDraw)
 
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs

@@ -17,7 +17,7 @@ class DungeonFloor:
 
         self.map_.append("."*cols)
         for i in range(rows-2):
-            self.map_.append("#"*cols)
+            self.map_.append("." + ("#"*(cols-2)) + ".")
         self.map_.append("."*cols)
 
         random_y = randint(0,rows-1)

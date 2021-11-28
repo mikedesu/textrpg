@@ -332,8 +332,10 @@ def help_menu(renderer):
 
 def check_pc_dungeon_bounds(game, pc, y, x):
     retval = True 
-    if pc.x+x < 0 or pc.y+y < 0 or pc.y+y > len(game.dungeonFloor.map_)-4 or pc.x+x > len(game.dungeonFloor.map_[0])-1:
-        game.addLog("cannot go outside dungeon walls")
+    rows = game.dungeonFloor.rows
+    cols = game.dungeonFloor.cols
+    if pc.x+x < 0 or pc.y+y < 0 or pc.y+y > rows or pc.x+x > cols:
+        #game.addLog("cannot go outside dungeon walls")
         retval = False
     return retval
 
@@ -376,7 +378,15 @@ def get_direction_tuple(dir_):
         y = 0
         x = 1
     return (y, x)
+
+
+
+
 """
+
+
+
+
 
 
 def check_pc_next_tile(game, pc, y, x):
@@ -385,10 +395,15 @@ def check_pc_next_tile(game, pc, y, x):
     assert(y in [-1, 0, 1])
     assert(x in [-1, 0, 1])
     retval = False
+    rows = game.dungeonFloor.rows
+    cols = game.dungeonFloor.cols
     if check_pc_dungeon_bounds(game, pc, y, x ):
-        next_tile = game.dungeonFloor.map_[ pc.y+y ][ pc.x+x ] 
-        if next_tile == '.':
-            retval = True
+        nx = pc.x + x
+        ny = pc.y + y
+        if nx >= 0 and nx < cols and ny >= 0 and ny < rows:
+            next_tile = game.dungeonFloor.map_[ pc.y+y ][ pc.x+x ] 
+            if next_tile == '.':
+                retval = True
     return retval
 
 
@@ -401,14 +416,13 @@ def handle_movement(game, pc, y, x):
     if result:
         result = check_pc_npc_collision( game, pc, y, x ) 
         if not result:
-            if check_pc_dungeon_bounds(game, pc, y, x ):
-                pc.y += y
-                pc.x += x
+            #if check_pc_dungeon_bounds(game, pc, y, x ):
+            pc.y += y
+            pc.x += x
         else:
             handle_pc_npc_collision(game, pc, result)
-
-
-
+    else:
+        game.addLog("Cannot move in that direction")
 
 
 
@@ -428,14 +442,23 @@ def handle_input(game, renderer, pc, k):
     if k == '?':
         help_menu(renderer)
     elif k in movement_keys:
+        y = 0
+        x = 0
+        dirStr = ""
         if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
-            handle_movement(game, pc, 0, -1)
+            #dirStr = "west"
+            x = -1
         elif k == 's' or k == 'k' or k == 'KEY_UP': # up
-            handle_movement(game, pc, -1, 0)
+            #dirStr = "north"
+            y = -1
         elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
-            handle_movement(game, pc, 1, 0)
+            #dirStr = "south"
+            y = 1
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
-            handle_movement(game, pc, 0, 1)
+            #dirStr = "east"
+            x = 1
+        #game.addLog(f"You attempt to move {dirStr}")
+        handle_movement(game, pc, y, x)
     elif k == "KEY_RESIZE":
         handle_resize(renderer)
     # exit game
