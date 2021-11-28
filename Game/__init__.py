@@ -7,9 +7,11 @@ class Game:
         self.currentTurnCount = 0
         assert(renderer != None)
         self.renderer = renderer
-        rows, cols = self.renderer.s.getmaxyx()
-        rows -= 4
-        cols -= 2
+        #rows, cols = self.renderer.s.getmaxyx()
+        rows = 10
+        cols = 10
+        #rows -= 4
+        #cols -= 2
         self.dungeonFloor = DungeonFloor.DungeonFloor(self, rows, cols)
 
     def __str__(self):

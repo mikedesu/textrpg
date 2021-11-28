@@ -358,6 +358,60 @@ def handle_pc_npc_collision(game, pc, npc):
             pc.xp += 1
 
 
+
+"""
+def get_direction_tuple(dir_):
+    y = 0
+    x = 0
+    if dir_ == "left":
+        y = 0
+        x = -1
+    elif dir_ == "up":
+        y = -1
+        x = 0
+    elif dir_ == "down":
+        y = 1
+        x = 0
+    elif dir_ == "right":
+        y = 0
+        x = 1
+    return (y, x)
+"""
+
+
+def check_pc_next_tile(game, pc, y, x):
+    assert(game != None)
+    assert(pc != None)
+    assert(y in [-1, 0, 1])
+    assert(x in [-1, 0, 1])
+    retval = False
+    if check_pc_dungeon_bounds(game, pc, y, x ):
+        next_tile = game.dungeonFloor.map_[ pc.y+y ][ pc.x+x ] 
+        if next_tile == '.':
+            retval = True
+    return retval
+
+
+def handle_movement(game, pc, y, x):
+    assert(game != None)
+    assert(pc != None)
+    assert(y in [-1, 0, 1])
+    assert(x in [-1, 0, 1])
+    result = check_pc_next_tile(game, pc, y, x)
+    if result:
+        result = check_pc_npc_collision( game, pc, y, x ) 
+        if not result:
+            if check_pc_dungeon_bounds(game, pc, y, x ):
+                pc.y += y
+                pc.x += x
+        else:
+            handle_pc_npc_collision(game, pc, result)
+
+
+
+
+
+
 def handle_input(game, renderer, pc, k):
     rows, cols = renderer.s.getmaxyx()
     # Help Menu
@@ -370,42 +424,20 @@ def handle_input(game, renderer, pc, k):
     up_keys =   ['s','k','KEY_UP']
     down_keys = ['d','l','KEY_DOWN']
     right_keys = ['f',';','KEY_RIGHT']
+    retval = False
     if k == '?':
         help_menu(renderer)
-        return False
     elif k in movement_keys:
         if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
-            result = check_pc_npc_collision( game, pc, 0, -1 ) 
-            if not result:
-                if check_pc_dungeon_bounds(game, pc, 0, -1):
-                    pc.x -= 1
-            else:
-                handle_pc_npc_collision(game, pc, result)
+            handle_movement(game, pc, 0, -1)
         elif k == 's' or k == 'k' or k == 'KEY_UP': # up
-            result = check_pc_npc_collision( game, pc, -1, 0 ) 
-            if not result:
-                if check_pc_dungeon_bounds(game, pc, -1, 0):
-                    pc.y -= 1
-            else:
-                handle_pc_npc_collision(game, pc, result)
+            handle_movement(game, pc, -1, 0)
         elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
-            result = check_pc_npc_collision( game, pc, 1, 0 ) 
-            if not result:
-                if check_pc_dungeon_bounds(game, pc, 1, 0):
-                    pc.y += 1
-            else:
-                handle_pc_npc_collision(game, pc, result)
+            handle_movement(game, pc, 1, 0)
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
-            result = check_pc_npc_collision( game, pc, 0, 1 ) 
-            if not result:
-                if check_pc_dungeon_bounds(game, pc, 0, 1 ):
-                    pc.x += 1
-            else:
-                handle_pc_npc_collision(game, pc, result)
-
+            handle_movement(game, pc, 0, 1)
     elif k == "KEY_RESIZE":
         handle_resize(renderer)
-        return False
     # exit game
     elif k == quit_key_0 or k == quit_key_1:
         exit(0)

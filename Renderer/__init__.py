@@ -91,24 +91,21 @@ class Renderer:
         # in order to accomodate both them and to have a 
         # convenient way to resize the viewport
         df = game.dungeonFloor 
-        for i in range(3, len(df.map_)):
-            self.s.addstr(i, 1, df.map_[i])
+        for i in range(len(df.map_)):
+            mapToDraw = df.map_[i]
+            self.s.addstr(i+3, 1, mapToDraw)
 
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
             self.draw_main_screen_npc(npc)
            
-
-
-
     def draw_main_screen(self,game,pc):
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
         self.draw_main_screen_border(game, pc)
         self.draw_main_screen_pc_info(game, pc)
-        
         # order of drawing matters
         # 1. dungeonFloor
         # 2. in-game loot / dropped-objects
