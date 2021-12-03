@@ -1,5 +1,9 @@
 # TODO
 
+## Bugfixes
+
+- Pressing '?' on the main game screen crashes game currently
+
 ## Easy 
 - quit message window advertising the game, the github, my website, etc
 - actually get this up on github

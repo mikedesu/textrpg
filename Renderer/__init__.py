@@ -37,13 +37,16 @@ class Renderer:
         y = 4
         x = 0
         rows, cols = self.s.getmaxyx()
+        # dungeon border
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
+        # border on sides
         line = "|" + (" "*(cols-2)) + "|"
         while y < rows-4:
             self.s.addstr(y, x, line)
             y += 1
+        # border on bottom
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
@@ -80,39 +83,74 @@ class Renderer:
         a = len(game.logs)
         if a == 1:
             # only 1 log
-            self.s.addstr(y, x, game.logs[a-1])
+            self.s.addstr(y,   x, game.logs[a-1])
         elif a == 2:
-            self.s.addstr(y, x, game.logs[a-2])
+            self.s.addstr(y,   x, game.logs[a-2])
             self.s.addstr(y+1, x, game.logs[a-1])
         elif a == 3:
-            self.s.addstr(y, x, game.logs[a-3])
+            self.s.addstr(y,   x, game.logs[a-3])
             self.s.addstr(y+1, x, game.logs[a-2])
             self.s.addstr(y+2, x, game.logs[a-1])
         elif a >= 4:
-            self.s.addstr(y, x, game.logs[a-4])
+            self.s.addstr(y,   x, game.logs[a-4])
             self.s.addstr(y+1, x, game.logs[a-3])
             self.s.addstr(y+2, x, game.logs[a-2])
             self.s.addstr(y+3, x, game.logs[a-1])
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def draw_main_screen_dungeonFloor(self, game):
-        # assuming the map is 1-to-1 with the size of screen
-        # and, this is gonna def change in the future
-        # to accomodate some autistic asshole who will 
-        # inevitably try to resize the screen on every keypress
-        # so i will have to devise a clever camera system
-        # in order to accomodate both them and to have a 
-        # convenient way to resize the viewport
         df = game.dungeonFloor
         rows, cols = self.s.getmaxyx()
         d_rows = game.dungeonFloor.rows
         d_cols = game.dungeonFloor.cols
+        # this is always 9 to accomodate for the 4 rows of logs,
+        # 2 rows of dungeon window border
+        # and 5 of the text on the bottom i believe
+        # same w/ mapRowOffset
         numRowsToSubtract = 9
         mapRowOffset = 5
-        for i in range(rows-numRowsToSubtract):
+        #for i in range(rows-numRowsToSubtract):
+        for i in range( len(df.map_) ):
             if i < d_rows:
-                mapToDraw = df.map_[i]
-                self.s.addstr(i + mapRowOffset, 1, mapToDraw)
+                rowToDraw = df.map_[i]
+                # to draw using tiles now...
+                for j in range( len(rowToDraw) ):
+                    tileToDraw = rowToDraw[j]
+                    tileToDrawStr = str( tileToDraw )
+                    try:
+                        self.s.addstr( i + mapRowOffset, j+1, tileToDrawStr )
+                    except Exception as e:
+                        print("Caught exception")
+                        print("---------")
+                        print(f"{e}")
+
+                #self.s.addstr(i + mapRowOffset, 1, mapToDraw)
+
+
+
+
+
+
+
+
+
+
 
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs
