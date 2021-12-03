@@ -1,22 +1,32 @@
 # TODO
 
-## Bugfixes
+## Bugfixes Needed
 
+- very large dungeonFloors are being cut-off in rendering
+    - I know its just ones that render off-screen from the start because smaller 
+      rooms render fine
+- attempting to move camera too far in any one direction will crash the game
+
+
+--------------------------------------------------------------------------------
 
 ## Easy 
 - quit message window advertising the game, the github, my website, etc
-- actually get this up on github
 
+--------------------------------------------------------------------------------
 
 ## Medium
-- Move code like "handle_input" into the Game class so that we reduce dependency on 'tools.py'
+
 - Basic dungeon crafting
     - Define a room
 - Camera movement mode
     - press 'c' to enter camera mode, or something
 - Basics of a shell/terminal for longer commands and debugging
 
+--------------------------------------------------------------------------------
+
 ## Hard / Long
+
 - item class definition
     - weapon sub-class 
     - armor sub-class

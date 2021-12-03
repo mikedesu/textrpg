@@ -2,7 +2,7 @@ from curses import start_color, echo, noecho, init_pair
 from curses import color_pair as c
 from curses import COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_BLUE, COLOR_MAGENTA 
 from curses import A_BOLD, use_default_colors
-
+from curses import curs_set
 from .Camera import Camera
 
 class Renderer:
@@ -22,6 +22,7 @@ class Renderer:
         init_pair(5, COLOR_MAGENTA, -1)
         init_pair(6, COLOR_BLUE, -1)
         self.s.keypad(True)
+        curs_set(False)
 
     def draw_titlescreen(self):
         self.s.addstr(0, 0, 'Welcome to the RPG', c(1))
@@ -44,9 +45,9 @@ class Renderer:
         self.s.addstr(y, x, line)
         y += 1
         # border on sides
-        line = "|" + (" "*(cols-2)) + "|"
         while y < rows-4:
-            self.s.addstr(y, x, line)
+            self.s.addstr(y, 0, "|")
+            self.s.addstr(y, cols-1, "|")
             y += 1
         # border on bottom
         line = "-" * cols
@@ -65,9 +66,11 @@ class Renderer:
         self.s.addstr(y,   x, f"T:{game.currentTurnCount}")
         self.s.addstr(y+1, x, f"y:{pc.y} x:{pc.x}")
         
-    def draw_main_screen_npc(self, npc):
+    def draw_main_screen_npc(self, game, npc):
         y = npc.y + 5
         x = npc.x + 1
+        cx = game.camera.x
+        cy = game.camera.y 
         rows, cols = self.s.getmaxyx()
         if y > rows-5:
             return
@@ -76,8 +79,17 @@ class Renderer:
             options = c(4) | A_BOLD 
         else:
             options = c(5) | A_BOLD 
-        self.s.addstr(y, x, npc.symbol, options )
+        try:
+            self.s.addstr(y + cy, x + cx, npc.symbol, options )
+        except Exception as e:
+            pass
 
+    def process_log(self, y, x, log):
+        
+        if "ERROR:" in log:
+            self.s.addstr(y, x, log, c(2))
+        else:
+            self.s.addstr(y, x, log)
 
     def draw_main_screen_logs(self, game):
         # only enough room for last 2 logs
@@ -85,19 +97,19 @@ class Renderer:
         a = len(game.logs)
         if a == 1:
             # only 1 log
-            self.s.addstr(y,   x, game.logs[a-1])
+            self.process_log(y,   x, game.logs[a-1])
         elif a == 2:
-            self.s.addstr(y,   x, game.logs[a-2])
-            self.s.addstr(y+1, x, game.logs[a-1])
+            self.process_log(y,   x, game.logs[a-2])
+            self.process_log(y+1, x, game.logs[a-1])
         elif a == 3:
-            self.s.addstr(y,   x, game.logs[a-3])
-            self.s.addstr(y+1, x, game.logs[a-2])
-            self.s.addstr(y+2, x, game.logs[a-1])
+            self.process_log(y,   x, game.logs[a-3])
+            self.process_log(y+1, x, game.logs[a-2])
+            self.process_log(y+2, x, game.logs[a-1])
         elif a >= 4:
-            self.s.addstr(y,   x, game.logs[a-4])
-            self.s.addstr(y+1, x, game.logs[a-3])
-            self.s.addstr(y+2, x, game.logs[a-2])
-            self.s.addstr(y+3, x, game.logs[a-1])
+            self.process_log(y,   x, game.logs[a-4])
+            self.process_log(y+1, x, game.logs[a-3])
+            self.process_log(y+2, x, game.logs[a-2])
+            self.process_log(y+3, x, game.logs[a-1])
 
 
 
@@ -121,15 +133,17 @@ class Renderer:
         rows, cols = self.s.getmaxyx()
         d_rows = game.dungeonFloor.rows
         d_cols = game.dungeonFloor.cols
+
+        # camera offsets
+        cx = game.camera.x
+        cy = game.camera.y 
         # this is always 9 to accomodate for the 4 rows of logs,
         # 2 rows of dungeon window border
         # and 5 of the text on the bottom i believe
         # same w/ mapRowOffset
         numRowsToSubtract = 9
         mapRowOffset = 5
-        #for i in range(rows-numRowsToSubtract):
         for i in range( len(df.map_) ):
-            #if i < d_rows:
             rowToDraw = df.map_[i]
             # to draw using tiles now...
             for j in range( len(rowToDraw) ):
@@ -137,41 +151,37 @@ class Renderer:
                 tileToDrawStr = str( tileToDraw )
                 try:
                     if i + mapRowOffset < rows - 4:
-                        self.s.addstr( i + mapRowOffset, j+1, tileToDrawStr )
+                        y = i + mapRowOffset + cy
+                        x = j + 1 + cx
+                        try:
+                            self.s.addstr( y, x, tileToDrawStr )
+                        except Exception as e:
+                            pass
+                    else:
+                        game.addLog("ERROR: UNEXPECTED SITUATION")
                 except Exception as e:
                     print("Caught exception")
                     print("---------")
                     print(f"{e}")
 
-                #self.s.addstr(i + mapRowOffset, 1, mapToDraw)
-
-
-
-
-
-
-
-
-
-
-
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
-            self.draw_main_screen_npc(npc)
+            self.draw_main_screen_npc(game, npc)
            
     def draw_main_screen(self,game,pc):
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
-        self.draw_main_screen_border(game, pc)
         self.draw_main_screen_pc_info(game, pc)
         # order of drawing matters
         # 1. dungeonFloor
         # 2. in-game loot / dropped-objects
         # 3. entities / NPCs
+        # 4. border
         self.draw_main_screen_dungeonFloor(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
-        self.draw_main_screen_npc(pc)
+        self.draw_main_screen_npc(game, pc)
+        self.draw_main_screen_border(game, pc)
         self.s.refresh()
      

@@ -1,23 +1,26 @@
 #!/usr/bin/python3
 from sys import exit
 from curses import wrapper
-from tools import get_user_input_ch, \
-    get_player_name, \
-    get_player_race, \
-    get_player_job, \
-    translate_race_str_to_enum, \
-    translate_job_str_to_enum, \
-    generate_random_stats, \
-    handle_new_game_stats,  \
-    new_character, \
-    handle_input, \
-    quick_new_character 
-import Game, Renderer
 
-def game_loop(game, renderer, pc):
+import Game
+from Game.Renderer import Renderer
+
+from tools import get_user_input_ch
+from tools import get_player_name
+from tools import get_player_race
+from tools import get_player_job
+from tools import translate_race_str_to_enum
+from tools import translate_job_str_to_enum
+from tools import generate_random_stats
+from tools import handle_new_game_stats
+from tools import new_character
+from tools import quick_new_character 
+#Renderer
+
+def game_loop(game, pc):
     while True:
-        renderer.draw_main_screen(game, pc)
-        cc2 = renderer.s.getkey()
+        game.renderer.draw_main_screen(game, pc)
+        key = game.renderer.s.getkey()
         ##################################################################
         # what are our movement keys by default?                         #
         # Left-handed mode:                                              #
@@ -27,14 +30,15 @@ def game_loop(game, renderer, pc):
         # Down  = D L Down                                               #
         # Right = F ; Right                                              #
         ##################################################################
-        rows, cols = renderer.s.getmaxyx()
+        rows, cols = game.renderer.s.getmaxyx()
         # what are we passing to cc2 exactly?
-        do_incr_turns = handle_input(game, renderer, pc, cc2)
+        #do_incr_turns = handle_input(game, renderer, pc, cc2)
+        do_incr_turns = game.handle_input(pc, key)
         if do_incr_turns:
             game.incrTurns()
 
 def main(stdscr):
-    renderer = Renderer.Renderer(screen=stdscr)
+    renderer = Renderer(screen=stdscr)
     #game = Game.Game(screen=stdscr)
     game = Game.Game(renderer=renderer)
     renderer.startup()
@@ -44,7 +48,7 @@ def main(stdscr):
         pc = quick_new_character(game, renderer.s)
         pc.y = 0
         pc.x = 0 # when drawing pc or anything in dungeon, have to account for offset of borders
-        game_loop(game, renderer, pc)
+        game_loop(game, pc)
     elif cc=='q':
         exit(0)
 

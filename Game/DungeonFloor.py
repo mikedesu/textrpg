@@ -40,8 +40,10 @@ class DungeonFloor:
             row.append(tile)
         self.map_.append(row)
 
-        random_y = randint(0,rows-1)
-        random_x = randint(0,cols-1)
+        #random_y = randint(0,rows-1)
+        #random_x = randint(0,cols-1)
+        random_y = 1
+        random_x = 0
         npc = NPC( self.game, y=random_y, x=random_x )   
         self.npcs = [ npc ]
 
