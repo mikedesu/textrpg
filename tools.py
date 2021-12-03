@@ -8,6 +8,8 @@ from Game.Alignment import Alignment
 from curses import color_pair as c, start_color, echo, noecho, init_pair, \
     COLOR_BLUE, COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_MAGENTA, A_BOLD, use_default_colors, \
     KEY_RESIZE, KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, resizeterm, is_term_resized
+from Game.Tile import Tile
+from Game.Tiletype import Tiletype
 
 def get_user_input_ch(s, input_set):
     cc = s.getkey()
@@ -361,7 +363,7 @@ def check_pc_next_tile(game, pc, y, x):
         ny = pc.y + y
         if nx >= 0 and nx < cols and ny >= 0 and ny < rows:
             next_tile = game.dungeonFloor.map_[ pc.y+y ][ pc.x+x ] 
-            if next_tile == '.':
+            if next_tile.tiletype == Tiletype.STONE_FLOOR:
                 retval = True
     return retval
 

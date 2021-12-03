@@ -3,16 +3,17 @@
 ## Bugfixes
 
 - Pressing '?' on the main game screen crashes game currently
+- Problem displaying help menu lol
 
 ## Easy 
 - quit message window advertising the game, the github, my website, etc
 - actually get this up on github
 
+
 ## Medium
+- Move code like "handle_input" into the Game class so that we reduce dependency on 'tools.py'
 - Basic dungeon crafting
     - Define a room
-    - Define Tiles
-    - Compose dungeon of Tiles instead of Strings
 - Camera movement mode
     - press 'c' to enter camera mode, or something
 - Basics of a shell/terminal for longer commands and debugging
