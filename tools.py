@@ -309,17 +309,40 @@ def quick_new_character(game, s):
     pc = NPC(game=game, name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
     return pc 
 
+
+
+
+
 def help_menu(renderer):
     renderer.s.clear()
     a = None
+    rows, cols = renderer.s.getmaxyx()
+
     with open("txt/helpmenu.txt", "r") as infile:
         a = infile.readlines()
+    
     y = 0
     for line in a:
-        renderer.s.addstr(y, 0, line, c(1))
-        y += 1
+        if y < rows:
+            try:
+                renderer.s.addstr(y, 0, line, c(1))
+                y += 1
+            except Exception as e:
+                print("Caught Exception")
+                print("----------")
+                print("WTF")
+        else:
+            break
+
     renderer.s.refresh()
     renderer.s.getkey()
+
+
+
+
+
+
+
 
 def check_pc_dungeon_bounds(game, pc, y, x):
     retval = True 
