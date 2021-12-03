@@ -2,8 +2,6 @@
 
 ## Bugfixes
 
-- Pressing '?' on the main game screen crashes game currently
-- Problem displaying help menu lol
 
 ## Easy 
 - quit message window advertising the game, the github, my website, etc

@@ -2,6 +2,9 @@
 # CHANGELOG
 
 -----
+## 02-12-2021
+    - fixed: Problem displaying help menu lol
+    - fixed: after swapping to tiles, the renderer is once again overlaying the dungeon on top of the bottom HUD
 
 ## 28-11-2021
     - created CHANGELOG

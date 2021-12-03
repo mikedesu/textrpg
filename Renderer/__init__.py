@@ -127,18 +127,19 @@ class Renderer:
         mapRowOffset = 5
         #for i in range(rows-numRowsToSubtract):
         for i in range( len(df.map_) ):
-            if i < d_rows:
-                rowToDraw = df.map_[i]
-                # to draw using tiles now...
-                for j in range( len(rowToDraw) ):
-                    tileToDraw = rowToDraw[j]
-                    tileToDrawStr = str( tileToDraw )
-                    try:
+            #if i < d_rows:
+            rowToDraw = df.map_[i]
+            # to draw using tiles now...
+            for j in range( len(rowToDraw) ):
+                tileToDraw = rowToDraw[j]
+                tileToDrawStr = str( tileToDraw )
+                try:
+                    if i + mapRowOffset < rows - 4:
                         self.s.addstr( i + mapRowOffset, j+1, tileToDrawStr )
-                    except Exception as e:
-                        print("Caught exception")
-                        print("---------")
-                        print(f"{e}")
+                except Exception as e:
+                    print("Caught exception")
+                    print("---------")
+                    print(f"{e}")
 
                 #self.s.addstr(i + mapRowOffset, 1, mapToDraw)
 
