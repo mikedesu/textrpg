@@ -402,10 +402,26 @@ def check_movement(game, pc, y, x):
             #if check_pc_dungeon_bounds(game, pc, y, x ):
             pc.y += y
             pc.x += x
+            if y==0 and x==1:
+                game.addLog("moved east")
+            elif y==1 and x==0:
+                game.addLog("moved south")
+            elif y==-1 and x==0:
+                game.addLog("moved north")
+            elif y==0 and x==-1:
+                game.addLog("moved west")
         else:
             handle_pc_npc_collision(game, pc, result)
     else:
-        game.addLog("Cannot move in that direction")
+        if y==0 and x==1:
+            game.addLog("cannot move east")
+        elif y==1 and x==0:
+            game.addLog("cannot move south")
+        elif y==-1 and x==0:
+            game.addLog("cannot move north")
+        elif y==0 and x==-1:
+            game.addLog("cannot move west")
+
 
 def handle_movement(game, pc, k):
     y = 0
