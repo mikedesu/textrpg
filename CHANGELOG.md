@@ -2,6 +2,11 @@
 # CHANGELOG
 
 -----
+
+## 05-12-2021
+    - fixed: camera-rendering bug, where dungeon was being rendered above/below the dungeon UI
+    - fixed: same with NPCs
+
 ## 02-12-2021
     - fixed: Problem displaying help menu lol
     - fixed: after swapping to tiles, the renderer is once again overlaying the dungeon on top of the bottom HUD

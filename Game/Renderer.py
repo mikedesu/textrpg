@@ -72,6 +72,10 @@ class Renderer:
         cx = game.camera.x
         cy = game.camera.y 
         rows, cols = self.s.getmaxyx()
+        
+        endOfDungeonDisplay = rows - 4
+        mapRowOffset = 5
+        
         if y > rows-5:
             return
         options = None
@@ -79,10 +83,9 @@ class Renderer:
             options = c(4) | A_BOLD 
         else:
             options = c(5) | A_BOLD 
-        try:
+        
+        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay :
             self.s.addstr(y + cy, x + cx, npc.symbol, options )
-        except Exception as e:
-            pass
 
     def process_log(self, y, x, log):
         
@@ -133,7 +136,6 @@ class Renderer:
         rows, cols = self.s.getmaxyx()
         d_rows = game.dungeonFloor.rows
         d_cols = game.dungeonFloor.cols
-
         # camera offsets
         cx = game.camera.x
         cy = game.camera.y 
@@ -143,26 +145,21 @@ class Renderer:
         # same w/ mapRowOffset
         numRowsToSubtract = 9
         mapRowOffset = 5
+        endOfDungeonDisplay = rows - 4
+        # y index
         for i in range( len(df.map_) ):
             rowToDraw = df.map_[i]
             # to draw using tiles now...
+            # x index
             for j in range( len(rowToDraw) ):
                 tileToDraw = rowToDraw[j]
                 tileToDrawStr = str( tileToDraw )
-                try:
-                    if i + mapRowOffset < rows - 4:
-                        y = i + mapRowOffset + cy
-                        x = j + 1 + cx
-                        try:
-                            self.s.addstr( y, x, tileToDrawStr )
-                        except Exception as e:
-                            pass
-                    else:
-                        game.addLog("ERROR: UNEXPECTED SITUATION")
-                except Exception as e:
-                    print("Caught exception")
-                    print("---------")
-                    print(f"{e}")
+                y = i + mapRowOffset + cy
+                x = j + 1 + cx
+                if y >= mapRowOffset and y <= endOfDungeonDisplay :
+                    self.s.addstr( y, x, tileToDrawStr )
+
+
 
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs
