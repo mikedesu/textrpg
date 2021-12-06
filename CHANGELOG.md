@@ -10,7 +10,7 @@
     - added: quit screen
     - added: basic item rendering
     - added: basic item logic - can walk on top of item and have it recognized
-
+    - added: basic item logic - can pick up an item now and it no longer renders in the dungeon
 
 ## 02-12-2021
     - fixed: Problem displaying help menu lol
