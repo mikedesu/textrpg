@@ -88,6 +88,27 @@ class Renderer:
         if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
             self.s.addstr(y + cy, x + cx, npc.symbol, options )
 
+
+    def draw_main_screen_item(self, game, item):
+        y = item.y + 5
+        x = item.x + 1
+        cx = game.camera.x
+        cy = game.camera.y 
+        rows, cols = self.s.getmaxyx()
+        endOfDungeonDisplay = rows - 4
+        mapRowOffset = 5
+        beginDisplayX = 1
+        endDisplayX = cols-1
+        #options = None
+        #if npc.is_player:
+        #    options = c(4) | A_BOLD 
+        #else:
+        #    options = c(5) | A_BOLD 
+        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
+            self.s.addstr(y + cy, x + cx, item.symbol )
+
+
+
     def process_log(self, y, x, log):
         
         if "ERROR:" in log:
@@ -169,23 +190,13 @@ class Renderer:
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
             self.draw_main_screen_npc(game, npc)
-           
-    def draw_main_screen(self,game,pc):
-        # experimental main-game drawing
-        self.s.clear()
-        self.draw_main_screen_logs(game)
-        self.draw_main_screen_pc_info(game, pc)
-        # order of drawing matters
-        # 1. dungeonFloor
-        # 2. in-game loot / dropped-objects
-        # 3. entities / NPCs
-        # 4. border
-        self.draw_main_screen_dungeonFloor(game)
-        self.draw_main_screen_dungeonFloor_npcs(game)
-        self.draw_main_screen_npc(game, pc)
-        self.draw_main_screen_border(game, pc)
-        self.s.refresh()
      
+    def draw_main_screen_dungeonFloor_items(self, game):
+        items = game.dungeonFloor.items
+        for item in items:
+            self.draw_main_screen_item(game, item)
+           
+    
     def draw_quit_screen(self):
         self.s.clear()
         a = None
@@ -203,3 +214,28 @@ class Renderer:
         self.s.getkey()
 
 
+
+
+
+
+
+    def draw_main_screen(self,game,pc):
+        # experimental main-game drawing
+        self.s.clear()
+        self.draw_main_screen_logs(game)
+        self.draw_main_screen_pc_info(game, pc)
+        # order of drawing matters
+        # 1. dungeonFloor
+        # 2. in-game loot / dropped-objects
+        # 3. entities / NPCs
+        # 4. border
+        self.draw_main_screen_dungeonFloor(game)
+        self.draw_main_screen_dungeonFloor_items(game)
+        self.draw_main_screen_dungeonFloor_npcs(game)
+
+        self.draw_main_screen_npc(game, pc)
+
+        self.draw_main_screen_border(game, pc)
+
+        self.s.refresh()
+     

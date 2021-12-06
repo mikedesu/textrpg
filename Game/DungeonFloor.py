@@ -54,7 +54,7 @@ class DungeonFloor:
         
         self.npcs = [ npc0, npc1, npc2 ]
 
-        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON )
+        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0 )
 
         self.items = [ item0 ] 
 
