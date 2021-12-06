@@ -2,12 +2,13 @@
 
 ## Bugfixes Needed
 
-- attempting to move camera too far in any one direction will crash the game
+- NPC rendering glitch on large rooms that render beneath dungeon UI 
 
 --------------------------------------------------------------------------------
 
 ## Easy 
-- quit message window advertising the game, the github, my website, etc
+
+
 
 --------------------------------------------------------------------------------
 
@@ -15,8 +16,6 @@
 
 - Basic dungeon crafting
     - Define a room
-- Camera movement mode
-    - press 'c' to enter camera mode, or something
 - Basics of a shell/terminal for longer commands and debugging
 
 --------------------------------------------------------------------------------
@@ -33,3 +32,4 @@
         - candles
         - torches
         - etc
+

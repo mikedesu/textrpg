@@ -31,9 +31,8 @@ class Game:
         self.currentTurnCount = 0
         assert(renderer != None)
         self.renderer = renderer
-        #rows, cols = self.renderer.s.getmaxyx()
-        rows = randint(5,20)
-        cols = randint(5,20)
+        rows = randint(5,15)
+        cols = randint(5,15)
         self.dungeonFloor = DungeonFloor.DungeonFloor(self, rows, cols)
         self.camera_mode = False
         self.camera = Camera()
