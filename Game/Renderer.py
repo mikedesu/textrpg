@@ -194,9 +194,11 @@ class Renderer:
         with open(filename, "r") as infile:
             a = infile.readlines()
         y = 0
-        for y in range(rows):
-            self.s.addstr(y, 0, line, c(1))
-            y += 1
+        for y in range(len(a)):
+            line = a[y]
+            if y < rows:
+                self.s.addstr(y, 0, line, c(1))
+            #y += 1
         self.s.refresh()
         self.s.getkey()
 
