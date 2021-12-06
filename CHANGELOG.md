@@ -6,6 +6,7 @@
 ## 05-12-2021
     - fixed: camera-rendering bug, where dungeon was being rendered above/below the dungeon UI
     - fixed: same with NPCs
+    - fixed: camera off-screen rendering bug, where game would crash on too-far X left/right movement
 
 ## 02-12-2021
     - fixed: Problem displaying help menu lol

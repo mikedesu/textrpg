@@ -84,6 +84,7 @@ class Game:
                 self.handle_resize()
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
+            self.renderer.draw_quit_screen()
             exit(0)
         else:
             self.addLog(f"Unimplemented key pressed: {k}")

@@ -75,6 +75,8 @@ class Renderer:
         
         endOfDungeonDisplay = rows - 4
         mapRowOffset = 5
+        beginDisplayX = 1
+        endDisplayX = cols-1
         
         if y > rows-5:
             return
@@ -83,8 +85,7 @@ class Renderer:
             options = c(4) | A_BOLD 
         else:
             options = c(5) | A_BOLD 
-        
-        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay :
+        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
             self.s.addstr(y + cy, x + cx, npc.symbol, options )
 
     def process_log(self, y, x, log):
@@ -146,6 +147,9 @@ class Renderer:
         numRowsToSubtract = 9
         mapRowOffset = 5
         endOfDungeonDisplay = rows - 4
+
+        beginDisplayX = 1
+        endDisplayX = cols-1
         # y index
         for i in range( len(df.map_) ):
             rowToDraw = df.map_[i]
@@ -156,7 +160,7 @@ class Renderer:
                 tileToDrawStr = str( tileToDraw )
                 y = i + mapRowOffset + cy
                 x = j + 1 + cx
-                if y >= mapRowOffset and y <= endOfDungeonDisplay :
+                if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
                     self.s.addstr( y, x, tileToDrawStr )
 
 
@@ -182,3 +186,18 @@ class Renderer:
         self.draw_main_screen_border(game, pc)
         self.s.refresh()
      
+    def draw_quit_screen(self):
+        self.s.clear()
+        a = None
+        rows, cols = self.s.getmaxyx()
+        filename="txt/quitscreen.txt"
+        with open(filename, "r") as infile:
+            a = infile.readlines()
+        y = 0
+        for y in range(rows):
+            self.s.addstr(y, 0, line, c(1))
+            y += 1
+        self.s.refresh()
+        self.s.getkey()
+
+

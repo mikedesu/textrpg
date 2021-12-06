@@ -2,11 +2,7 @@
 
 ## Bugfixes Needed
 
-- very large dungeonFloors are being cut-off in rendering
-    - I know its just ones that render off-screen from the start because smaller 
-      rooms render fine
 - attempting to move camera too far in any one direction will crash the game
-
 
 --------------------------------------------------------------------------------
 
