@@ -4,6 +4,9 @@ from random import randint
 from .Tile import Tile
 from .Tiletype import Tiletype 
 
+from .Item import Item
+from .ItemClass import ItemClass
+
 class DungeonFloor:
     def __init__(self, game=None, rows=0, cols=0):
         # SUPER-basic beginning example
@@ -44,8 +47,17 @@ class DungeonFloor:
         #random_x = randint(0,cols-1)
         random_y = 1
         random_x = 0
-        npc = NPC( self.game, y=random_y, x=random_x )   
-        self.npcs = [ npc ]
+        
+        npc0 = NPC( self.game, y=1, x=0 )   
+        npc1 = NPC( self.game, y=2, x=0 )   
+        npc2 = NPC( self.game, y=3, x=0 )   
+        
+        self.npcs = [ npc0, npc1, npc2 ]
+
+        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON )
+
+        self.items = [ item0 ] 
+
 
 
 
