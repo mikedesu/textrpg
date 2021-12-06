@@ -128,6 +128,7 @@ class Game:
         if result:
             result = self.check_pc_npc_collision(pc, y, x ) 
             if not result:
+
                 pc.y += y
                 pc.x += x
                 if y==0 and x==1:
@@ -138,6 +139,12 @@ class Game:
                     self.addLog("moved north")
                 elif y==0 and x==-1:
                     self.addLog("moved west")
+
+                item_collision = self.check_pc_item_collision(pc)
+                if item_collision:
+                    self.addLog(f"There is a {item_collision.name} here")
+
+
             else:
                 self.handle_pc_npc_collision(pc, result)
         else:
@@ -176,12 +183,28 @@ class Game:
                 # just add 1 xp for now lol
                 pc.xp += 1
 
+
+    def check_pc_item_collision(self, pc):
+        for item in self.dungeonFloor.items:
+            if pc.x == item.x and pc.y == item.y:
+                # in other words, pc WOULD move into the item
+                # so we'd return true
+                # game.addLog("bumped into npc")
+                # considering returning the NPC that caused the collision
+                #return True
+                return item
+        return None
+
+
+
+
+
     def check_pc_npc_collision(self, pc, y, x):
         for npc in self.dungeonFloor.npcs:
             if pc.x + x == npc.x and pc.y + y == npc.y:
                 # in other words, pc WOULD move into the npc
                 # so we'd return true
-                #game.addLog("bumped into npc")
+                # game.addLog("bumped into npc")
                 # considering returning the NPC that caused the collision
                 #return True
                 return npc

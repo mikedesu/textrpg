@@ -8,6 +8,9 @@
     - fixed: same with NPCs
     - fixed: camera off-screen rendering bug, where game would crash on too-far X left/right movement
     - added: quit screen
+    - added: basic item rendering
+    - added: basic item logic - can walk on top of item and have it recognized
+
 
 ## 02-12-2021
     - fixed: Problem displaying help menu lol
