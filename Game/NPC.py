@@ -44,6 +44,7 @@ class NPC:
         self.hp = hp
         self.maxhp = maxhp
         self.xp = 0
+        self.items = []
 
     def attack(self, npc):
         # traditional dnd 3.0 rules:

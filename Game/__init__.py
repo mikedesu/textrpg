@@ -85,10 +85,38 @@ class Game:
         elif k == quit_key_0 or k == quit_key_1:
             self.renderer.draw_quit_screen()
             exit(0)
+
+        # pickup item
+        elif k == ",":
+            #self.addLog(f"Item pickup: {k}")
+            self.handle_item_pickup(pc)
+
+            return False
+
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
         return True
+
+    def handle_item_pickup(self, pc):
+        x = pc.x
+        y = pc.y
+        i = 0
+        pickedUp = False
+        while i < len(self.dungeonFloor.items):
+            item = self.dungeonFloor.items[i]
+            if item.x == x and item.y == y:
+                pc.items.append( item )
+                self.addLog(f"Picked up {item.name}")
+                pickedUp = True
+                break # only pickup one item at a time
+            i += 1
+        if pickedUp:
+            # remove that item from the dungeon itemlist
+            self.dungeonFloor.items.pop(i)
+            # it shouldn't render after this
+
+
 
     def handle_resize(self):
         rows, cols = self.renderer.s.getmaxyx()
