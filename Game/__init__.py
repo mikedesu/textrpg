@@ -46,7 +46,8 @@ class Game:
     def addLog(self,log):
         if log==None or log=="":
             raise Exception("Log is empty or none")
-        self.logs.append(f"{self.currentTurnCount}: {log}")
+        self.logs.append(f"{log}")
+        #self.logs.append(f"{self.currentTurnCount}: {log}")
 
     def incrTurns(self):
         self.currentTurnCount += 1
@@ -66,7 +67,9 @@ class Game:
         down_keys = ['d','l','KEY_DOWN']
         right_keys = ['f',';','KEY_RIGHT']
         logger_mode_switch_keys = ['l']
+        display_inventory_key = ['i']
         retval = False
+        
         if k == help_key:
             self.help_menu()
             return False
@@ -83,7 +86,6 @@ class Game:
             elif self.logger_mode and not self.camera_mode:
                 self.handle_logger_movement(k)
                 return False
-
             elif self.camera_mode and not self.logger_mode:
                 self.handle_camera_movement(k)
                 return False
@@ -91,20 +93,27 @@ class Game:
         elif k in logger_mode_switch_keys:
             if self.logger_mode == True:
                 self.logger_mode = False
-                return False
+                self.logger_offset = 0
             else:
                 self.logger_mode = True
-                return False
+            return False
+        
         elif k == "KEY_RESIZE":
             self.addLog("handle_resize")
             resize = is_term_resized(rows, cols)
             if resize:
                 self.handle_resize()
             return False
+
+        elif k in display_inventory_key:
+            self.display_inventory(pc)
+            return False
+        
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
             #self.renderer.draw_quit_screen()
             exit(0)
+        
         # pickup item
         elif k == ",":
             self.handle_item_pickup(pc)
@@ -123,7 +132,7 @@ class Game:
             item = self.dungeonFloor.items[i]
             if item.x == x and item.y == y:
                 pc.items.append( item )
-                self.addLog(f"Picked up {item.name}")
+                self.addLog(f"{self.currentTurnCount}: Picked up {item.name}")
                 pickedUp = True
                 break # only pickup one item at a time
             i += 1
@@ -131,6 +140,14 @@ class Game:
             # remove that item from the dungeon itemlist
             self.dungeonFloor.items.pop(i)
             # it shouldn't render after this
+
+
+    def display_inventory(self, pc):
+        self.addLog(f"Displaying inventory:")
+        for item in pc.items:
+            self.addLog(f"{item}")
+
+
 
 
 
@@ -186,13 +203,13 @@ class Game:
                 pc.y += y
                 pc.x += x
                 if y==0 and x==1:
-                    self.addLog("moved east")
+                    self.addLog(f"{self.currentTurnCount}: Walked east")
                 elif y==1 and x==0:
-                    self.addLog("moved south")
+                    self.addLog(f"{self.currentTurnCount}: Walked south")
                 elif y==-1 and x==0:
-                    self.addLog("moved north")
+                    self.addLog(f"{self.currentTurnCount}: Walked north")
                 elif y==0 and x==-1:
-                    self.addLog("moved west")
+                    self.addLog(f"{self.currentTurnCount}: Walked west")
 
                 item_collision = self.check_pc_item_collision(pc)
                 if item_collision:
@@ -219,12 +236,17 @@ class Game:
         retval = False
         rows = self.dungeonFloor.rows
         cols = self.dungeonFloor.cols
+
+        walkable_tiles = [ Tiletype.STONE_FLOOR, 
+            Tiletype.GRASS
+        ]
+
         if self.check_pc_dungeon_bounds(pc, y, x ):
             nx = pc.x + x
             ny = pc.y + y
             if nx >= 0 and nx < cols and ny >= 0 and ny < rows:
                 next_tile = self.dungeonFloor.map_[ pc.y+y ][ pc.x+x ] 
-                if next_tile.tiletype == Tiletype.STONE_FLOOR:
+                if next_tile.tiletype in walkable_tiles:
                     retval = True
         return retval
 
@@ -232,7 +254,7 @@ class Game:
         if type(npc) == NPC:
             pc.attack(npc)
             if npc.hp <= 0:
-                self.addLog(f"You killed {npc.name}!")
+                self.addLog(f"{self.currentTurnCount}: You killed {npc.name}!")
                 self.dungeonFloor.npcs.remove(npc)
                 # just add 1 xp for now lol
                 pc.xp += 1

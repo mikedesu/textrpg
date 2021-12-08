@@ -7,7 +7,8 @@ class Tile:
     def __str__(self):
         a = {
                 Tiletype.STONE_FLOOR : ".",
-                Tiletype.STONE_WALL  : "#"
+                Tiletype.STONE_WALL  : "#",
+                Tiletype.GRASS       : "#",
             }
         return a[ self.tiletype ] 
 

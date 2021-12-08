@@ -1,9 +1,10 @@
 from curses import start_color, echo, noecho, init_pair
 from curses import color_pair as c
-from curses import COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_BLUE, COLOR_MAGENTA 
+from curses import COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_BLUE, COLOR_MAGENTA , COLOR_GREEN
 from curses import A_BOLD, use_default_colors
 from curses import curs_set
 from .Camera import Camera
+from .Tiletype import Tiletype
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -21,6 +22,8 @@ class Renderer:
         init_pair(4, COLOR_RED,   -1)
         init_pair(5, COLOR_MAGENTA, -1)
         init_pair(6, COLOR_BLUE, -1)
+
+        init_pair(7, COLOR_GREEN, -1)
         self.s.keypad(True)
         curs_set(False)
 
@@ -179,11 +182,19 @@ class Renderer:
             # x index
             for j in range( len(rowToDraw) ):
                 tileToDraw = rowToDraw[j]
+                options = None
+
+                if tileToDraw.tiletype == Tiletype.GRASS:
+                    options = c(7)
+
                 tileToDrawStr = str( tileToDraw )
                 y = i + mapRowOffset + cy
                 x = j + 1 + cx
                 if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
-                    self.s.addstr( y, x, tileToDrawStr )
+                    if options:
+                        self.s.addstr( y, x, tileToDrawStr, c(7) )
+                    else:
+                        self.s.addstr( y, x, tileToDrawStr )
 
 
 

@@ -1,34 +1,23 @@
 Help Menu:
 ----------
 Player Character mode:                  
-
-a, ARROW_LEFT  - Move left
-s, ARROW_UP    - Move up
-d, ARROW_DOWN  - Move down
-f, ARROW_RIGHT - Move right
-,              - Pick up item at feet
-c              - Turn camera mode on
-l              - Turn logger mode on
-q              - Quit
-?              - This help menu
-
-Camera mode:
-
-ARROW_LEFT  - Move left
-ARROW_UP    - Move up
-ARROW_DOWN  - Move down
-ARROW_RIGHT - Move right
-c              - Turn camera mode off
-
-Logger mode:
-
-ARROW_UP    - Move up
-ARROW_DOWN  - Move down
-l           - Turn logger mode off
-
 ----------
-
+a, ARROW_LEFT  - Move left              s, ARROW_UP    - Move up
+d, ARROW_DOWN  - Move down              f, ARROW_RIGHT - Move right
+,              - Pick up item at feet   i              - Display inventory
+c              - Turn camera mode on    l              - Turn logger mode on
+q              - Quit                   ?              - This help menu
+----------
+Camera mode:
+----------
+ARROW_LEFT  - Move left                 ARROW_UP    - Move up
+ARROW_DOWN  - Move down                 ARROW_RIGHT - Move right
+c           - Turn camera mode off
+----------
+Logger mode:
+----------
+ARROW_UP    - Move up                   ARROW_DOWN  - Move down
+l           - Turn logger mode off
+----------
 Press any key to continue
-
 Shoutouts to everyone watching this on twitch.tv, youtube, and twitter!
-

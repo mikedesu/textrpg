@@ -22,18 +22,21 @@ class DungeonFloor:
         self.map_ = []
         row = []
         for i in range(cols):
-            tile = Tile(tiletype=Tiletype.STONE_FLOOR)
+            tile = Tile(tiletype=Tiletype.GRASS)
+            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
             row.append(tile)
         self.map_.append(row)
         row = []
         for i in range(rows-2):
             row = []
-            tile = Tile(tiletype=Tiletype.STONE_FLOOR)
+            tile = Tile(tiletype=Tiletype.GRASS)
+            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
             row.append(tile)
             for j in range(cols-2):
                 tile = Tile(tiletype=Tiletype.STONE_WALL)
                 row.append(tile)
-            tile = Tile(tiletype=Tiletype.STONE_FLOOR)
+            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
+            tile = Tile(tiletype=Tiletype.GRASS)
             row.append(tile)
             self.map_.append(row)
 
@@ -54,7 +57,7 @@ class DungeonFloor:
         
         self.npcs = [ npc0, npc1, npc2 ]
 
-        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0 )
+        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0, weight=1 )
 
         self.items = [ item0 ] 
 

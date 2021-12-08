@@ -55,11 +55,11 @@ class NPC:
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
             npc.hp -= 1
-            self.game.addLog("Your attack hit!")
+            self.game.addLog(f"{self.game.currentTurnCount}: Your attack hit!")
         else:
             # we dont need to do anything but we should log both a hit or a 
             # miss so we need a way to pass msgs to the game log
-            self.game.addLog("Your attack missed!")
+            self.game.addLog(f"{self.game.currentTurnCount}: Your attack missed!")
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"
