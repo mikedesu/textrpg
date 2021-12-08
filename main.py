@@ -15,7 +15,6 @@ from tools import generate_random_stats
 from tools import handle_new_game_stats
 from tools import new_character
 from tools import quick_new_character 
-#Renderer
 
 def game_loop(game, pc):
     while True:
@@ -31,15 +30,12 @@ def game_loop(game, pc):
         # Right = F ; Right                                              #
         ##################################################################
         rows, cols = game.renderer.s.getmaxyx()
-        # what are we passing to cc2 exactly?
-        #do_incr_turns = handle_input(game, renderer, pc, cc2)
         do_incr_turns = game.handle_input(pc, key)
         if do_incr_turns:
             game.incrTurns()
 
 def main(stdscr):
     renderer = Renderer(screen=stdscr)
-    #game = Game.Game(screen=stdscr)
     game = Game.Game(renderer=renderer)
     renderer.startup()
     renderer.draw_titlescreen()

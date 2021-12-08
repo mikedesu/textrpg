@@ -120,6 +120,7 @@ class Renderer:
         # only enough room for last 2 logs
         y, x = 0, 0
         a = len(game.logs)
+        b = game.logger_offset 
         if a == 1:
             # only 1 log
             self.process_log(y,   x, game.logs[a-1])
@@ -131,10 +132,10 @@ class Renderer:
             self.process_log(y+1, x, game.logs[a-2])
             self.process_log(y+2, x, game.logs[a-1])
         elif a >= 4:
-            self.process_log(y,   x, game.logs[a-4])
-            self.process_log(y+1, x, game.logs[a-3])
-            self.process_log(y+2, x, game.logs[a-2])
-            self.process_log(y+3, x, game.logs[a-1])
+            self.process_log(y,   x, game.logs[a-4+b])
+            self.process_log(y+1, x, game.logs[a-3+b])
+            self.process_log(y+2, x, game.logs[a-2+b])
+            self.process_log(y+3, x, game.logs[a-1+b])
 
 
 

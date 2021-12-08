@@ -35,7 +35,10 @@ class Game:
         cols = randint(5,15)
         self.dungeonFloor = DungeonFloor.DungeonFloor(self, rows, cols)
         self.camera_mode = False
+        self.logger_mode = False
+        self.logger_offset = 0
         self.camera = Camera()
+
 
     def __str__(self):
         return self.title
@@ -43,7 +46,7 @@ class Game:
     def addLog(self,log):
         if log==None or log=="":
             raise Exception("Log is empty or none")
-        self.logs.append(log)
+        self.logs.append(f"{self.currentTurnCount}: {log}")
 
     def incrTurns(self):
         self.currentTurnCount += 1
@@ -56,43 +59,56 @@ class Game:
         quit_key_1 = 'Q'
         camera_key = 'c'
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
-        movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+        #movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+        movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
         down_keys = ['d','l','KEY_DOWN']
         right_keys = ['f',';','KEY_RIGHT']
+        logger_mode_switch_keys = ['l']
         retval = False
         if k == help_key:
             self.help_menu()
+            return False
         elif k == camera_key:
             if self.camera_mode == False:
                 self.camera_mode = True
+                return False
             else:
                 self.camera_mode = False
+                return False
         elif k in movement_keys:
-            if self.camera_mode == False:
+            if not self.camera_mode and not self.logger_mode:
                 self.handle_movement(pc, k)
-            else:
+            elif self.logger_mode and not self.camera_mode:
+                self.handle_logger_movement(k)
+                return False
+
+            elif self.camera_mode and not self.logger_mode:
                 self.handle_camera_movement(k)
+                return False
 
-
+        elif k in logger_mode_switch_keys:
+            if self.logger_mode == True:
+                self.logger_mode = False
+                return False
+            else:
+                self.logger_mode = True
+                return False
         elif k == "KEY_RESIZE":
             self.addLog("handle_resize")
             resize = is_term_resized(rows, cols)
             if resize:
                 self.handle_resize()
+            return False
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
-            self.renderer.draw_quit_screen()
+            #self.renderer.draw_quit_screen()
             exit(0)
-
         # pickup item
         elif k == ",":
-            #self.addLog(f"Item pickup: {k}")
             self.handle_item_pickup(pc)
-
             return False
-
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
@@ -136,6 +152,16 @@ class Game:
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             x = 1
         self.check_movement(pc, y, x)
+
+    def handle_logger_movement(self, k):
+        if k == 'KEY_UP':
+            # decrement logger index
+            if self.logger_offset + len(self.logs) - 5 >= 0:
+                self.logger_offset -= 1
+        elif k == 'KEY_DOWN':
+            if self.logger_offset < 0:
+                self.logger_offset += 1
+
 
     def handle_camera_movement(self, k):
         self.addLog(f"handle_camera_movement({k})")
