@@ -3,6 +3,9 @@
 
 -----
 
+## 10-12-2021
+    - added: multiple items on a single tile, also handling selecting from among multiple items when picking up an item
+
 ## 05-12-2021
     - fixed: camera-rendering bug, where dungeon was being rendered above/below the dungeon UI
     - fixed: same with NPCs

@@ -62,6 +62,9 @@ class Game:
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
         #movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
         movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+
+        selection_keys = ['1','2','3','4','5','6','7','8','9','0']
+
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
         down_keys = ['d','l','KEY_DOWN']
@@ -117,29 +120,66 @@ class Game:
         # pickup item
         elif k == ",":
             self.handle_item_pickup(pc)
-            return False
+            return True
+
+        elif k in selection_keys:
+            # depends on the selection 'mode'
+            # for instance, if we are picking up an item, like one of many on a tile
+            # we'll be given a selection we can make such as 1 or 2
+            #self.addLog(f"Unimplemented selection key pressed: {k}")
+            self.handle_item_pickup_main(pc, k)
+            return True
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
         return True
 
+
+    def handle_item_pickup_main(self, pc, k):
+
+        # this is bad code lol needs fixing already see bugs ahead
+
+        x = pc.x
+        y = pc.y
+        i = int(k)
+        items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
+        
+        item = items[i]
+        
+        pc.items.append( item )
+
+        # find the real item in the dungeonFloor items list and remove it
+        for x in range(len(self.dungeonFloor.items)):
+            item_ = self.dungeonFloor.items[x]
+            if item == item_:
+                self.dungeonFloor.items.pop(x)
+                break
+
+        self.addLog('----------')
+        self.addLog(f"{self.currentTurnCount}. Picked up a {item.name}")
+
+
+
+
     def handle_item_pickup(self, pc):
         x = pc.x
         y = pc.y
         i = 0
-        pickedUp = False
-        while i < len(self.dungeonFloor.items):
-            item = self.dungeonFloor.items[i]
-            if item.x == x and item.y == y:
-                pc.items.append( item )
-                self.addLog(f"{self.currentTurnCount}: Picked up {item.name}")
-                pickedUp = True
-                break # only pickup one item at a time
-            i += 1
-        if pickedUp:
-            # remove that item from the dungeon itemlist
-            self.dungeonFloor.items.pop(i)
-            # it shouldn't render after this
+        items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
+        # single-item case
+        if len(items)==1:
+            pc.items.append( items[0] )
+            self.addLog(f"{self.currentTurnCount}: Picked up {items[0].name}")
+            self.dungeonFloor.items.pop(0)
+        # multiple-items case
+        else:
+            self.addLog(f"There are multiple items here.")
+            self.addLog(f"Which would you like to pick up?")
+            self.item_selection_mode = True
+            for i in range(len(items)):
+                item = items[i]
+                self.addLog(f"{i}. {item.name}")
+
 
 
     def display_inventory(self, pc):
@@ -219,7 +259,9 @@ class Game:
                 self.addLog(f"{self.currentTurnCount}: Walked {dir_}")
                 item_collision = self.check_pc_item_collision(pc)
                 if item_collision:
-                    self.addLog(f"There is a {item_collision.name} here")
+                    for item in self.dungeonFloor.items:
+                        if item.x == item_collision.x and item.y == item_collision.y:
+                            self.addLog(f"There is a {item.name} here")
             else:
                 self.handle_pc_npc_collision(pc, result)
         return retval

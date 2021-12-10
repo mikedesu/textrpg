@@ -8,12 +8,14 @@
 
 ## Easy 
 
+- Multiple items on a single tile
 
 
 --------------------------------------------------------------------------------
 
 ## Medium
 
+- Select which item to pick up on a tile with multiple items
 - Basic NPC Movement
     - totally random 
 - Basic dungeon crafting
