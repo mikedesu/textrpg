@@ -57,19 +57,19 @@ class Renderer:
         self.s.addstr(y, x, line)
         y += 1
     
-    def draw_main_screen_pc_info(self, game, pc):
+    def draw_main_screen_pc_info(self, game):
         rows, cols = self.s.getmaxyx()
         y = rows-3
         x = 0
         # draw pc info at bottom of screen
-        self.s.addstr(y, x, str(pc))
+        self.s.addstr(y, x, str(game.pc))
         # approximate the middle to drop a turn counter
         # like T:999
         x = int( 3 * cols / 4 )
         self.s.addstr(y,   x, f"T:{game.currentTurnCount}")
-        self.s.addstr(y+1, x, f"y:{pc.y} x:{pc.x}")
+        self.s.addstr(y+1, x, f"y:{game.pc.y} x:{game.pc.x}")
         
-    def draw_main_screen_npc(self, game, npc):
+    def draw_main_screen_entity(self, game, npc):
         y = npc.y + 5
         x = npc.x + 1
         cx = game.camera.x
@@ -201,7 +201,7 @@ class Renderer:
     def draw_main_screen_dungeonFloor_npcs(self, game):
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
-            self.draw_main_screen_npc(game, npc)
+            self.draw_main_screen_entity(game, npc)
      
     def draw_main_screen_dungeonFloor_items(self, game):
         items = game.dungeonFloor.items
@@ -231,11 +231,12 @@ class Renderer:
 
 
 
-    def draw_main_screen(self,game,pc):
+    #def draw_main_screen(self,game,pc):
+    def draw_main_screen(self,game):
         # experimental main-game drawing
         self.s.clear()
         self.draw_main_screen_logs(game)
-        self.draw_main_screen_pc_info(game, pc)
+        self.draw_main_screen_pc_info(game)
         # order of drawing matters
         # 1. dungeonFloor
         # 2. in-game loot / dropped-objects
@@ -244,10 +245,7 @@ class Renderer:
         self.draw_main_screen_dungeonFloor(game)
         self.draw_main_screen_dungeonFloor_items(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
-
-        self.draw_main_screen_npc(game, pc)
-
-        self.draw_main_screen_border(game, pc)
-
+        self.draw_main_screen_entity(game, game.pc)
+        self.draw_main_screen_border(game, game.pc)
         self.s.refresh()
      

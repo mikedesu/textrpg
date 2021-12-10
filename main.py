@@ -16,9 +16,10 @@ from tools import handle_new_game_stats
 from tools import new_character
 from tools import quick_new_character 
 
-def game_loop(game, pc):
+def game_loop(game):
     while True:
-        game.renderer.draw_main_screen(game, pc)
+        game.renderer.draw_main_screen(game)
+        #game.renderer.draw_main_screen(game, game.pc)
         key = game.renderer.s.getkey()
         ##################################################################
         # what are our movement keys by default?                         #
@@ -30,9 +31,11 @@ def game_loop(game, pc):
         # Right = F ; Right                                              #
         ##################################################################
         rows, cols = game.renderer.s.getmaxyx()
-        do_incr_turns = game.handle_input(pc, key)
+        do_incr_turns = game.handle_input(game.pc, key)
         if do_incr_turns:
+            game.process_npc_turn()
             game.incrTurns()
+
 
 def main(stdscr):
     renderer = Renderer(screen=stdscr)
@@ -41,10 +44,14 @@ def main(stdscr):
     renderer.draw_titlescreen()
     cc = get_user_input_ch(stdscr, ['n', 'q'])
     if cc=='n':
+        
         pc = quick_new_character(game, renderer.s)
         pc.y = 0
         pc.x = 0 # when drawing pc or anything in dungeon, have to account for offset of borders
-        game_loop(game, pc)
+
+        game.pc = pc 
+
+        game_loop(game)
     elif cc=='q':
         exit(0)
 

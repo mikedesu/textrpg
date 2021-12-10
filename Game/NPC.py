@@ -46,20 +46,20 @@ class NPC:
         self.xp = 0
         self.items = []
 
-    def attack(self, npc):
+    def attack(self, target):
         # traditional dnd 3.0 rules:
         # 1d20 
         roll = randint(1, 20)
         # if the roll is >= player's ac, attack hits
-        if roll >= npc.ac:
+        if roll >= target.ac:
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
-            npc.hp -= 1
-            self.game.addLog(f"{self.game.currentTurnCount}: Your attack hit!")
+            target.hp -= 1
+            self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack hit {target.name}!")
         else:
             # we dont need to do anything but we should log both a hit or a 
             # miss so we need a way to pass msgs to the game log
-            self.game.addLog(f"{self.game.currentTurnCount}: Your attack missed!")
+            self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack missed {target.name}!")
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"
@@ -69,5 +69,6 @@ class NPC:
         s += f"Int: {self.attribs[3]} "
         s += f"Wis: {self.attribs[4]} "
         s += f"Cha: {self.attribs[5]} "
+        s += f"HP: {self.hp}/{self.maxhp} "
         s += f"XP: {self.xp}"
         return s

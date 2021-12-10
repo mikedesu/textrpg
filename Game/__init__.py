@@ -38,6 +38,7 @@ class Game:
         self.logger_mode = False
         self.logger_offset = 0
         self.camera = Camera()
+        self.debug_mode = False
 
 
     def __str__(self):
@@ -85,7 +86,7 @@ class Game:
                 return False
         elif k in movement_keys:
             if not self.camera_mode and not self.logger_mode:
-                result = self.handle_movement(pc, k)
+                result = self.handle_movement(pc, k, True)
             elif self.logger_mode and not self.camera_mode:
                 self.handle_logger_movement(k)
                 return False
@@ -102,7 +103,8 @@ class Game:
             return False
         
         elif k == "KEY_RESIZE":
-            self.addLog("handle_resize")
+            if self.debug_mode:
+                self.addLog("handle_resize")
             resize = is_term_resized(rows, cols)
             if resize:
                 self.handle_resize()
@@ -114,12 +116,17 @@ class Game:
         
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
-            #self.renderer.draw_quit_screen()
+            self.renderer.draw_quit_screen()
             exit(0)
         
         # pickup item
         elif k == ",":
             self.handle_item_pickup(pc)
+            return True
+
+        # wait in one spot / inspect / search ground / area around you
+        elif k == ".":
+            # more to implement later...
             return True
 
         elif k in selection_keys:
@@ -160,6 +167,24 @@ class Game:
 
 
 
+    def process_npc_turn(self):
+        # for right now, lets make them move randomly
+        
+        movement_keys = ['KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+        for i in range( len( self.dungeonFloor.npcs ) ):
+            try:
+                npc = self.dungeonFloor.npcs[i]
+                # select a random keypress
+                random_index = randint(0, len(movement_keys)-1)
+                random_key = movement_keys[ random_index ] 
+                self.handle_movement( npc , random_key, True ) 
+            except Exception as e:
+                pass
+                #self.addLog(f"{e}")
+
+
+
+
 
     def handle_item_pickup(self, pc):
         x = pc.x
@@ -197,7 +222,7 @@ class Game:
         resizeterm(rows, cols)
         self.renderer.s.refresh()
 
-    def handle_movement(self, pc, k):
+    def handle_movement(self, entity, k, doLog):
         y = 0
         x = 0
         if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
@@ -208,7 +233,7 @@ class Game:
             y = 1
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             x = 1
-        return self.check_movement(pc, y, x)
+        return self.check_movement(entity, y, x, doLog)
 
     def handle_logger_movement(self, k):
         if k == 'KEY_UP':
@@ -221,7 +246,10 @@ class Game:
 
 
     def handle_camera_movement(self, k):
-        self.addLog(f"handle_camera_movement({k})")
+        
+        if self.debug_mode:
+            self.addLog(f"handle_camera_movement({k})")
+        
         if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
             self.camera.x -= 1
         elif k == 's' or k == 'k' or k == 'KEY_UP': # up
@@ -233,10 +261,11 @@ class Game:
 
 
 
-    def check_movement(self, pc, y, x):
-        assert(pc != None)
+    def check_movement(self, entity, y, x, doLog):
+        assert(entity != None)
         assert(y in [-1, 0, 1])
         assert(x in [-1, 0, 1])
+        assert(doLog in [True, False])
         retval = True
         dir_ = ""
         if y==0 and x==1:
@@ -247,23 +276,26 @@ class Game:
             dir_ = "north"
         elif y==0 and x==-1:
             dir_ = "west"
-        result = self.check_pc_next_tile(pc, y, x)
+        result = self.check_pc_next_tile(entity, y, x)
         if not result:
-            self.addLog(f"Cannot move {dir_}")
+            if doLog:
+                self.addLog(f"{entity.name} cannot move {dir_}")
             retval = False
         else:
-            result = self.check_pc_npc_collision(pc, y, x ) 
+            result = self.check_pc_npc_collision(entity, y, x ) 
             if not result:
-                pc.y += y
-                pc.x += x
-                self.addLog(f"{self.currentTurnCount}: Walked {dir_}")
-                item_collision = self.check_pc_item_collision(pc)
+                entity.y += y
+                entity.x += x
+                if doLog:
+                    self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
+                item_collision = self.check_pc_item_collision(entity)
                 if item_collision:
                     for item in self.dungeonFloor.items:
                         if item.x == item_collision.x and item.y == item_collision.y:
-                            self.addLog(f"There is a {item.name} here")
+                            if doLog:
+                                self.addLog(f"There is a {item.name} here")
             else:
-                self.handle_pc_npc_collision(pc, result)
+                self.handle_pc_npc_collision(entity, result)
         return retval
 
 
@@ -292,10 +324,17 @@ class Game:
         if type(npc) == NPC:
             pc.attack(npc)
             if npc.hp <= 0:
-                self.addLog(f"{self.currentTurnCount}: You killed {npc.name}!")
-                self.dungeonFloor.npcs.remove(npc)
-                # just add 1 xp for now lol
-                pc.xp += 1
+                self.addLog(f"{self.currentTurnCount}: {pc.name} killed {npc.name}!")
+
+                if not npc.is_player:
+                    self.dungeonFloor.npcs.remove(npc)
+                    # just add 1 xp for now lol
+                    pc.xp += 1
+                else:
+                    # game over!
+                    self.addLog(f"{npc.name} died! Game over!")
+                    self.renderer.draw_quit_screen()
+                    exit(0)
 
 
     def check_pc_item_collision(self, pc):
@@ -313,16 +352,20 @@ class Game:
 
 
 
-    def check_pc_npc_collision(self, pc, y, x):
+    def check_pc_npc_collision(self, entity, y, x):
+        # check NPC against player
+        if not entity.is_player:
+            if entity.x + x == self.pc.x and entity.y + y == self.pc.y:
+                return self.pc
+        # for all entities, check against NPCs
         for npc in self.dungeonFloor.npcs:
-            if pc.x + x == npc.x and pc.y + y == npc.y:
-                # in other words, pc WOULD move into the npc
-                # so we'd return true
-                # game.addLog("bumped into npc")
-                # considering returning the NPC that caused the collision
-                #return True
-                return npc
+            if entity != npc:
+                if entity.x + x == npc.x and entity.y + y == npc.y:
+                    # in other words, entity WOULD move into the npc
+                    return npc
+        # otherwise, return nothing
         return None
+
 
     def check_pc_dungeon_bounds(self, pc, y, x):
         retval = True 

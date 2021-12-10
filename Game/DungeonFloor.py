@@ -20,22 +20,27 @@ class DungeonFloor:
 
     def superBasicDungeon(self, rows, cols):
         self.map_ = []
+        
         row = []
         for i in range(cols):
             tile = Tile(tiletype=Tiletype.GRASS)
-            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
             row.append(tile)
         self.map_.append(row)
+        
         row = []
-        for i in range(rows-2):
+        for i in range(cols):
+            tile = Tile(tiletype=Tiletype.GRASS)
+            row.append(tile)
+        self.map_.append(row)
+
+        row = []
+        for i in range(rows-3):
             row = []
             tile = Tile(tiletype=Tiletype.GRASS)
-            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
             row.append(tile)
             for j in range(cols-2):
                 tile = Tile(tiletype=Tiletype.STONE_WALL)
                 row.append(tile)
-            #tile = Tile(tiletype=Tiletype.STONE_FLOOR)
             tile = Tile(tiletype=Tiletype.GRASS)
             row.append(tile)
             self.map_.append(row)
@@ -46,17 +51,15 @@ class DungeonFloor:
             row.append(tile)
         self.map_.append(row)
 
-        #random_y = randint(0,rows-1)
-        #random_x = randint(0,cols-1)
         random_y = 1
         random_x = 0
+        npc0 = NPC( self.game, name="John", y=1, x=0 )   
+        npc1 = NPC( self.game, name="Mike", y=2, x=0 )   
+        npc2 = NPC( self.game, name="Carlos", y=3, x=0 )   
         
-        #npc0 = NPC( self.game, y=1, x=0 )   
-        #npc1 = NPC( self.game, y=2, x=0 )   
-        #npc2 = NPC( self.game, y=3, x=0 )   
-        
-        #self.npcs = [ npc0, npc1, npc2 ]
-        self.npcs = [  ]
+        self.npcs = [ npc0, npc1, npc2 ]
+        #self.npcs = [  npc0]
+        #self.npcs = [  ]
 
         # experimenting with 2 items 1 tile
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0, weight=1 )
