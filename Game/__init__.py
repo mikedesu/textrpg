@@ -82,7 +82,7 @@ class Game:
                 return False
         elif k in movement_keys:
             if not self.camera_mode and not self.logger_mode:
-                self.handle_movement(pc, k)
+                result = self.handle_movement(pc, k)
             elif self.logger_mode and not self.camera_mode:
                 self.handle_logger_movement(k)
                 return False
@@ -168,7 +168,7 @@ class Game:
             y = 1
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             x = 1
-        self.check_movement(pc, y, x)
+        return self.check_movement(pc, y, x)
 
     def handle_logger_movement(self, k):
         if k == 'KEY_UP':
@@ -191,42 +191,38 @@ class Game:
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             self.camera.x += 1
 
+
+
     def check_movement(self, pc, y, x):
         assert(pc != None)
         assert(y in [-1, 0, 1])
         assert(x in [-1, 0, 1])
+        retval = True
+        dir_ = ""
+        if y==0 and x==1:
+            dir_ = "east"
+        elif y==1 and x==0:
+            dir_ = "south"
+        elif y==-1 and x==0:
+            dir_ = "north"
+        elif y==0 and x==-1:
+            dir_ = "west"
         result = self.check_pc_next_tile(pc, y, x)
-        if result:
+        if not result:
+            self.addLog(f"Cannot move {dir_}")
+            retval = False
+        else:
             result = self.check_pc_npc_collision(pc, y, x ) 
             if not result:
-
                 pc.y += y
                 pc.x += x
-                if y==0 and x==1:
-                    self.addLog(f"{self.currentTurnCount}: Walked east")
-                elif y==1 and x==0:
-                    self.addLog(f"{self.currentTurnCount}: Walked south")
-                elif y==-1 and x==0:
-                    self.addLog(f"{self.currentTurnCount}: Walked north")
-                elif y==0 and x==-1:
-                    self.addLog(f"{self.currentTurnCount}: Walked west")
-
+                self.addLog(f"{self.currentTurnCount}: Walked {dir_}")
                 item_collision = self.check_pc_item_collision(pc)
                 if item_collision:
                     self.addLog(f"There is a {item_collision.name} here")
-
-
             else:
                 self.handle_pc_npc_collision(pc, result)
-        else:
-            if y==0 and x==1:
-                self.addLog("cannot move east")
-            elif y==1 and x==0:
-                self.addLog("cannot move south")
-            elif y==-1 and x==0:
-                self.addLog("cannot move north")
-            elif y==0 and x==-1:
-                self.addLog("cannot move west")
+        return retval
 
 
     def check_pc_next_tile(self, pc, y, x):
