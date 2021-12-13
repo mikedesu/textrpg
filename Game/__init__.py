@@ -62,7 +62,8 @@ class Game:
         camera_key = 'c'
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
         #movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
-        movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
+        
+        movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', '1','2','3','4','5','6','7','8','9']
 
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
 
@@ -225,14 +226,36 @@ class Game:
     def handle_movement(self, entity, k, doLog):
         y = 0
         x = 0
-        if k == 'a' or k == 'j' or k == 'KEY_LEFT': # left
+        
+        lefts  = ['a','j','KEY_LEFT','4']
+        rights = ['f',';','KEY_RIGHT','6']
+        ups    = ['s','k','KEY_UP','8']
+        downs  = ['d','l','KEY_DOWN','2']
+        ul     = ['7']
+        ur     = ['9']
+        dl     = ['1']
+        dr     = ['3']
+
+        if k in lefts:
             x = -1
-        elif k == 's' or k == 'k' or k == 'KEY_UP': # up
+        elif k in ups:
             y = -1
-        elif k == 'd' or k == 'l' or k == 'KEY_DOWN': # down
+        elif k in downs:
             y = 1
-        elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
+        elif k in rights:
             x = 1
+        elif k in ul:
+            x = -1
+            y = -1
+        elif k in ur:
+            x = 1
+            y = -1
+        elif k in dl:
+            x = -1
+            y = 1
+        elif k in dr:
+            x = 1
+            y = 1
         return self.check_movement(entity, y, x, doLog)
 
     def handle_logger_movement(self, k):
@@ -276,6 +299,14 @@ class Game:
             dir_ = "north"
         elif y==0 and x==-1:
             dir_ = "west"
+        elif y==-1 and x==-1:
+            dir_ = "northwest"
+        elif y==-1 and x==1:
+            dir_ = "northeast"
+        elif y==1 and x==-1:
+            dir_ = "southwest"
+        elif y==1 and x==1:
+            dir_ = "southeast"
         result = self.check_pc_next_tile(entity, y, x)
         if not result:
             if doLog:
