@@ -320,7 +320,7 @@ class Game:
         assert(entity != None)
         assert(y in [-1, 0, 1])
         assert(x in [-1, 0, 1])
-        assert(isinstance(doLog, bool)))
+        assert(isinstance(doLog, bool))
         retval = True
         dir_ = ""
         if y==0 and x==1:
