@@ -11,12 +11,7 @@
 
 ## Easy 
 
-- Hunger indicator
 - Debug panel that can be turned on/off and displays variables
-- Personality-traits
-    - enum for datatype
-    - perhaps an array on the NPC
-    - example: a goblin that is racist towards Dwarves
 
 --------------------------------------------------------------------------------
 
