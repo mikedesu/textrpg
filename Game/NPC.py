@@ -50,7 +50,7 @@ class NPC:
         self.items = []
         self.personalityTraits = personalityTraits 
 
-    def attack(self, target):
+    def attack(self, target, doLog):
         # traditional dnd 3.0 rules:
         # 1d20 
         roll = randint(1, 20)
@@ -59,11 +59,13 @@ class NPC:
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
             target.hp -= 1
-            self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack hit {target.name}!")
+            if doLog:
+                self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack hit {target.name}!")
         else:
             # we dont need to do anything but we should log both a hit or a 
             # miss so we need a way to pass msgs to the game log
-            self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack missed {target.name}!")
+            if doLog:
+                self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack missed {target.name}!")
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"

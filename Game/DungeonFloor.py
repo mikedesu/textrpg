@@ -6,6 +6,8 @@ from .Tiletype import Tiletype
 
 from .Item import Item
 from .ItemClass import ItemClass
+from .Race import Race
+from .PersonalityTrait import PersonalityTrait
 
 class DungeonFloor:
     def __init__(self, game=None, rows=0, cols=0):
@@ -57,6 +59,7 @@ class DungeonFloor:
         npc0 = NPC( self.game, name="John", y=1, x=0 )   
         npc1 = NPC( self.game, name="Mike", y=2, x=0 )   
         npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
+        #npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
         
         self.npcs = [ npc0, npc1, npc2 ]
         #self.npcs = [  npc0]

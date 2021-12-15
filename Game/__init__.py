@@ -210,7 +210,8 @@ class Game:
                 # select a random keypress
                 random_index = randint(0, len(movement_keys)-1)
                 random_key = movement_keys[ random_index ] 
-                self.handle_movement( npc , random_key, True ) 
+                self.handle_movement( npc , random_key, False ) 
+                #self.handle_movement( npc , random_key, True ) 
             except Exception as e:
                 pass
                 #self.addLog(f"{e}")
@@ -319,7 +320,7 @@ class Game:
         assert(entity != None)
         assert(y in [-1, 0, 1])
         assert(x in [-1, 0, 1])
-        assert(doLog in [True, False])
+        assert(isinstance(doLog, bool)))
         retval = True
         dir_ = ""
         if y==0 and x==1:
@@ -358,7 +359,7 @@ class Game:
                             if doLog and entity.is_player:
                                 self.addLog(f"There is a {item.name} here")
             else:
-                self.handle_pc_npc_collision(entity, result)
+                self.handle_pc_npc_collision(entity, result, doLog)
         return retval
 
 
@@ -383,13 +384,12 @@ class Game:
                     retval = True
         return retval
 
-    def handle_pc_npc_collision(self, pc, npc):
+    def handle_pc_npc_collision(self, pc, npc, doLog):
         if type(npc) == NPC:
             pc.attack(npc)
             if npc.hp <= 0:
-                if pc.is_player:
+                if doLog:
                     self.addLog(f"{self.currentTurnCount}: {pc.name} killed {npc.name}!")
-
                 if not npc.is_player:
                     self.dungeonFloor.npcs.remove(npc)
                     # just add 1 xp for now lol
