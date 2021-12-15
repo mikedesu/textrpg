@@ -2,22 +2,29 @@
 
 ## Bugfixes Needed
 
+- There is a bug involving picking up items due to the newly-added diagonal 
+  movement.
 - NPC rendering glitch on large rooms that render beneath dungeon UI 
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- Multiple items on a single tile
-
+- HUD indicator for current mode:
+    - Player-Character
+    - Camera
+    - Log
+- Hunger indicator
 
 --------------------------------------------------------------------------------
 
 ## Medium
 
-- Select which item to pick up on a tile with multiple items
+- Shields
+- Equipping Weapons and Shields
 - Basic NPC Movement
-    - totally random 
+    - intelligent movement
+    - movement "strategies"
 - Basic dungeon crafting
     - Define a room
 - Basics of a shell/terminal for longer commands and debugging
@@ -26,6 +33,7 @@
 
 ## Hard / Long
 
+- proper HELP menu(s)
 - lighting system
     - PC / NPC light radius / visibility
     - light coming off of torches and other light sources
