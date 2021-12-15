@@ -386,7 +386,7 @@ class Game:
 
     def handle_pc_npc_collision(self, pc, npc, doLog):
         if type(npc) == NPC:
-            pc.attack(npc)
+            pc.attack(npc, doLog)
             if npc.hp <= 0:
                 if doLog:
                     self.addLog(f"{self.currentTurnCount}: {pc.name} killed {npc.name}!")
