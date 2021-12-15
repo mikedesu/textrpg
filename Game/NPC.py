@@ -3,6 +3,7 @@ from .Job import Job
 from .Attribs import Attribs as a
 from .Gender import Gender
 from .Alignment import Alignment
+from .PersonalityTrait import PersonalityTrait 
 from random import randint
 
 class ZeroLevelException(Exception):
@@ -17,7 +18,7 @@ class NPC:
     def __init__(self, game=None, name="Unnamed", level=1, race=Race.HUMAN, 
         job=Job.FIGHTER, attribs=[10,10,10,10,10,10], y=0, x=0, 
         gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, 
-        symbol="@", hp=10, maxhp=10, ac=10):
+        symbol="@", hp=10, maxhp=10, ac=10, personalityTraits=[PersonalityTrait.NORMAL] ):
         if game == None:
             raise Exception("Game cannot be None")
         # basic checks on numeric input parameters
@@ -44,7 +45,10 @@ class NPC:
         self.hp = hp
         self.maxhp = maxhp
         self.xp = 0
+        self.hunger = 255
+        self.maxhunger = 255
         self.items = []
+        self.personalityTraits = personalityTraits 
 
     def attack(self, target):
         # traditional dnd 3.0 rules:
@@ -70,5 +74,7 @@ class NPC:
         s += f"Wis: {self.attribs[4]} "
         s += f"Cha: {self.attribs[5]} "
         s += f"HP: {self.hp}/{self.maxhp} "
-        s += f"XP: {self.xp}"
+        s += f"XP: {self.xp} "
+        #hungerStr = f"H:{self.hunger}/{self.maxhunger}"
+        #s += hungerStr 
         return s

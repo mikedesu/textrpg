@@ -34,12 +34,11 @@ class Game:
         rows = randint(5,15)
         cols = randint(5,15)
         self.dungeonFloor = DungeonFloor.DungeonFloor(self, rows, cols)
-        self.camera_mode = False
-        self.logger_mode = False
+        self.currentMode = "Player"
+        self.itemSelectionMode = False
         self.logger_offset = 0
         self.camera = Camera()
         self.debug_mode = False
-
 
     def __str__(self):
         return self.title
@@ -64,7 +63,6 @@ class Game:
         #movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
         
         movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', '1','2','3','4','5','6','7','8','9']
-
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
 
         left_keys = ['a','j','KEY_LEFT']
@@ -79,29 +77,55 @@ class Game:
             self.help_menu()
             return False
         elif k == camera_key:
-            if self.camera_mode == False:
-                self.camera_mode = True
-                return False
-            else:
-                self.camera_mode = False
-                return False
-        elif k in movement_keys:
-            if not self.camera_mode and not self.logger_mode:
+            
+            if self.currentMode == "Player":
+                self.currentMode = "Camera"
+            elif self.currentMode == "Camera":
+                self.currentMode = "Player"
+
+           # if self.camera_mode == False:
+           #     self.camera_mode = True
+           #     return False
+           # else:
+           #     self.camera_mode = False
+           #     return False
+        elif k in movement_keys and not self.itemSelectionMode:
+
+            if self.currentMode == "Player":
                 result = self.handle_movement(pc, k, True)
-            elif self.logger_mode and not self.camera_mode:
-                self.handle_logger_movement(k)
-                return False
-            elif self.camera_mode and not self.logger_mode:
+            elif self.currentMode == "Camera":
                 self.handle_camera_movement(k)
                 return False
+            elif self.currentMode == "Logger":
+                self.handle_logger_movement(k)
+                return False
+
+
+
+            #if not self.camera_mode and not self.logger_mode:
+            #    result = self.handle_movement(pc, k, True)
+            #elif self.logger_mode and not self.camera_mode:
+            #    self.handle_logger_movement(k)
+            #    return False
+            #elif self.camera_mode and not self.logger_mode:
+            #    self.handle_camera_movement(k)
+            #    return False
 
         elif k in logger_mode_switch_keys:
-            if self.logger_mode == True:
-                self.logger_mode = False
+
+            if self.currentMode != "Logger":
+                self.currentMode = "Logger"
                 self.logger_offset = 0
             else:
-                self.logger_mode = True
-            return False
+                self.currentMode = "Player"
+
+
+            #if self.logger_mode == True:
+            #    self.logger_mode = False
+            #    self.logger_offset = 0
+            #else:
+            #    self.logger_mode = True
+            #return False
         
         elif k == "KEY_RESIZE":
             if self.debug_mode:
@@ -130,7 +154,7 @@ class Game:
             # more to implement later...
             return True
 
-        elif k in selection_keys:
+        elif self.itemSelectionMode and k in selection_keys:
             # depends on the selection 'mode'
             # for instance, if we are picking up an item, like one of many on a tile
             # we'll be given a selection we can make such as 1 or 2
@@ -144,33 +168,41 @@ class Game:
 
 
     def handle_item_pickup_main(self, pc, k):
-
         # this is bad code lol needs fixing already see bugs ahead
-
-        x = pc.x
-        y = pc.y
         i = int(k)
-        items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
-        
+        # get all items on current tile
+        items = [item for item in self.dungeonFloor.items if item.x==pc.x and item.y==pc.y]
         item = items[i]
-        
         pc.items.append( item )
-
         # find the real item in the dungeonFloor items list and remove it
         for x in range(len(self.dungeonFloor.items)):
             item_ = self.dungeonFloor.items[x]
             if item == item_:
                 self.dungeonFloor.items.pop(x)
                 break
-
         self.addLog('----------')
         self.addLog(f"{self.currentTurnCount}. Picked up a {item.name}")
+        self.itemSelectionMode = False
+
+
+    def decrOneHungerUnitPC(self):
+        self.pc.hunger -= 1
+        if self.pc.hunger <= 0:
+            self.addLog(f"{self.pc.name} died of hunger! Game over!")
+            self.renderer.draw_quit_screen()
+            exit(0)
+    
+    def incrOneHungerUnitPC(self):
+        self.pc.hunger += 1 
+        if self.pc.hunger >= self.pc.maxhunger:
+            self.pc.hunger = self.pc.maxhunger 
+
+
 
 
 
     def process_npc_turn(self):
         # for right now, lets make them move randomly
-        
         movement_keys = ['KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
         for i in range( len( self.dungeonFloor.npcs ) ):
             try:
@@ -184,9 +216,6 @@ class Game:
                 #self.addLog(f"{e}")
 
 
-
-
-
     def handle_item_pickup(self, pc):
         x = pc.x
         y = pc.y
@@ -198,13 +227,17 @@ class Game:
             self.addLog(f"{self.currentTurnCount}: Picked up {items[0].name}")
             self.dungeonFloor.items.pop(0)
         # multiple-items case
-        else:
+        elif len(items) > 1:
             self.addLog(f"There are multiple items here.")
             self.addLog(f"Which would you like to pick up?")
-            self.item_selection_mode = True
+            self.itemSelectionMode = True
             for i in range(len(items)):
                 item = items[i]
                 self.addLog(f"{i}. {item.name}")
+        else:
+            # do nothing
+            self.addLog(f"There is nothing here!")
+            pass
 
 
 
@@ -226,7 +259,6 @@ class Game:
     def handle_movement(self, entity, k, doLog):
         y = 0
         x = 0
-        
         lefts  = ['a','j','KEY_LEFT','4']
         rights = ['f',';','KEY_RIGHT','6']
         ups    = ['s','k','KEY_UP','8']
@@ -235,7 +267,6 @@ class Game:
         ur     = ['9']
         dl     = ['1']
         dr     = ['3']
-
         if k in lefts:
             x = -1
         elif k in ups:
@@ -309,7 +340,7 @@ class Game:
             dir_ = "southeast"
         result = self.check_pc_next_tile(entity, y, x)
         if not result:
-            if doLog:
+            if doLog and entity.is_player:
                 self.addLog(f"{entity.name} cannot move {dir_}")
             retval = False
         else:
@@ -317,13 +348,14 @@ class Game:
             if not result:
                 entity.y += y
                 entity.x += x
-                if doLog:
+                #if doLog:
+                if doLog and entity.is_player:
                     self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
                 item_collision = self.check_pc_item_collision(entity)
                 if item_collision:
                     for item in self.dungeonFloor.items:
                         if item.x == item_collision.x and item.y == item_collision.y:
-                            if doLog:
+                            if doLog and entity.is_player:
                                 self.addLog(f"There is a {item.name} here")
             else:
                 self.handle_pc_npc_collision(entity, result)
@@ -355,7 +387,8 @@ class Game:
         if type(npc) == NPC:
             pc.attack(npc)
             if npc.hp <= 0:
-                self.addLog(f"{self.currentTurnCount}: {pc.name} killed {npc.name}!")
+                if pc.is_player:
+                    self.addLog(f"{self.currentTurnCount}: {pc.name} killed {npc.name}!")
 
                 if not npc.is_player:
                     self.dungeonFloor.npcs.remove(npc)

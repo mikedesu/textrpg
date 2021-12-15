@@ -53,9 +53,10 @@ class DungeonFloor:
 
         random_y = 1
         random_x = 0
+        
         npc0 = NPC( self.game, name="John", y=1, x=0 )   
         npc1 = NPC( self.game, name="Mike", y=2, x=0 )   
-        npc2 = NPC( self.game, name="Carlos", y=3, x=0 )   
+        npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
         
         self.npcs = [ npc0, npc1, npc2 ]
         #self.npcs = [  npc0]

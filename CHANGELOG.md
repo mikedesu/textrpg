@@ -3,6 +3,13 @@
 
 -----
 
+## 15-12-2021
+    - several changes since last update, including:
+        - diagonal movement
+        - bugfixes
+    - Personality Traits
+        - Speciesm 
+
 ## 10-12-2021
     - added: multiple items on a single tile, also handling selecting from among multiple items when picking up an item
 

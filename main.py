@@ -14,6 +14,7 @@ def game_loop(game):
         do_incr_turns = game.handle_input(game.pc, key)
         if do_incr_turns:
             game.process_npc_turn()
+            game.decrOneHungerUnitPC()
             game.incrTurns()
 
 

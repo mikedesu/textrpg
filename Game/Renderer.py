@@ -63,11 +63,28 @@ class Renderer:
         x = 0
         # draw pc info at bottom of screen
         self.s.addstr(y, x, str(game.pc))
-        # approximate the middle to drop a turn counter
-        # like T:999
-        x = int( 3 * cols / 4 )
-        self.s.addstr(y,   x, f"T:{game.currentTurnCount}")
-        self.s.addstr(y+1, x, f"y:{game.pc.y} x:{game.pc.x}")
+        # approximate the middle to drop a turn counter like T:999
+        x = int( 24 * cols / 32 )
+        
+        # handle hunger string
+        hunger = game.pc.hunger
+        maxhunger = game.pc.maxhunger
+        hungerStr = f"H:{hunger}/{maxhunger}"
+        options = None
+        if hunger < (maxhunger / 4):
+            options = c(4) | A_BOLD 
+        elif hunger < (maxhunger / 2):
+            options = c(1) 
+        else:
+            options = c(7) | A_BOLD
+        self.s.addstr(y, x, hungerStr, options )
+
+        offset = len(hungerStr)+1
+        str0 = f"M:{game.currentMode} T:{game.currentTurnCount}"
+        self.s.addstr(y,   x+offset, str0)
+        str1 = f"cy: {game.camera.y} cx: {game.camera.x} y:{game.pc.y} x:{game.pc.x}"
+        self.s.addstr(y+1, x, str1)
+
         
     def draw_main_screen_entity(self, game, npc):
         y = npc.y + 5
@@ -75,12 +92,10 @@ class Renderer:
         cx = game.camera.x
         cy = game.camera.y 
         rows, cols = self.s.getmaxyx()
-        
         endOfDungeonDisplay = rows - 4
         mapRowOffset = 5
         beginDisplayX = 1
         endDisplayX = cols-1
-        
         if y > rows-5:
             return
         options = None

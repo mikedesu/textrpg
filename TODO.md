@@ -2,19 +2,21 @@
 
 ## Bugfixes Needed
 
-- There is a bug involving picking up items due to the newly-added diagonal 
-  movement.
+- Activating camera-mode consumes one hunger unit lol
 - NPC rendering glitch on large rooms that render beneath dungeon UI 
+- Game crashes if you press '0' for some reason, hmmm...
+- Activating logger-mode increments turn for some reason...
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- HUD indicator for current mode:
-    - Player-Character
-    - Camera
-    - Log
 - Hunger indicator
+- Debug panel that can be turned on/off and displays variables
+- Personality-traits
+    - enum for datatype
+    - perhaps an array on the NPC
+    - example: a goblin that is racist towards Dwarves
 
 --------------------------------------------------------------------------------
 
@@ -28,6 +30,8 @@
 - Basic dungeon crafting
     - Define a room
 - Basics of a shell/terminal for longer commands and debugging
+- Add the properties for handling turn priority
+    - based off of Dexterity
 
 --------------------------------------------------------------------------------
 
