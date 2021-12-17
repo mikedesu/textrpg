@@ -65,11 +65,8 @@ class Game:
         quit_key_1 = 'Q'
         camera_key = 'c'
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
-        #movement_keys = ['a','s','d','f','j','k','l',';','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT']
-        
         movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', '1','2','3','4','5','6','7','8','9']
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
-
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
         down_keys = ['d','l','KEY_DOWN']
@@ -82,11 +79,11 @@ class Game:
             self.help_menu()
             return False
         elif k == camera_key:
-            
             if self.currentMode == "Player":
                 self.currentMode = "Camera"
             elif self.currentMode == "Camera":
                 self.currentMode = "Player"
+            return False
 
            # if self.camera_mode == False:
            #     self.camera_mode = True
