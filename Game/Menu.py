@@ -12,7 +12,7 @@ class Menu(object):
 
         self.title = title
         self.items = items
-        self.items.append(("Exit", "exit"))
+        #self.items.append(("Exit", "exit"))
 
     def navigate(self, n):
         self.position += n
@@ -50,5 +50,4 @@ class Menu(object):
         self.panel.hide()
         panel.update_panels()
         curses.doupdate()
-
 

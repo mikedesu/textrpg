@@ -25,6 +25,7 @@ from .Camera import Camera
 from .Menu import Menu
 from .ItemPickupMenu import ItemPickupMenu
 from .InventoryMenu import InventoryMenu
+
 from random import randint
 
 class Game:
@@ -112,12 +113,10 @@ class Game:
             exit(0)
         # pickup item
         elif k == ",":
-            self.handle_item_pickup(pc)
-            return True
+            return self.handle_item_pickup(pc)
         # wait in one spot / inspect / search ground / area around you
         elif k == ".":
-            # more to implement later...
-            return True
+            return True # more to implement later...
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
@@ -173,6 +172,10 @@ class Game:
         x = self.pc.x
         y = self.pc.y
         items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
+        assert(i >= 0)
+        assert(i <= len(items) )
+        if i == len(items):
+            return False
         item = items[i]
         # add the item to the pc's items
         self.pc.items.append( item )
@@ -182,7 +185,8 @@ class Game:
             item_ = self.dungeonFloor.items[x]
             if item == item_:
                 self.dungeonFloor.items.pop(x)
-                break
+                return True
+        # should never get here...
 
 
     def handle_item_pickup(self, pc):
@@ -195,11 +199,14 @@ class Game:
             pc.items.append( items[0] )
             self.addLog(f"{self.currentTurnCount}: Picked up {items[0].name}")
             self.dungeonFloor.items.pop(0)
+            return True
         # multiple-items case
         elif len(items) > 1:
             menuItems=[(items[i].name, self.handleItemPickupHelper, i ) for i in range(len(items))]
+            menuItems.append( ("Exit", self.handleItemPickupHelper, len(items) ) )
+
             self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s )
-            self.testMenu.display()
+            return self.testMenu.display()
         else:
             # do nothing
             self.addLog(f"{self.currentTurnCount}: There is nothing here!")

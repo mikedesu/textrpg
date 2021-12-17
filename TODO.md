@@ -3,7 +3,6 @@
 ## Bugfixes Needed
 
 - When an enemy makes attack contact with you, need to log that event
-- Hitting 'Exit' on the ItemPickupMenu currently consumes a turn...
 
 --------------------------------------------------------------------------------
 

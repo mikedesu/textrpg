@@ -11,6 +11,8 @@ class ItemPickupMenu(Menu):
             offsetY = 2
             offsetX = 2
 
+            retval = False
+
             while True:
                 self.window.refresh()
                 curses.doupdate()
@@ -29,7 +31,7 @@ class ItemPickupMenu(Menu):
                     if self.position == len(self.items) - 1:
                         break
                     else:
-                        self.items[self.position][1](self.position)
+                        retval = self.items[self.position][1](self.position)
                         break
                 elif key == curses.KEY_UP:
                     self.navigate(-1)
@@ -39,5 +41,6 @@ class ItemPickupMenu(Menu):
             self.panel.hide()
             panel.update_panels()
             curses.doupdate()
+            return retval
 
 
