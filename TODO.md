@@ -2,10 +2,9 @@
 
 ## Bugfixes Needed
 
-- Activating logger-mode increments turn for some reason...
-- Game crashes if you press '0' for some reason, hmmm...
 - When an enemy makes attack contact with you, need to log that event
 - NPC rendering glitch on large rooms that render beneath dungeon UI 
+- Hitting 'Exit' on the ItemPickupMenu currently consumes a turn...
 
 --------------------------------------------------------------------------------
 

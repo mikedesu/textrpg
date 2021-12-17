@@ -243,7 +243,7 @@ class Game:
             self.testMenu.display()
         else:
             # do nothing
-            self.addLog(f"There is nothing here!")
+            self.addLog(f"{self.currentTurnCount}: There is nothing here!")
             pass
 
 
@@ -349,7 +349,7 @@ class Game:
         result = self.check_pc_next_tile(entity, y, x)
         if not result:
             if doLog and entity.is_player:
-                self.addLog(f"{entity.name} cannot move {dir_}")
+                self.addLog(f"{self.currentTurnCount}: {entity.name} tried to walk {dir_} but cannot!")
             retval = False
         else:
             result = self.check_pc_npc_collision(entity, y, x ) 
