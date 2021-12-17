@@ -300,7 +300,7 @@ def generate_random_stats():
 #    return pc 
 
 def quick_new_character(game, s):
-    name = "dm"
+    name = "Darkmage"
     stats = generate_random_stats()
     race = Race.HUMAN 
     job  = Job.MAGE

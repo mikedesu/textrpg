@@ -1,7 +1,5 @@
-
 import curses
 from curses import panel
-
 from .Menu import Menu
 
 class ItemPickupMenu(Menu):
@@ -9,16 +7,23 @@ class ItemPickupMenu(Menu):
             self.panel.top()
             self.panel.show()
             self.window.clear()
+
+            offsetY = 2
+            offsetX = 2
+
             while True:
                 self.window.refresh()
                 curses.doupdate()
+
+                self.window.addstr( 0, 0, self.title )
+
                 for index, item in enumerate(self.items):
                     if index == self.position:
                         mode = curses.A_REVERSE
                     else:
                         mode = curses.A_NORMAL
                     msg = "%d. %s" % (index, item[0])
-                    self.window.addstr(1 + index, 1, msg, mode)
+                    self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
                 if key in [curses.KEY_ENTER, ord("\n")]:
                     if self.position == len(self.items) - 1:

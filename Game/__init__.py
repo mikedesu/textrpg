@@ -244,7 +244,7 @@ class Game:
         # multiple-items case
         elif len(items) > 1:
             menuItems=[(items[i].name, self.handleItemPickupHelper, i ) for i in range(len(items))]
-            self.testMenu = ItemPickupMenu( menuItems, self.renderer.s )
+            self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s )
             self.testMenu.display()
         else:
             # do nothing

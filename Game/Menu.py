@@ -2,15 +2,17 @@ import curses
 from curses import panel
 
 class Menu(object):
-    def __init__(self, items, stdscreen):
+    def __init__(self, title, items, stdscreen):
         self.window = stdscreen.subwin(0, 0)
         self.window.keypad(1)
         self.panel = panel.new_panel(self.window)
         self.panel.hide()
         panel.update_panels()
         self.position = 0
+
+        self.title = title
         self.items = items
-        self.items.append(("exit", "exit"))
+        self.items.append(("Exit", "exit"))
 
     def navigate(self, n):
         self.position += n
