@@ -1,4 +1,3 @@
-from . import DungeonFloor 
 from curses import color_pair as c
 from curses import start_color 
 from curses import echo 
@@ -18,9 +17,13 @@ from curses import KEY_UP
 from curses import KEY_DOWN 
 from curses import resizeterm 
 from curses import is_term_resized
+
+from .DungeonFloor import DungeonFloor 
 from .Tiletype import Tiletype
 from .NPC import NPC
 from .Camera import Camera
+from .Menu import Menu
+from .ItemPickupMenu import ItemPickupMenu
 
 from random import randint
 
@@ -33,12 +36,14 @@ class Game:
         self.renderer = renderer
         rows = randint(5,15)
         cols = randint(5,15)
-        self.dungeonFloor = DungeonFloor.DungeonFloor(self, rows, cols)
+        self.dungeonFloor = DungeonFloor(self, rows, cols)
         self.currentMode = "Player"
-        self.itemSelectionMode = False
+        #self.itemSelectionMode = False
         self.logger_offset = 0
         self.camera = Camera()
         self.debug_mode = False
+
+        self.testMenu = None
 
     def __str__(self):
         return self.title
@@ -89,7 +94,8 @@ class Game:
            # else:
            #     self.camera_mode = False
            #     return False
-        elif k in movement_keys and not self.itemSelectionMode:
+        #elif k in movement_keys and not self.itemSelectionMode:
+        elif k in movement_keys: #and not self.itemSelectionMode:
 
             if self.currentMode == "Player":
                 result = self.handle_movement(pc, k, True)
@@ -101,16 +107,6 @@ class Game:
                 return False
 
 
-
-            #if not self.camera_mode and not self.logger_mode:
-            #    result = self.handle_movement(pc, k, True)
-            #elif self.logger_mode and not self.camera_mode:
-            #    self.handle_logger_movement(k)
-            #    return False
-            #elif self.camera_mode and not self.logger_mode:
-            #    self.handle_camera_movement(k)
-            #    return False
-
         elif k in logger_mode_switch_keys:
 
             if self.currentMode != "Logger":
@@ -120,12 +116,6 @@ class Game:
                 self.currentMode = "Player"
 
 
-            #if self.logger_mode == True:
-            #    self.logger_mode = False
-            #    self.logger_offset = 0
-            #else:
-            #    self.logger_mode = True
-            #return False
         
         elif k == "KEY_RESIZE":
             if self.debug_mode:
@@ -146,6 +136,8 @@ class Game:
         
         # pickup item
         elif k == ",":
+ 
+            
             self.handle_item_pickup(pc)
             return True
 
@@ -154,13 +146,13 @@ class Game:
             # more to implement later...
             return True
 
-        elif self.itemSelectionMode and k in selection_keys:
+        #elif self.itemSelectionMode and k in selection_keys:
             # depends on the selection 'mode'
             # for instance, if we are picking up an item, like one of many on a tile
             # we'll be given a selection we can make such as 1 or 2
             #self.addLog(f"Unimplemented selection key pressed: {k}")
-            self.handle_item_pickup_main(pc, k)
-            return True
+            #self.handle_item_pickup_main(pc, k)
+            #return True
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
@@ -172,16 +164,23 @@ class Game:
         i = int(k)
         # get all items on current tile
         items = [item for item in self.dungeonFloor.items if item.x==pc.x and item.y==pc.y]
+        
         item = items[i]
+        # add the item to the pc's items
         pc.items.append( item )
+
         # find the real item in the dungeonFloor items list and remove it
         for x in range(len(self.dungeonFloor.items)):
             item_ = self.dungeonFloor.items[x]
             if item == item_:
                 self.dungeonFloor.items.pop(x)
                 break
+        
+
+
         self.addLog('----------')
         self.addLog(f"{self.currentTurnCount}. Picked up a {item.name}")
+        
         self.itemSelectionMode = False
 
 
@@ -216,12 +215,27 @@ class Game:
                 pass
                 #self.addLog(f"{e}")
 
+    def handleItemPickupHelper(self, i):
+        x = self.pc.x
+        y = self.pc.y
+        items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
+        item = items[i]
+        # add the item to the pc's items
+        self.pc.items.append( item )
+        self.addLog(f"{self.currentTurnCount}: {self.pc.name} picked up a {item.name}")
+        # find the real item in the dungeonFloor items list and remove it
+        for x in range(len(self.dungeonFloor.items)):
+            item_ = self.dungeonFloor.items[x]
+            if item == item_:
+                self.dungeonFloor.items.pop(x)
+                break
+
 
     def handle_item_pickup(self, pc):
         x = pc.x
         y = pc.y
-        i = 0
         items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
+
         # single-item case
         if len(items)==1:
             pc.items.append( items[0] )
@@ -229,16 +243,14 @@ class Game:
             self.dungeonFloor.items.pop(0)
         # multiple-items case
         elif len(items) > 1:
-            self.addLog(f"There are multiple items here.")
-            self.addLog(f"Which would you like to pick up?")
-            self.itemSelectionMode = True
-            for i in range(len(items)):
-                item = items[i]
-                self.addLog(f"{i}. {item.name}")
+            menuItems=[(items[i].name, self.handleItemPickupHelper, i ) for i in range(len(items))]
+            self.testMenu = ItemPickupMenu( menuItems, self.renderer.s )
+            self.testMenu.display()
         else:
             # do nothing
             self.addLog(f"There is nothing here!")
             pass
+
 
 
 
