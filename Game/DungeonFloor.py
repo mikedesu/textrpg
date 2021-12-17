@@ -18,54 +18,38 @@ class DungeonFloor:
         self.rows = rows
         self.cols = cols
         self.game = game
-        self.superBasicDungeon(rows, cols)
+        self.superBasicDungeon0(rows, cols)
 
-    def superBasicDungeon(self, rows, cols):
+
+
+
+    def addRowOfTiles(self, cols, tiletype):
+        assert(tiletype != None)
+        row = []
+        for i in range(cols):
+            tile = Tile(tiletype)
+            row.append(tile)
+        self.map_.append(row)
+
+
+    def superBasicDungeon0(self, rows, cols):
         self.map_ = []
-        
-        row = []
-        for i in range(cols):
-            tile = Tile(tiletype=Tiletype.GRASS)
-            row.append(tile)
-        self.map_.append(row)
-        
-        row = []
-        for i in range(cols):
-            tile = Tile(tiletype=Tiletype.GRASS)
-            row.append(tile)
-        self.map_.append(row)
-
-        row = []
-        for i in range(rows-3):
-            row = []
-            tile = Tile(tiletype=Tiletype.GRASS)
-            row.append(tile)
-            for j in range(cols-2):
-                tile = Tile(tiletype=Tiletype.STONE_WALL)
-                row.append(tile)
-            tile = Tile(tiletype=Tiletype.GRASS)
-            row.append(tile)
-            self.map_.append(row)
-
-        row = []
-        for i in range(cols):
-            tile = Tile(tiletype=Tiletype.STONE_FLOOR)
-            row.append(tile)
-        self.map_.append(row)
+        self.addRowOfTiles(cols, Tiletype.GRASS)
+        self.addRowOfTiles(cols, Tiletype.GRASS)
+        for i in range(rows-4):
+            self.addRowOfTiles(cols, Tiletype.GRASS)
+        self.addRowOfTiles(cols, Tiletype.STONE_FLOOR)
+        self.addRowOfTiles(cols, Tiletype.STONE_FLOOR)
 
         random_y = 1
         random_x = 0
-        
         #npc0 = NPC( self.game, name="John", y=1, x=0 )   
         #npc1 = NPC( self.game, name="Mike", y=2, x=0 )   
         #npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
-        
         #npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
-        
         #self.npcs = [ npc0, npc1, npc2 ]
         #self.npcs = [  npc0]
         self.npcs = [  ]
-
         # experimenting with 2 items 1 tile
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0, weight=1 )
         item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=4, x=0, weight=1 )

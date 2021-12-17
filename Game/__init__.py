@@ -34,8 +34,8 @@ class Game:
         self.currentTurnCount = 0
         assert(renderer != None)
         self.renderer = renderer
-        rows = randint(5,15)
-        cols = randint(5,15)
+        rows = randint(15,25)
+        cols = randint(15,25)
         self.dungeonFloor = DungeonFloor(self, rows, cols)
         self.currentMode = "Player"
         #self.itemSelectionMode = False

@@ -3,6 +3,14 @@
 
 -----
 
+## 17-12-2021
+    - item pickup menu!
+        - looks good, functions as intended
+    - bugfixes
+        - logger no longer uses turns
+        - camera no longer uses turns or hunger
+        - *FIXED* that damn rendering bug!!!!
+
 ## 15-12-2021
     - several changes since last update, including:
         - diagonal movement

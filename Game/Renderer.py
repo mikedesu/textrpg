@@ -87,23 +87,32 @@ class Renderer:
 
         
     def draw_main_screen_entity(self, game, npc):
-        y = npc.y + 5
-        x = npc.x + 1
-        cx = game.camera.x
-        cy = game.camera.y 
         rows, cols = self.s.getmaxyx()
-        endOfDungeonDisplay = rows - 4
         mapRowOffset = 5
         beginDisplayX = 1
+        y = npc.y + mapRowOffset
+        x = npc.x + beginDisplayX
         endDisplayX = cols-1
-        if y > rows-5:
-            return
+        endDisplayY = rows-4
+        cx = game.camera.x
+        cy = game.camera.y 
         options = None
         if npc.is_player:
             options = c(4) | A_BOLD 
         else:
             options = c(5) | A_BOLD 
-        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
+        y_check0 = y+cy >= mapRowOffset 
+        y_check1 = y+cy <= endDisplayY 
+        #if not y_check0:
+        #    game.addLog("Error: y_check0 failed")
+        #if not y_check1:
+        #    game.addLog("Error: y_check1 failed")
+        y_check = y_check0 and y_check1
+        x_check0 = x+cx >= beginDisplayX 
+        x_check1 = x+cx <= endDisplayX
+        x_check = x_check0 and x_check1
+        all_checks = y_check and x_check 
+        if all_checks :
             self.s.addstr(y + cy, x + cx, npc.symbol, options )
 
 
