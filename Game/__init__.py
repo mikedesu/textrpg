@@ -93,7 +93,6 @@ class Game:
            #     return False
         #elif k in movement_keys and not self.itemSelectionMode:
         elif k in movement_keys: #and not self.itemSelectionMode:
-
             if self.currentMode == "Player":
                 result = self.handle_movement(pc, k, True)
             elif self.currentMode == "Camera":
@@ -103,14 +102,13 @@ class Game:
                 self.handle_logger_movement(k)
                 return False
 
-
         elif k in logger_mode_switch_keys:
-
             if self.currentMode != "Logger":
                 self.currentMode = "Logger"
                 self.logger_offset = 0
             else:
                 self.currentMode = "Player"
+            return False
 
 
         

@@ -2,11 +2,10 @@
 
 ## Bugfixes Needed
 
-- Activating camera-mode consumes one hunger unit lol
-- NPC rendering glitch on large rooms that render beneath dungeon UI 
-- Game crashes if you press '0' for some reason, hmmm...
 - Activating logger-mode increments turn for some reason...
+- Game crashes if you press '0' for some reason, hmmm...
 - When an enemy makes attack contact with you, need to log that event
+- NPC rendering glitch on large rooms that render beneath dungeon UI 
 
 --------------------------------------------------------------------------------
 
