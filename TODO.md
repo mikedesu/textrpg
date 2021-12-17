@@ -3,6 +3,7 @@
 ## Bugfixes Needed
 
 - When an enemy makes attack contact with you, need to log that event
+- InventoryMenu needs the exit-turn fix as well
 
 --------------------------------------------------------------------------------
 
