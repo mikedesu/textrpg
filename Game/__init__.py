@@ -1,3 +1,4 @@
+import curses
 from curses import color_pair as c
 from curses import start_color 
 from curses import echo 
@@ -35,8 +36,10 @@ class Game:
         self.currentTurnCount = 0
         assert(renderer != None)
         self.renderer = renderer
-        rows = randint(15,25)
-        cols = randint(15,25)
+        #rows = randint(15,25)
+        #cols = randint(15,25)
+        rows = 20
+        cols = 100
         self.dungeonFloor = DungeonFloor(self, rows, cols)
         self.currentMode = "Player"
         self.logger_offset = 0
@@ -117,6 +120,13 @@ class Game:
         # wait in one spot / inspect / search ground / area around you
         elif k == ".":
             return True # more to implement later...
+        elif k == 'm':
+
+            # experimenting with drawing windows on top of the dungeon
+            
+
+
+            return False
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False

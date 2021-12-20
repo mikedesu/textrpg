@@ -3,6 +3,11 @@ from curses import panel
 from .Menu import Menu
 
 class InventoryMenu(Menu):
+
+    
+ #   def __init__(self, title, items, stdscreen):
+
+
     def display(self):
             self.panel.top()
             self.panel.show()
@@ -15,7 +20,15 @@ class InventoryMenu(Menu):
                 self.window.refresh()
                 curses.doupdate()
 
-                self.window.addstr( 0, 0, self.title )
+                #self.window.addstr( 0, 0, self.title )
+
+                self.window.border('|','|','-','-','+','+','+','+')
+                offsetY = 2
+                offsetX = 2
+                self.window.addstr( offsetY, offsetX, self.title )
+                offsetX += 2
+                offsetY += 2
+
 
                 for index, item in enumerate(self.items):
                     if index == self.position:

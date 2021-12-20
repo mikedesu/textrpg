@@ -1,3 +1,4 @@
+import curses
 from curses import start_color, echo, noecho, init_pair
 from curses import color_pair as c
 from curses import COLOR_BLACK, COLOR_RED, COLOR_WHITE, COLOR_BLUE, COLOR_MAGENTA , COLOR_GREEN
@@ -259,6 +260,9 @@ class Renderer:
     def draw_main_screen(self,game):
         # experimental main-game drawing
         self.s.clear()
+
+        self.s.border('|','|','-','-','+','+','+','+')
+
         self.draw_main_screen_logs(game)
         self.draw_main_screen_pc_info(game)
         # order of drawing matters
@@ -270,6 +274,8 @@ class Renderer:
         self.draw_main_screen_dungeonFloor_items(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
         self.draw_main_screen_entity(game, game.pc)
-        self.draw_main_screen_border(game, game.pc)
+        #self.draw_main_screen_border(game, game.pc)
+
+
         self.s.refresh()
      

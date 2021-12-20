@@ -3,16 +3,30 @@ from curses import panel
 
 class Menu(object):
     def __init__(self, title, items, stdscreen):
-        self.window = stdscreen.subwin(0, 0)
+        maxY, maxX = stdscreen.getmaxyx()
+        self.title = title
+        self.items = items
+        self.position = 0
+        y = 5
+        x = 5
+        rowPad = 6
+        colPad = 20
+        rows = len(items) + rowPad
+        cols = max(len(title) + colPad, self.getLongestItemLength() + colPad)
+        self.window = stdscreen.subwin(rows, cols , y, x)
         self.window.keypad(1)
         self.panel = panel.new_panel(self.window)
         self.panel.hide()
         panel.update_panels()
-        self.position = 0
 
-        self.title = title
-        self.items = items
-        #self.items.append(("Exit", "exit"))
+
+    def getLongestItemLength(self):
+        longestLen = 0
+        for item in self.items:
+            if len(item) > longestLen:
+                longestLen = len(item)
+        return longestLen 
+
 
     def navigate(self, n):
         self.position += n
@@ -21,13 +35,17 @@ class Menu(object):
         elif self.position >= len(self.items):
             self.position = len(self.items) - 1
 
+
     def display(self):
         self.panel.top()
         self.panel.show()
         self.window.clear()
+        rows, cols = self.window.getmaxyx()
         while True:
             self.window.refresh()
             curses.doupdate()
+            for i in range(cols):
+                self.window.addstr(0, i, '-')
             for index, item in enumerate(self.items):
                 if index == self.position:
                     mode = curses.A_REVERSE

@@ -17,7 +17,12 @@ class ItemPickupMenu(Menu):
                 self.window.refresh()
                 curses.doupdate()
 
-                self.window.addstr( 0, 0, self.title )
+                self.window.border('|','|','-','-','+','+','+','+')
+                offsetY = 2
+                offsetX = 2
+                self.window.addstr( offsetY, offsetX, self.title )
+                offsetX += 2
+                offsetY += 2
 
                 for index, item in enumerate(self.items):
                     if index == self.position:
