@@ -7,12 +7,14 @@ class Menu(object):
         self.title = title
         self.items = items
         self.position = 0
-        y = 5
-        x = 5
+
         rowPad = 6
         colPad = 20
         rows = len(items) + rowPad
         cols = max(len(title) + colPad, self.getLongestItemLength() + colPad)
+        y = maxY // 2 - (rows//2)
+        x = maxX // 2 - (cols//2)
+        
         self.window = stdscreen.subwin(rows, cols , y, x)
         self.window.keypad(1)
         self.panel = panel.new_panel(self.window)

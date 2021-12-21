@@ -9,6 +9,8 @@ from .ItemClass import ItemClass
 from .Race import Race
 from .PersonalityTrait import PersonalityTrait
 
+import sys
+
 class DungeonFloor:
     def __init__(self, game=None, rows=0, cols=0):
         # SUPER-basic beginning example
@@ -39,18 +41,36 @@ class DungeonFloor:
         assert(rows > 0)
         assert(cols > 0)
         for i in range(y,y+rows-1):
-            row=self.map_[i]
-            for j in range(x,x+cols-1):
-                tile=row[j]
-                tile.tiletype=tiletype
+            if i < len(self.map_):
+                row=self.map_[i]
+                for j in range(x,x+cols-1):
+                    tile=row[j]
+                    tile.tiletype=tiletype
 
 
     def superBasicDungeon1(self, rows, cols):
         self.map_ = []
         for i in range(rows):
             self.addRowOfTiles(cols, Tiletype.STONE_WALL)
-        self.drawBasicRoom(Tiletype.STONE_FLOOR, 1, 1, 10, 10)
-        self.drawBasicRoom(Tiletype.STONE_FLOOR, 5, 15, 10, 10)
+        y=1
+        x=1
+        h=10
+        w=10
+        self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
+        
+        h=5
+        w=5
+        y = 12
+        x = 12
+        for i in range(0,5):
+            #y += w + 5
+            x += h + (h//2)
+            self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
+
+
+
+
+
 
         y = 3
         x = 1
