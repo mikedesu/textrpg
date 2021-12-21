@@ -25,12 +25,12 @@ class ItemPickupMenu(Menu):
                 offsetY += 2
 
                 for index, item in enumerate(self.items):
+                    mode = curses.A_NORMAL
                     if index == self.position:
                         mode = curses.A_REVERSE
-                    else:
-                        mode = curses.A_NORMAL
-                    msg = "%d. %s" % (index, item[0])
+                    msg = f"{index}. {item[0]}"
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
+
                 key = self.window.getch()
                 if key in [curses.KEY_ENTER, ord("\n")]:
                     if self.position == len(self.items) - 1:
@@ -42,6 +42,7 @@ class ItemPickupMenu(Menu):
                     self.navigate(-1)
                 elif key == curses.KEY_DOWN:
                     self.navigate(1)
+
             self.window.clear()
             self.panel.hide()
             panel.update_panels()

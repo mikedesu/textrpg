@@ -263,19 +263,18 @@ class Renderer:
 
         self.s.border('|','|','-','-','+','+','+','+')
 
-        self.draw_main_screen_logs(game)
-        self.draw_main_screen_pc_info(game)
         # order of drawing matters
         # 1. dungeonFloor
         # 2. in-game loot / dropped-objects
         # 3. entities / NPCs
         # 4. border
+        
+        self.draw_main_screen_logs(game)
+        self.draw_main_screen_pc_info(game)
         self.draw_main_screen_dungeonFloor(game)
         self.draw_main_screen_dungeonFloor_items(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
         self.draw_main_screen_entity(game, game.pc)
-        #self.draw_main_screen_border(game, game.pc)
-
 
         self.s.refresh()
      

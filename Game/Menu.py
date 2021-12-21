@@ -46,14 +46,13 @@ class Menu(object):
         while True:
             self.window.refresh()
             curses.doupdate()
-            for i in range(cols):
-                self.window.addstr(0, i, '-')
             for index, item in enumerate(self.items):
                 if index == self.position:
                     mode = curses.A_REVERSE
                 else:
                     mode = curses.A_NORMAL
-                msg = "%d. %s" % (index, item[0])
+                #msg = "%d. %s" % (index, item[0])
+                msg = f"{index}. {item[0]}"
                 self.window.addstr(1 + index, 1, msg, mode)
             key = self.window.getch()
             if key in [curses.KEY_ENTER, ord("\n")]:
