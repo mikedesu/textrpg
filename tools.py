@@ -1,6 +1,6 @@
 from random import randint
 from Game import Game
-from Game.NPC import NPC
+from Game.Entity import Entity
 from Game.Race import Race
 from Game.Job import Job
 from Game.Gender import Gender
@@ -306,6 +306,6 @@ def quick_new_character(game, s):
     job  = Job.MAGE
     gender = Gender.MALE
     alignment = Alignment.LAWFUL_EVIL
-    pc = NPC(game=game, name=name, level=1, race=race, job=job, attribs=stats, gender=gender, alignment=alignment, is_player=True)
+    pc = Entity(game=game, name=name, level=1, race=race, job=job, abilities=stats, gender=gender, alignment=alignment, is_player=True)
     return pc 
 

@@ -146,7 +146,7 @@ class Renderer:
 
     def draw_main_screen_logs(self, game):
         # only enough room for last 2 logs
-        y, x = 0, 0
+        y, x = 1, 1
         a = len(game.logs)
         b = game.logger_offset 
         if a == 1:

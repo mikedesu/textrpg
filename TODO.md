@@ -4,12 +4,14 @@
 
 - When an enemy makes attack contact with you, need to log that event
 - InventoryMenu needs the exit-turn fix as well
+- There appears to be a glitch with item placement. Items I've only single-placed in the dungeon are able to be picked up twice sometimes.
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
 - Debug panel that can be turned on/off and displays variables
+- Basic Name Generator
 
 --------------------------------------------------------------------------------
 

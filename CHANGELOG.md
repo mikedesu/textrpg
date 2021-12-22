@@ -3,6 +3,9 @@
 
 -----
 
+## 21-12-2021
+    - updated how item symbols are set. it is now based on the item's itemclass.
+
 ## 17-12-2021
     - item pickup menu!
         - looks good, functions as intended

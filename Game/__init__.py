@@ -21,7 +21,7 @@ from curses import is_term_resized
 
 from .DungeonFloor import DungeonFloor 
 from .Tiletype import Tiletype
-from .NPC import NPC
+from .Entity import Entity
 from .Camera import Camera
 from .Menu import Menu
 from .ItemPickupMenu import ItemPickupMenu
@@ -112,7 +112,7 @@ class Game:
             return False
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
-            self.renderer.draw_quit_screen()
+            #self.renderer.draw_quit_screen()
             exit(0)
         # pickup item
         elif k == ",":
@@ -146,7 +146,8 @@ class Game:
         # get all items on current tile
         items = [item for item in self.dungeonFloor.items if item.x==pc.x and item.y==pc.y]
         item = items[int(k)]
-        pc.items.append( item )# add the item to the pc's items
+        #pc.items.append( item )# add the item to the pc's items
+        pc.addItemToInventory(item)
         self.removeItemFromDungeonFloor(item)
         self.addLog(f"{self.currentTurnCount}: {pc.name} picked up a {item.name}")
         self.itemSelectionMode = False
@@ -363,7 +364,8 @@ class Game:
         return retval
 
     def handle_pc_npc_collision(self, pc, npc, doLog):
-        if type(npc) == NPC:
+        #if type(npc) == Entity:
+        if isinstance(npc, Entity):
             pc.attack(npc, doLog)
             if npc.hp <= 0:
                 if doLog:

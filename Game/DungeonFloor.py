@@ -1,4 +1,5 @@
-from .NPC import NPC 
+#from .NPC import NPC 
+from .Entity import Entity
 from random import randint
 
 from .Tile import Tile
@@ -66,12 +67,6 @@ class DungeonFloor:
             #y += w + 5
             x += h + (h//2)
             self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-
-
-
-
-
-
         y = 3
         x = 1
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
@@ -84,6 +79,8 @@ class DungeonFloor:
             item2,
             item3
         ]
+        npc0 = Entity( self.game, name="John", y=5, x=5 )   
+        self.npcs = [  npc0 ]
 
     def superBasicDungeon0(self, rows, cols):
         self.map_ = []
@@ -96,12 +93,12 @@ class DungeonFloor:
 
         random_y = 1
         random_x = 0
-        #npc0 = NPC( self.game, name="John", y=1, x=0 )   
+        npc0 = NPC( self.game, name="John", y=5, x=5 )   
+        self.npcs = [  npc0 ]
         #npc1 = NPC( self.game, name="Mike", y=2, x=0 )   
         #npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
         #npc2 = NPC( self.game, name="Carlos", y=3, x=0, race=Race.ELF, personalityTraits=[PersonalityTrait.SPECIEST_TOWARDS_DWARVES] )   
         #self.npcs = [ npc0, npc1, npc2 ]
-        #self.npcs = [  npc0]
         #self.npcs = [  ]
         # experimenting with 2 items 1 tile
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=4, x=0, weight=1 )
