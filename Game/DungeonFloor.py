@@ -67,20 +67,28 @@ class DungeonFloor:
             #y += w + 5
             x += h + (h//2)
             self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-        y = 3
+        y = 2
         x = 1
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
-        item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=x, x=x, weight=1 )
+        item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
         item2 = Item( "Mace", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
         item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
         self.items = [ 
-            item0, 
+            item0,
             item1,
             item2,
             item3
         ]
-        npc0 = Entity( self.game, name="John", y=5, x=5 )   
-        self.npcs = [  npc0 ]
+        #npc0 = Entity( self.game, name="John", y=5, x=5 )   
+        self.npcs = [   ]
+        #self.npcs = [  npc0 ]
+
+
+
+
+
+
+
 
     def superBasicDungeon0(self, rows, cols):
         self.map_ = []

@@ -5,6 +5,7 @@
 
 ## 21-12-2021
     - updated how item symbols are set. it is now based on the item's itemclass.
+    - When an enemy makes attack contact with you, need to log that event *DONE* 
 
 ## 17-12-2021
     - item pickup menu!
