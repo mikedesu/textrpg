@@ -26,6 +26,9 @@ from .Camera import Camera
 from .Menu import Menu
 from .ItemPickupMenu import ItemPickupMenu
 from .InventoryMenu import InventoryMenu
+from .EquipMenu import EquipMenu
+from .Subequipmenu import Subequipmenu
+from .Bodypart import Bodypart
 
 from random import randint
 
@@ -46,6 +49,8 @@ class Game:
         self.camera = Camera()
         self.debug_mode = False
         self.testMenu = None
+        self.equipMenu = None
+        self.subequipMenu = None
 
     def __str__(self):
         return self.title
@@ -74,6 +79,7 @@ class Game:
         right_keys = ['f',';','KEY_RIGHT']
         logger_mode_switch_keys = ['l']
         display_inventory_key = ['i']
+        display_equip_menu_key = ['e']
         retval = False
         if k == help_key:
             self.help_menu()
@@ -110,6 +116,12 @@ class Game:
         elif k in display_inventory_key:
             self.display_inventory(pc)
             return False
+        elif k in display_equip_menu_key:
+            self.display_equip_menu()
+            return False
+
+
+
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
             #self.renderer.draw_quit_screen()
@@ -227,12 +239,35 @@ class Game:
 
     def displayInventoryHelper(self, i):
         pass
+    
+    def displayEquipMenuHelper(self, bodypart):
+        items = self.pc.items
+        menuItems=[(items[i].name, self.displayInventoryHelper) for i in range(len(items))]
+        title = "Which item are you equipping?"
+        if len(menuItems) == 0:
+            title = "You have nothing to equip!"
+        else:
+            menuItems.append( ("Exit", None) )
+        self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s )
+        self.subequipMenu.display()
+        pass
 
     def display_inventory(self, pc):
         items = pc.items
         menuItems=[(items[i].name, self.displayInventoryHelper, i ) for i in range(len(items))]
         self.testMenu = InventoryMenu( "Inventory", menuItems, self.renderer.s )
         self.testMenu.display()
+
+    def display_equip_menu(self):
+        myfun = self.displayEquipMenuHelper 
+        menuItems = [
+            (Bodypart.Righthand, myfun),
+            (Bodypart.Lefthand,  myfun),
+            ("Exit",             None)
+        ]
+        self.equipMenu = EquipMenu( "Which body part are you equipping on?", menuItems, self.renderer.s )
+        self.equipMenu.display()
+
 
 
     def handle_resize(self):

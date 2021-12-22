@@ -34,7 +34,6 @@ class Entity:
                 raise NegativeAttributeException 
         self.game = game
         self.name = name
-
         self.level = level
         self.race = race
         self.job = job
@@ -58,6 +57,31 @@ class Entity:
         self.hp = self.maxhp
         # set entity items
         self.items = []
+        self.righthand = None
+        self.lefthand = None
+
+
+    @property
+    def righthand(self):
+        return self._righthand
+    @righthand.setter
+    def righthand(self, item):
+        assert(item == None or isinstance(item,Item))
+        self._righthand = item 
+
+    @property
+    def lefthand(self):
+        return self._lefthand
+    @lefthand.setter
+    def lefthand(self, item):
+        assert(item == None or isinstance(item,Item))
+        self._lefthand = item 
+
+
+
+
+
+
 
     @property
     def level(self):

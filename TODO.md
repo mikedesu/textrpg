@@ -2,7 +2,6 @@
 
 ## Bugfixes Needed
 
-- There appears to be a glitch with item placement. Items I've only single-placed in the dungeon are able to be picked up twice sometimes.
 
 --------------------------------------------------------------------------------
 
