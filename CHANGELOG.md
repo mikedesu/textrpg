@@ -4,6 +4,7 @@
 -----
 
 ## 21-12-2021
+    - Equipping weapons on either left or right hand is now possible! 
     - updated how item symbols are set. it is now based on the item's itemclass.
     - When an enemy makes attack contact with you, need to log that event *DONE* 
     - There appears to be a glitch with item placement. Items I've only single-placed in the dungeon are able to be picked up twice sometimes *MAYBE FIXED*

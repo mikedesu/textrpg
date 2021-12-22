@@ -1,11 +1,11 @@
 from .Race import Race
 from .Job import Job
-
 from .Attribs import Attribs as a
-
 from .Gender import Gender
 from .Alignment import Alignment
 from .PersonalityTrait import PersonalityTrait 
+from .Item import Item
+
 from random import randint
 #from . import Game
 
@@ -66,7 +66,8 @@ class Entity:
         return self._righthand
     @righthand.setter
     def righthand(self, item):
-        assert(item == None or isinstance(item,Item))
+        #assert(item == None or isinstance(item,Item))
+        #raise Exception(f"item is {type(item)}")
         self._righthand = item 
 
     @property
@@ -74,7 +75,8 @@ class Entity:
         return self._lefthand
     @lefthand.setter
     def lefthand(self, item):
-        assert(item == None or isinstance(item,Item))
+        #assert(item == None or isinstance(item,Item))
+        #raise Exception(f"item is {type(item)}")
         self._lefthand = item 
 
 

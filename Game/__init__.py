@@ -240,9 +240,33 @@ class Game:
     def displayInventoryHelper(self, i):
         pass
     
+
+    def displaySubequipmenuHelper(self, bodypart, item):
+        # actually perform the equipping
+ 
+        success = False
+        location = None
+        if bodypart==Bodypart.Righthand or bodypart==Bodypart.Lefthand:
+            if self.pc.lefthand != item and self.pc.righthand != item:
+                if bodypart==Bodypart.Righthand:
+                    self.pc.righthand = item
+                elif bodypart==Bodypart.Lefthand:
+                    self.pc.lefthand = item
+                success = True
+            elif self.pc.lefthand == item:
+                self.addLog(f"{item.name} is already equipped on {Bodypart.Lefthand}")
+            elif self.pc.righthand == item:
+                self.addLog(f"{item.name} is already equipped on {Bodypart.Righthand}")
+        else:
+            self.addLog(f"Equipping on {bodypart} is unimplemented right now...")
+        
+        if success:
+            self.addLog(f"{self.pc.name} equipped a {item.name} on their {bodypart}")
+
+
     def displayEquipMenuHelper(self, bodypart):
         items = self.pc.items
-        menuItems=[(items[i].name, self.displayInventoryHelper) for i in range(len(items))]
+        menuItems=[(bodypart, items[i], self.displaySubequipmenuHelper) for i in range(len(items))]
         title = "Which item are you equipping?"
         if len(menuItems) == 0:
             title = "You have nothing to equip!"
@@ -250,7 +274,7 @@ class Game:
             menuItems.append( ("Exit", None) )
         self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s )
         self.subequipMenu.display()
-        pass
+
 
     def display_inventory(self, pc):
         items = pc.items

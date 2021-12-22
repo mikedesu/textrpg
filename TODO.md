@@ -9,13 +9,15 @@
 
 - Debug panel that can be turned on/off and displays variables
 - Basic Name Generator
+- Actually make equipped-weapons matter during attacks
+- Actually make equipped-shields matter during attacks
 
 --------------------------------------------------------------------------------
 
 ## Medium
 
 - Shields
-- Equipping Weapons and Shields
+- Equipping Shields
 - Basic NPC Movement
     - intelligent movement
     - movement "strategies"

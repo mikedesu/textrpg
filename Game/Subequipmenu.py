@@ -24,15 +24,17 @@ class Subequipmenu(Menu):
                     else:
                         mode = curses.A_NORMAL
                     #msg = "%d. %s" % (index, item[0])
-                    msg = f"{index}. {item[0]}"
+                    msg = f"{index}. {item[1]}"
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
                 if key in [curses.KEY_ENTER, ord("\n")]:
                     if self.position == len(self.items) - 1:
                         break
                     else:
-                        #bodypart = self.items[self.position][0]
-                        #helperFunction = self.items[self.position][1]
+                        bodypart = self.items[self.position][0]
+                        item = self.items[self.position][1]
+                        helperFunction = self.items[self.position][2]
+                        helperFunction(bodypart, item)
                         #self.items[self.position][1](bodypart)
                         #helperFunction(bodypart)
                         break
