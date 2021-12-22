@@ -175,7 +175,8 @@ class Game:
                 # select a random keypress
                 random_index = randint(0, len(movement_keys)-1)
                 random_key = movement_keys[ random_index ] 
-                self.handle_movement( npc , random_key, False ) 
+                #self.handle_movement( npc , random_key, False ) 
+                self.handle_movement( npc , random_key, True ) 
             except Exception as e:
                 pass
 
