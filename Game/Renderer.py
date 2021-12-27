@@ -234,6 +234,39 @@ class Renderer:
         for item in items:
             self.draw_main_screen_item(game, item)
            
+    def drawMainScreenDungeonFloorDoors(self, game):
+        assert(game!=None)
+        doors = game.dungeonFloor.doors
+        for door in doors:
+            self.drawMainScreenDoor(game, door)
+
+    def drawMainScreenDoor(self, game, door):
+        assert(game!=None)
+        assert(door!=None)
+        y = door.y + 5
+        x = door.x + 1
+        cx = game.camera.x
+        cy = game.camera.y 
+        rows, cols = self.s.getmaxyx()
+        endOfDungeonDisplay = rows - 4
+        mapRowOffset = 5
+        beginDisplayX = 1
+        endDisplayX = cols-1
+        #options = None
+        #if npc.is_player:
+        #    options = c(4) | A_BOLD 
+        #else:
+        #    options = c(5) | A_BOLD 
+
+        symbol = '+' # if isClosed
+        if not door.isClosed:
+            symbol = '-'
+
+        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
+            self.s.addstr(y + cy, x + cx, symbol )
+
+
+
     
     def draw_quit_screen(self):
         self.s.clear()
@@ -293,6 +326,10 @@ class Renderer:
         self.draw_main_screen_logs(game)
         self.draw_main_screen_pc_info(game)
         self.draw_main_screen_dungeonFloor(game)
+
+        self.drawMainScreenDungeonFloorDoors(game)
+        
+
         self.draw_main_screen_dungeonFloor_items(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
         self.draw_main_screen_entity(game, game.pc)

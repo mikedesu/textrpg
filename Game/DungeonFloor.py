@@ -3,6 +3,8 @@ from .Entity import Entity
 from random import randint
 
 from .Tile import Tile
+from .Door import Door 
+from .Doortype import Doortype
 from .Tiletype import Tiletype 
 
 from .Item import Item
@@ -23,7 +25,13 @@ class DungeonFloor:
         self.game = game
         self.items = []
         self.npcs = []
+        self.doors = []
         self.superBasicDungeon1(rows, cols)
+
+
+    def addDoor(self, y, x):
+        d = Door(name="Door1", y=y, x=x, doortype=Doortype.Wooden)
+        self.doors.append(d)
 
     def updateRowOfTilesYX(self, y, x, cols, tiletype):
         for i in range(cols):
@@ -108,6 +116,9 @@ class DungeonFloor:
             item2,
             item3
         ]
+
+        self.addDoor(3,11)
+
         self.npcs = [   ]
         #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         #self.npcs = [  npc0 ]

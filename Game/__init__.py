@@ -94,10 +94,16 @@ class Game:
         display_inventory_key = ['i']
         display_equip_menu_key = ['e']
         debugPanelKey=['d']
+        openKey=['o']
+
         retval = False
         if k == help_key:
             self.help_menu()
             return False
+        elif k in openKey:
+            self.handleOpen()
+            return True
+
         elif k in debugPanelKey:
             self.debugPanel = not self.debugPanel 
             return False
@@ -160,6 +166,45 @@ class Game:
             self.addLog(f"Unimplemented key pressed: {k}")
             return False
         return True
+
+
+
+    def handleOpenDirection(self, key):
+        assert(key!=None)
+        #assert(key in ['1','2','3','4','5','6','7','8','9'])
+        self.addLog(f"{key}")
+        
+        y=0
+        x=0
+        dirs = { 
+                '1':(-1,-1),
+                '2':(-1,0),
+                '3':(-1,1),
+                '4':(0,-1),
+                '5':(0,0),
+                '6':(0,1),
+                '7':(1,-1),
+                '8':(1,0),
+                '9':(1,1)
+                }
+        y = dirs[key][0]
+        x = dirs[key][1]
+
+        newX = self.pc.x + x
+        newY = self.pc.y + y
+        
+        for i in range(len(self.dungeonFloor.doors)):
+            door = self.dungeonFloor.doors[i]
+            if door.x==newX and door.y==newY:
+                door.isClosed = not door.isClosed 
+                break
+
+
+
+    def handleOpen(self):
+        self.addLog("Open in which direction?")
+        key = self.renderer.s.getkey() 
+        self.handleOpenDirection(key)
 
 
     def removeItemFromDungeonFloor(self, item):
@@ -402,12 +447,32 @@ class Game:
             retval = False
         else:
             result = self.check_pc_npc_collision(entity, y, x ) 
+
             if not result:
+
+                doorCollision = self.checkEntityDoorCollision(entity, y, x)
+                if doorCollision:
+                    for d in self.dungeonFloor.doors:
+                        if d.x==doorCollision.x and d.y==doorCollision.y:
+                            if doLog and entity.is_player:
+                                self.addLog(f"There is a {d.doortype} door here")
+                            return False
+
+
                 entity.y += y
                 entity.x += x
                 #if doLog:
                 if doLog and entity.is_player:
                     self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
+
+                #doorCollision = self.checkEntityDoorCollision(entity)
+                #if doorCollision:
+                #    for d in self.dungeonFloor.doors:
+                #        if d.x==doorCollision.x and d.y==doorCollision.y:
+                #            if doLog and entity.is_player:
+                #                self.addLog(f"There is a {d.doortype} door here")
+                #                return False
+
                 item_collision = self.check_pc_item_collision(entity)
                 if item_collision:
                     for item in self.dungeonFloor.items:
@@ -462,6 +527,14 @@ class Game:
             if pc.x == item.x and pc.y == item.y:
                 return item
         return None
+
+    def checkEntityDoorCollision(self, e, y, x):
+        for d in self.dungeonFloor.doors:
+            if e.x+x == d.x and e.y+y == d.y:
+                if d.isClosed:
+                    return d
+        return None
+
 
 
     def check_pc_npc_collision(self, entity, y, x):

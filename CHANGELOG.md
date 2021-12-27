@@ -6,6 +6,7 @@
 ## 26-12-2021
     - Debug panel by pressing 'd'
     - Basic hallway drawing
+    - Basic wooden doors, closed, functionally blocking you from walking down a halfway
 
 ## 21-12-2021
     - Equipping weapon on right hand now impacts attack and damage calc
