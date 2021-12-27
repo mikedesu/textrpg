@@ -515,6 +515,10 @@ class Game:
                     self.dungeonFloor.npcs.remove(npc)
                     # just add 1 xp for now lol
                     pc.xp += 1
+                    pc.killcount += 1
+
+                # test
+                    pc.lightradius += 1
                 else:
                     # game over!
                     self.addLog(f"{npc.name} died! Game over!")

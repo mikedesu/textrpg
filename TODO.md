@@ -3,6 +3,8 @@
 ## Bugfixes Needed
 
 - Opening doors diagonally does not work for some reason
+- Light radius issue:
+    - We should not be able to see what is behind a closed door
 
 --------------------------------------------------------------------------------
 
@@ -11,11 +13,14 @@
 - Basic Name Generator
 - Actually make equipped-shields matter during attacks
 - Weapon-classes (Blunt, Cutting, Poking)
+- Kicking ('k')
 
 --------------------------------------------------------------------------------
 
 ## Medium
 
+- Kicking doors down / breaking doors down
+    - How would I implement this?
 - Shields
 - Equipping Shields
 - Basic NPC Movement

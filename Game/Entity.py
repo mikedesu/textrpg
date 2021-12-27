@@ -65,6 +65,7 @@ class Entity:
         self.righthand = None
         self.lefthand = None
         self.lightradius = lightradius
+        self.killcount = 0
 
 
 
@@ -77,6 +78,14 @@ class Entity:
         #assert(isinstance(ac,int))
         self._baseAttack=ac
 
+    @property
+    def killcount(self):
+        return self._killcount
+    @killcount.setter
+    def killcount(self,k):
+        assert(k!=None)
+        assert(k>=0)
+        self._killcount=k
 
 
     @property

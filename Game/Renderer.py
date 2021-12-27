@@ -309,6 +309,8 @@ class Renderer:
             f"Dexterity Modifier: {ModTable.getModForScore(game.pc.abilities[1])}",
             f"AC: {game.pc.ac}",
             f"Your Base Attack: {game.pc.baseAttack}",
+            f"Your Kill Count: {game.pc.killcount}",
+            f"Your Light Radius: {game.pc.lightradius}",
             "-"*(cols//8),
         ]
 
