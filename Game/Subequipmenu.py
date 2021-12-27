@@ -9,6 +9,7 @@ class Subequipmenu(Menu):
             self.window.clear()
             offsetY = 2
             offsetX = 2
+            success = False
             while True:
                 self.window.refresh()
                 curses.doupdate()
@@ -30,11 +31,13 @@ class Subequipmenu(Menu):
                 if key in [curses.KEY_ENTER, ord("\n")]:
                     if self.position == len(self.items) - 1:
                         break
+                    elif len(self.items)==0:
+                        break
                     else:
                         bodypart = self.items[self.position][0]
                         item = self.items[self.position][1]
                         helperFunction = self.items[self.position][2]
-                        helperFunction(bodypart, item)
+                        success = helperFunction(bodypart, item)
                         #self.items[self.position][1](bodypart)
                         #helperFunction(bodypart)
                         break
@@ -46,5 +49,6 @@ class Subequipmenu(Menu):
             self.panel.hide()
             panel.update_panels()
             curses.doupdate()
+            return success
 
 

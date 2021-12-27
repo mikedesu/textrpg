@@ -7,9 +7,10 @@
 
 ## Easy 
 
+- Basic hallways
+- Basic doors
 - Debug panel that can be turned on/off and displays variables
 - Basic Name Generator
-- Actually make equipped-weapons matter during attacks
 - Actually make equipped-shields matter during attacks
 
 --------------------------------------------------------------------------------
@@ -31,6 +32,7 @@
 
 ## Hard / Long
 
+- Deciding on the experience-level progression
 - proper HELP menu(s)
 - lighting system
     - PC / NPC light radius / visibility

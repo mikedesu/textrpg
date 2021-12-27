@@ -1,6 +1,4 @@
-
 from .ItemClass import ItemClass
-
 
 class Item:
     def __init__(self, name='Unnamed Item', 
@@ -8,6 +6,7 @@ class Item:
             x=0, 
             y=0, 
             weight=0, 
+            damage=(1,4,0),
             symbol='*' 
         ):
         assert(name != "")
@@ -20,7 +19,18 @@ class Item:
         self.weight = weight
         # future items will have unique symbols based on itemclass and other factors
         self.symbol = symbol
+        self.damage = damage
         self.updateSymbol()
+
+    @property 
+    def damage(self):
+        return self._damage
+    @damage.setter
+    def damage(self, dmg):
+        assert(dmg!=None)
+        assert(isinstance(dmg,tuple))
+        self._damage=dmg
+
 
     def updateSymbol(self):
         assert(self.itemclass!=None)

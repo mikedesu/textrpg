@@ -6,6 +6,7 @@ from curses import A_BOLD, use_default_colors
 from curses import curs_set
 from .Camera import Camera
 from .Tiletype import Tiletype
+from .ModTable import ModTable
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -252,7 +253,27 @@ class Renderer:
 
 
 
+    def drawDebugPanel(self, game):
+        assert(game!=None)
+        rows, cols = self.s.getmaxyx()
+        rowOffset = 4
+        y = rows//4 - rowOffset 
+        x = cols*3//4
+        debugPanel = [
+            "-"*(cols//8),
+            f"Current Turn: {game.currentTurnCount}",
+            f"Number of NPCs in the dungeon: {len(game.dungeonFloor.npcs)}",
+            f"Number of items in the dungeon: {len(game.dungeonFloor.items)}",
+            "",
+            f"Your Base AC: {game.pc.baseAC}",
+            f"Dexterity Modifier: {ModTable.getModForScore(game.pc.abilities[1])}",
+            f"AC: {game.pc.ac}",
+            "-"*(cols//8),
+        ]
 
+        for line in debugPanel:
+            self.s.addstr(y, x, line)
+            y += 1
 
 
 
@@ -275,6 +296,9 @@ class Renderer:
         self.draw_main_screen_dungeonFloor_items(game)
         self.draw_main_screen_dungeonFloor_npcs(game)
         self.draw_main_screen_entity(game, game.pc)
+
+        if game.debugPanel:
+            self.drawDebugPanel(game)
 
         self.s.refresh()
      

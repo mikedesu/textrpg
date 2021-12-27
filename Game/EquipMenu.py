@@ -9,6 +9,7 @@ class EquipMenu(Menu):
             self.window.clear()
             offsetY = 2
             offsetX = 2
+            success = False
             while True:
                 self.window.refresh()
                 curses.doupdate()
@@ -34,7 +35,7 @@ class EquipMenu(Menu):
                         bodypart = self.items[self.position][0]
                         helperFunction = self.items[self.position][1]
                         #self.items[self.position][1](bodypart)
-                        helperFunction(bodypart)
+                        success = helperFunction(bodypart)
                         break
                 elif key == curses.KEY_UP:
                     self.navigate(-1)
@@ -44,5 +45,6 @@ class EquipMenu(Menu):
             self.panel.hide()
             panel.update_panels()
             curses.doupdate()
+            return success
 
 

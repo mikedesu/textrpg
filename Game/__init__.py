@@ -30,6 +30,8 @@ from .EquipMenu import EquipMenu
 from .Subequipmenu import Subequipmenu
 from .Bodypart import Bodypart
 
+from .ModTable import ModTable
+
 from random import randint
 
 class Game:
@@ -51,6 +53,8 @@ class Game:
         self.testMenu = None
         self.equipMenu = None
         self.subequipMenu = None
+        self.debugPanel = False
+        self.modTable = ModTable()
 
     def __str__(self):
         return self.title
@@ -62,8 +66,17 @@ class Game:
 
     def incrTurns(self):
         self.currentTurnCount += 1
+
+    @property
+    def debugPanel(self):
+        return self._debugPanel
+    @debugPanel.setter
+    def debugPanel(self, v):
+        assert(isinstance(v,bool))
+        self._debugPanel = v
     
-    def handle_input(self, pc, k):
+    
+    def handleInput(self, pc, k):
         rows, cols = self.renderer.s.getmaxyx()
         # Help Menu
         help_key = '?'
@@ -80,9 +93,13 @@ class Game:
         logger_mode_switch_keys = ['l']
         display_inventory_key = ['i']
         display_equip_menu_key = ['e']
+        debugPanelKey=['d']
         retval = False
         if k == help_key:
             self.help_menu()
+            return False
+        elif k in debugPanelKey:
+            self.debugPanel = not self.debugPanel 
             return False
         elif k == camera_key:
             if self.currentMode == "Player":
@@ -117,8 +134,8 @@ class Game:
             self.display_inventory(pc)
             return False
         elif k in display_equip_menu_key:
-            self.display_equip_menu()
-            return False
+            return self.display_equip_menu()
+            #return False
 
 
 
@@ -243,7 +260,6 @@ class Game:
 
     def displaySubequipmenuHelper(self, bodypart, item):
         # actually perform the equipping
- 
         success = False
         location = None
         if bodypart==Bodypart.Righthand or bodypart==Bodypart.Lefthand:
@@ -259,9 +275,9 @@ class Game:
                 self.addLog(f"{item.name} is already equipped on {Bodypart.Righthand}")
         else:
             self.addLog(f"Equipping on {bodypart} is unimplemented right now...")
-        
         if success:
             self.addLog(f"{self.pc.name} equipped a {item.name} on their {bodypart}")
+        return success
 
 
     def displayEquipMenuHelper(self, bodypart):
@@ -273,7 +289,7 @@ class Game:
         else:
             menuItems.append( ("Exit", None) )
         self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s )
-        self.subequipMenu.display()
+        return self.subequipMenu.display()
 
 
     def display_inventory(self, pc):
@@ -290,7 +306,7 @@ class Game:
             ("Exit",             None)
         ]
         self.equipMenu = EquipMenu( "Which body part are you equipping on?", menuItems, self.renderer.s )
-        self.equipMenu.display()
+        return self.equipMenu.display()
 
 
 

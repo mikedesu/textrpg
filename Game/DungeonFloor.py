@@ -59,29 +59,35 @@ class DungeonFloor:
         w=10
         self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
         
-        h=5
-        w=5
-        y = 12
-        x = 12
+        h=6
+        w=6
+        y = 1
+        x = 6
         for i in range(0,5):
             #y += w + 5
-            x += h + (h//2)
+            x += (2*w)
             self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
         y = 2
         x = 1
-        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
-        item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
-        item2 = Item( "Mace", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
-        item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1 )
+        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,6,0) )
+        item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,  damage=(1,8,0) )
+        item2 = Item( "Mace", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,4,0) )
+        item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,1,0) )
         self.items = [ 
             item0,
             item1,
             item2,
             item3
         ]
-        #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         self.npcs = [   ]
+        #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         #self.npcs = [  npc0 ]
+        
+        for i in range(5):
+            x = randint(2,6)
+            y = randint(2,6)
+            npc = Entity( self.game, name="John", y=y, x=x )   
+            self.npcs.append(npc)
 
 
 

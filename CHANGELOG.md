@@ -4,6 +4,8 @@
 -----
 
 ## 21-12-2021
+    - Equipping weapon on right hand now impacts attack and damage calc
+    - Equipping weapons costs 1 turn, no cost to exit the menu
     - Equipping weapons on either left or right hand is now possible! 
     - updated how item symbols are set. it is now based on the item's itemclass.
     - When an enemy makes attack contact with you, need to log that event *DONE* 

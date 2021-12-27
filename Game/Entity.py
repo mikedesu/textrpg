@@ -5,6 +5,7 @@ from .Gender import Gender
 from .Alignment import Alignment
 from .PersonalityTrait import PersonalityTrait 
 from .Item import Item
+from .ModTable import ModTable
 
 from random import randint
 #from . import Game
@@ -44,7 +45,7 @@ class Entity:
         self.alignment = alignment 
         self.is_player = is_player 
         self.symbol = symbol 
-        self.ac = ac
+        self.baseAC = ac
         self.hd = hd
         self.hunger = 255
         self.maxhunger = 255
@@ -59,6 +60,19 @@ class Entity:
         self.items = []
         self.righthand = None
         self.lefthand = None
+
+    @property
+    def baseAC(self):
+        return self._baseAC
+    @baseAC.setter
+    def baseAC(self, ac):
+        #assert(isinstance(ac,int))
+        self._baseAC=ac
+
+    @property
+    def ac(self):
+        dexMod = ModTable.getModForScore(self.abilities[1])
+        return self.baseAC + dexMod
 
 
     @property
@@ -164,13 +178,13 @@ class Entity:
         assert(v!=None)
         self._symbol=v
 
-    @property
-    def ac(self):
-        return self._ac
-    @ac.setter
-    def ac(self, v):
-        assert(v!=None)
-        self._ac=v
+    #@property
+    #def ac(self):
+    #    return self._ac
+    #@ac.setter
+    #def ac(self, v):
+    #    assert(v!=None)
+    #    self._ac=v
 
     @property
     def hd(self):
@@ -267,14 +281,34 @@ class Entity:
 
 
     def attack(self, target, doLog):
+
+        # depends on which hand a weapon is equipped in
+        # for right now we shall code for right hand
+        weapon = self.righthand
+        
+        numWeaponRolls = 1
+        weaponDie      = 1
+        weaponMod      = 0
+        if weapon != None:
+            numWeaponRolls = weapon.damage[0]
+            weaponDie      = weapon.damage[1]
+            weaponMod      = weapon.damage[2]
+
         # traditional dnd 3.0 rules:
-        # 1d20 
+        # 1d20 for attack
         roll = randint(1, 20)
+
         # if the roll is >= player's ac, attack hits
         if roll >= target.ac:
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
-            target.hp -= 1
+
+            # damage roll
+            damage = randint(1, weaponDie)
+            for i in range(1,numWeaponRolls-1):
+                damage += randint(1, weaponDie)
+
+            target.hp -= damage
             if doLog:
                 self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack hit {target.name}!")
         else:
@@ -282,6 +316,17 @@ class Entity:
             # miss so we need a way to pass msgs to the game log
             if doLog:
                 self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack missed {target.name}!")
+
+
+
+
+
+
+
+
+
+
+
 
     def __str__(self):
         s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"
