@@ -25,6 +25,11 @@ class DungeonFloor:
         self.npcs = []
         self.superBasicDungeon1(rows, cols)
 
+    def updateRowOfTilesYX(self, y, x, cols, tiletype):
+        for i in range(cols):
+            self.map_[y][x + i].tiletype = tiletype
+
+   
 
     def addRowOfTiles(self, cols, tiletype):
         assert(tiletype != None)
@@ -41,12 +46,29 @@ class DungeonFloor:
         #assert(x >= 0 and x < len(self.map_[0]))
         assert(rows > 0)
         assert(cols > 0)
-        for i in range(y,y+rows-1):
+        for i in range(y,y+rows):
             if i < len(self.map_):
                 row=self.map_[i]
-                for j in range(x,x+cols-1):
+                for j in range(x,x+cols):
                     tile=row[j]
                     tile.tiletype=tiletype
+
+    def drawBasicHall(self, tiletype, y, x, rows, cols):
+        assert(isinstance(tiletype, Tiletype))
+        assert(self.map_ != None)
+        assert(isinstance(y,int))
+        assert(y >= 0)
+        assert(isinstance(x,int))
+        assert(x >= 0)
+        assert(isinstance(rows,int))
+        assert(rows >= 0)
+        assert(isinstance(cols,int))
+        assert(cols >= 0)
+
+        for row in range(rows):
+            self.addRowOfTiles(cols, tiletype)
+        
+
 
 
     def superBasicDungeon1(self, rows, cols):
@@ -67,6 +89,13 @@ class DungeonFloor:
             #y += w + 5
             x += (2*w)
             self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
+
+        y = 3
+        x = 11
+        h = 1
+        w = 7*8
+        self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
+        
         y = 2
         x = 1
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,6,0) )

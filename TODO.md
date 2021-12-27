@@ -9,9 +9,9 @@
 
 - Basic hallways
 - Basic doors
-- Debug panel that can be turned on/off and displays variables
 - Basic Name Generator
 - Actually make equipped-shields matter during attacks
+- Weapon-classes (Blunt, Cutting, Poking)
 
 --------------------------------------------------------------------------------
 

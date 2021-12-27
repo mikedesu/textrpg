@@ -3,6 +3,10 @@
 
 -----
 
+## 26-12-2021
+    - Debug panel by pressing 'd'
+    - Basic hallway drawing
+
 ## 21-12-2021
     - Equipping weapon on right hand now impacts attack and damage calc
     - Equipping weapons costs 1 turn, no cost to exit the menu
