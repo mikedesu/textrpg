@@ -2,13 +2,12 @@
 
 ## Bugfixes Needed
 
+- Opening doors diagonally does not work for some reason
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- Basic hallways
-- Basic doors
 - Basic Name Generator
 - Actually make equipped-shields matter during attacks
 - Weapon-classes (Blunt, Cutting, Poking)
@@ -34,9 +33,6 @@
 
 - Deciding on the experience-level progression
 - proper HELP menu(s)
-- lighting system
-    - PC / NPC light radius / visibility
-    - light coming off of torches and other light sources
 - item class definition
     - weapon sub-class 
     - armor sub-class

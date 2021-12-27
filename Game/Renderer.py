@@ -7,6 +7,7 @@ from curses import curs_set
 from .Camera import Camera
 from .Tiletype import Tiletype
 from .ModTable import ModTable
+from math import sqrt
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -88,34 +89,38 @@ class Renderer:
         self.s.addstr(y+1, x, str1)
 
         
-    def draw_main_screen_entity(self, game, npc):
-        rows, cols = self.s.getmaxyx()
-        mapRowOffset = 5
-        beginDisplayX = 1
-        y = npc.y + mapRowOffset
-        x = npc.x + beginDisplayX
-        endDisplayX = cols-1
-        endDisplayY = rows-4
-        cx = game.camera.x
-        cy = game.camera.y 
-        options = None
-        if npc.is_player:
-            options = c(4) | A_BOLD 
-        else:
-            options = c(5) | A_BOLD 
-        y_check0 = y+cy >= mapRowOffset 
-        y_check1 = y+cy <= endDisplayY 
-        #if not y_check0:
-        #    game.addLog("Error: y_check0 failed")
-        #if not y_check1:
-        #    game.addLog("Error: y_check1 failed")
-        y_check = y_check0 and y_check1
-        x_check0 = x+cx >= beginDisplayX 
-        x_check1 = x+cx <= endDisplayX
-        x_check = x_check0 and x_check1
-        all_checks = y_check and x_check 
-        if all_checks :
-            self.s.addstr(y + cy, x + cx, npc.symbol, options )
+    def draw_main_screen_entity(self, game, e):
+        
+        if not e.is_player:
+            distToPC = self.getDistance( e.y, e.x, game.pc.y, game.pc.x )
+        if e.is_player or distToPC <= game.pc.lightradius:
+            rows, cols = self.s.getmaxyx()
+            mapRowOffset = 5
+            beginDisplayX = 1
+            y = e.y + mapRowOffset
+            x = e.x + beginDisplayX
+            endDisplayX = cols-1
+            endDisplayY = rows-4
+            cx = game.camera.x
+            cy = game.camera.y 
+            options = None
+            if e.is_player:
+                options = c(4) | A_BOLD 
+            else:
+                options = c(5) | A_BOLD 
+            y_check0 = y+cy >= mapRowOffset 
+            y_check1 = y+cy <= endDisplayY 
+            #if not y_check0:
+            #    game.addLog("Error: y_check0 failed")
+            #if not y_check1:
+            #    game.addLog("Error: y_check1 failed")
+            y_check = y_check0 and y_check1
+            x_check0 = x+cx >= beginDisplayX 
+            x_check1 = x+cx <= endDisplayX
+            x_check = x_check0 and x_check1
+            all_checks = y_check and x_check 
+            if all_checks :
+                self.s.addstr(y + cy, x + cx, e.symbol, options )
 
 
     def draw_main_screen_item(self, game, item):
@@ -177,7 +182,8 @@ class Renderer:
 
 
 
-
+    def getDistance(self, y, x, y0, x0):
+        return sqrt((x0 - x)**2) + ((y0 - y)**2)
 
 
 
@@ -214,13 +220,18 @@ class Renderer:
                     options = c(7)
 
                 tileToDrawStr = str( tileToDraw )
-                y = i + mapRowOffset + cy
-                x = j + 1 + cx
-                if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
-                    if options:
-                        self.s.addstr( y, x, tileToDrawStr, c(7) )
-                    else:
-                        self.s.addstr( y, x, tileToDrawStr )
+
+                # the actual tile (y,x) is (i, j) in the dungeon
+                distToPC = self.getDistance( i, j, game.pc.y, game.pc.x )
+                if distToPC <= game.pc.lightradius:
+
+                    y = i + mapRowOffset + cy
+                    x = j + 1 + cx
+                    if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
+                        if options:
+                            self.s.addstr( y, x, tileToDrawStr, c(7) )
+                        else:
+                            self.s.addstr( y, x, tileToDrawStr )
 
 
 
@@ -243,27 +254,23 @@ class Renderer:
     def drawMainScreenDoor(self, game, door):
         assert(game!=None)
         assert(door!=None)
-        y = door.y + 5
-        x = door.x + 1
-        cx = game.camera.x
-        cy = game.camera.y 
-        rows, cols = self.s.getmaxyx()
-        endOfDungeonDisplay = rows - 4
-        mapRowOffset = 5
-        beginDisplayX = 1
-        endDisplayX = cols-1
-        #options = None
-        #if npc.is_player:
-        #    options = c(4) | A_BOLD 
-        #else:
-        #    options = c(5) | A_BOLD 
 
-        symbol = '+' # if isClosed
-        if not door.isClosed:
-            symbol = '-'
-
-        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
-            self.s.addstr(y + cy, x + cx, symbol )
+        distToPC = self.getDistance( door.y, door.x, game.pc.y, game.pc.x )
+        if distToPC <= game.pc.lightradius:
+            y = door.y + 5
+            x = door.x + 1
+            cx = game.camera.x
+            cy = game.camera.y 
+            rows, cols = self.s.getmaxyx()
+            endOfDungeonDisplay = rows - 4
+            mapRowOffset = 5
+            beginDisplayX = 1
+            endDisplayX = cols-1
+            symbol = '+' # if isClosed
+            if not door.isClosed:
+                symbol = '-'
+            if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
+                self.s.addstr(y + cy, x + cx, symbol )
 
 
 
@@ -301,6 +308,7 @@ class Renderer:
             f"Your Base AC: {game.pc.baseAC}",
             f"Dexterity Modifier: {ModTable.getModForScore(game.pc.abilities[1])}",
             f"AC: {game.pc.ac}",
+            f"Your Base Attack: {game.pc.baseAttack}",
             "-"*(cols//8),
         ]
 

@@ -22,7 +22,8 @@ class Entity:
     def __init__(self, game=None, name="Unnamed", level=1, race=Race.HUMAN, 
         job=Job.FIGHTER, abilities=[10,10,10,10,10,10], y=0, x=0, 
         gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, 
-        symbol="@", hd=(1,4), ac=10, personalityTraits=[PersonalityTrait.NORMAL] ):
+        symbol="@", hd=(1,4), ac=10, personalityTraits=[PersonalityTrait.NORMAL],
+        lightradius=2, baseAttack=0):
         if game == None:
             raise Exception("Game cannot be None")
         # basic checks on numeric input parameters
@@ -45,7 +46,10 @@ class Entity:
         self.alignment = alignment 
         self.is_player = is_player 
         self.symbol = symbol 
+
         self.baseAC = ac
+        self.baseAttack = baseAttack
+
         self.hd = hd
         self.hunger = 255
         self.maxhunger = 255
@@ -60,6 +64,20 @@ class Entity:
         self.items = []
         self.righthand = None
         self.lefthand = None
+        self.lightradius = lightradius
+
+
+
+    @property
+    def baseAttack(self):
+        return self._baseAttack
+    @baseAttack.setter
+    def baseAttack(self, ac):
+        assert(ac!=None)
+        #assert(isinstance(ac,int))
+        self._baseAttack=ac
+
+
 
     @property
     def baseAC(self):
@@ -278,14 +296,10 @@ class Entity:
         if item not in self.items:
             self.items.append(item)
 
-
-
-    def attack(self, target, doLog):
-
-        # depends on which hand a weapon is equipped in
-        # for right now we shall code for right hand
+    
+    @property
+    def baseDamage(self):
         weapon = self.righthand
-        
         numWeaponRolls = 1
         weaponDie      = 1
         weaponMod      = 0
@@ -293,13 +307,33 @@ class Entity:
             numWeaponRolls = weapon.damage[0]
             weaponDie      = weapon.damage[1]
             weaponMod      = weapon.damage[2]
+        return (numWeaponRolls, weaponDie, weaponMod)
+
+
+    def attack(self, target, doLog):
+
+        # depends on which hand a weapon is equipped in
+        # for right now we shall code for right hand
+        #weapon = self.righthand
+        #numWeaponRolls = 1
+        #weaponDie      = 1
+        #weaponMod      = 0
+        #if weapon != None:
+        #    numWeaponRolls = weapon.damage[0]
+        #    weaponDie      = weapon.damage[1]
+        #    weaponMod      = weapon.damage[2]
+        baseDamage = self.baseDamage
+        numWeaponRolls = baseDamage[0]
+        weaponDie      = baseDamage[1]
+        weaponMod      = baseDamage[2]
 
         # traditional dnd 3.0 rules:
         # 1d20 for attack
         roll = randint(1, 20)
+        total = roll + self.baseAttack
 
         # if the roll is >= player's ac, attack hits
-        if roll >= target.ac:
+        if total >= target.ac:
             # for right now, lets just subtract 1 hp until we come back to 
             # properly write the damage calc rules
 
