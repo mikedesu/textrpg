@@ -2,14 +2,15 @@ Help Menu:
 --------------------------------------------------------------------------
 Player Character mode:                  
 --------------------------------------------------------------------------
-a, ARROW_LEFT, 4 - Move west      | s, ARROW_UP, 8    - Move north
-d, ARROW_DOWN, 2 - Move south     | f, ARROW_RIGHT, 6 - Move east
+4                - Move west      | 8                 - Move north
+2                - Move south     | 6                 - Move east
 7                - Move northwest | 9                 - Move northeast
 1                - Move southwest | 3                 - Move southeast
 --------------------------------------------------------------------------
 , - Pick up item at feet          | i - Display inventory
 c - Turn camera mode on           | l - Turn logger mode on
 q - Quit                          | ? - This help menu
+o - Open door (then a direction)  | 
 --------------------------------------------------------------------------
 Camera mode:
 --------------------------------------------------------------------------
