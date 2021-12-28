@@ -3,6 +3,10 @@
 
 -----
 
+## 28-12-2021
+    - Opening doors with 'o' and then a direction no longer crashes (arrowkeys still wont work for this)
+    - Hitting enter on an empty inventory screen no longer crashes the game
+
 ## 26-12-2021
     - Debug panel by pressing 'd'
     - Basic hallway drawing

@@ -101,8 +101,10 @@ class Game:
             self.help_menu()
             return False
         elif k in openKey:
-            self.handleOpen()
-            return True
+            self.addLog(f"Open in which direction?")
+
+            self.renderer.draw_main_screen(self)
+            return self.handleOpen()
 
         elif k in debugPanelKey:
             self.debugPanel = not self.debugPanel 
@@ -172,7 +174,7 @@ class Game:
     def handleOpenDirection(self, key):
         assert(key!=None)
         #assert(key in ['1','2','3','4','5','6','7','8','9'])
-        self.addLog(f"{key}")
+        #self.addLog(f"{key}")
         
         y=0
         x=0
@@ -187,24 +189,31 @@ class Game:
                 '8':(1,0),
                 '9':(1,1)
                 }
-        y = dirs[key][0]
-        x = dirs[key][1]
-
-        newX = self.pc.x + x
-        newY = self.pc.y + y
         
-        for i in range(len(self.dungeonFloor.doors)):
-            door = self.dungeonFloor.doors[i]
-            if door.x==newX and door.y==newY:
-                door.isClosed = not door.isClosed 
-                break
+        try:
+            y = dirs[key][0]
+            x = dirs[key][1]
+
+            newX = self.pc.x + x
+            newY = self.pc.y + y
+            
+            for i in range(len(self.dungeonFloor.doors)):
+                door = self.dungeonFloor.doors[i]
+                if door.x==newX and door.y==newY:
+                    door.isClosed = not door.isClosed
+                    self.addLog("Opened door")
+                    return True
+            self.addLog("No door to open")
+            return True
+        except:
+            return False
 
 
 
     def handleOpen(self):
-        self.addLog("Open in which direction?")
+        #self.addLog("Open in which direction?")
         key = self.renderer.s.getkey() 
-        self.handleOpenDirection(key)
+        return self.handleOpenDirection(key)
 
 
     def removeItemFromDungeonFloor(self, item):

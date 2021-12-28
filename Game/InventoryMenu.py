@@ -39,7 +39,9 @@ class InventoryMenu(Menu):
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
                 if key in [curses.KEY_ENTER, ord("\n")]:
-                    if self.position == len(self.items) - 1:
+                    if len(self.items)==0:
+                        break
+                    elif self.position == len(self.items) - 1:
                         break
                     else:
                         self.items[self.position][1](self.position)
