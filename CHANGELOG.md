@@ -8,7 +8,7 @@
     - Re-named renderer methods to stand in defiance of PEP 8 :D 
     - Created an "EndgameScreen" to display credits, thanks, etc.
     - Opening doors diagonally does NOW work because i fixed it :D 
-
+    - Tile-discovery so tiles stay "lit-up" after you "discover" them
 
 ## 28-12-2021
     - Opening doors with 'o' and then a direction no longer crashes (arrowkeys still wont work for this)

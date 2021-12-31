@@ -2,17 +2,20 @@
 
 ## Bugfixes Needed
 
+- Escape should be able to close menus
+- Numpad movement in menus
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
-- Escape should be able to close menus
-- Numpad movement in menus
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- Basic Name Generator
+- Maybe get rid of the whole left/right-hand concept entirely? 
+    - Make it like: Free hands?
+        - Free hand 1
+        - Free hand 2
 - Actually make equipped-shields matter during attacks
 - Weapon-classes (Blunt, Cutting, Poking)
 - Kicking ('k')
@@ -21,8 +24,8 @@
 
 ## Medium
 
+- Actually-Good Name Generator
 - Be able to immediately equip items that might be on the floor
-- Tile-discovery so tiles stay "lit-up" after you "discover" them
 - Notes that you can pick-up and read
 - Kicking doors down / breaking doors down
     - How would I implement this?

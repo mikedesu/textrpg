@@ -534,7 +534,7 @@ class Game:
                     pc.killcount += 1
 
                 # test
-                    pc.lightradius += 1
+                    #pc.lightradius += 1
                 else:
                     # game over!
                     self.addLog(f"{npc.name} died! Game over!")

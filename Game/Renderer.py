@@ -106,6 +106,7 @@ class Renderer:
         
         if not e.is_player:
             distToPC = self.getDistance( e.y, e.x, game.pc.y, game.pc.x )
+
         if e.is_player or distToPC <= game.pc.lightradius:
             rows, cols = self.s.getmaxyx()
             mapRowOffset = 5
@@ -228,15 +229,18 @@ class Renderer:
             for j in range( len(rowToDraw) ):
                 tileToDraw = rowToDraw[j]
                 options = None
-
-                if tileToDraw.tiletype == Tiletype.GRASS:
-                    options = c(7)
-
-                tileToDrawStr = str( tileToDraw )
-
-                # the actual tile (y,x) is (i, j) in the dungeon
+                
                 distToPC = self.getDistance( i, j, game.pc.y, game.pc.x )
-                if distToPC <= game.pc.lightradius:
+                
+                if distToPC <= game.pc.lightradius or tileToDraw.isDiscovered:
+                    tileToDraw.isDiscovered = True
+                
+                #if tileToDraw.isDiscovered:
+                    if tileToDraw.tiletype == Tiletype.GRASS:
+                        options = c(7)
+                    tileToDrawStr = str( tileToDraw )
+ 
+
 
                     y = i + mapRowOffset + cy
                     x = j + 1 + cx
@@ -245,6 +249,19 @@ class Renderer:
                             self.s.addstr( y, x, tileToDrawStr, c(7) )
                         else:
                             self.s.addstr( y, x, tileToDrawStr )
+
+                #if tileToDraw.tiletype == Tiletype.GRASS:
+                #    options = c(7)
+                #tileToDrawStr = str( tileToDraw )
+                # the actual tile (y,x) is (i, j) in the dungeon
+                
+                #    y = i + mapRowOffset + cy
+                #    x = j + 1 + cx
+                #    if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
+                #        if options:
+                #            self.s.addstr( y, x, tileToDrawStr, c(7) )
+                #        else:
+                #            self.s.addstr( y, x, tileToDrawStr )
 
 
 
