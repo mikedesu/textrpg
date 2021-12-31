@@ -364,7 +364,15 @@ class Entity:
 
 
 
-
+    def abilityString(self):
+        s = ""
+        s += f"Str: {self.abilities[0]} "
+        s += f"Dex: {self.abilities[1]} "
+        s += f"Con: {self.abilities[2]} "
+        s += f"Int: {self.abilities[3]} "
+        s += f"Wis: {self.abilities[4]} "
+        s += f"Cha: {self.abilities[5]} "
+        return s
 
 
 
@@ -372,13 +380,7 @@ class Entity:
 
 
     def __str__(self):
-        s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job}\n"
-        s += f"Str: {self.abilities[0]} "
-        s += f"Dex: {self.abilities[1]} "
-        s += f"Con: {self.abilities[2]} "
-        s += f"Int: {self.abilities[3]} "
-        s += f"Wis: {self.abilities[4]} "
-        s += f"Cha: {self.abilities[5]} "
+        s = f"{self.name} Level {self.level} {self.alignment} {self.race} {self.job} "
         s += f"HP: {self.hp}/{self.maxhp} "
         s += f"XP: {self.xp} "
         #hungerStr = f"H:{self.hunger}/{self.maxhunger}"

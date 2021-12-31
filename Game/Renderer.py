@@ -30,19 +30,19 @@ class Renderer:
         self.s.keypad(True)
         curs_set(False)
 
-    def draw_titlescreen(self):
-        self.s.addstr(0, 0, 'Welcome to the RPG', c(1))
-        self.s.addstr(1, 0, 'By darkmage', c(1))
-        self.s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
-        self.s.addstr(3, 0, 'Press q to quit', c(3))
-        self.s.addstr(4, 0, 'Press n for new game', c(3))
-        self.s.refresh()
+    #def draw_titlescreen(self):
+    #    self.s.addstr(0, 0, 'Welcome to the RPG', c(1))
+    #    self.s.addstr(1, 0, 'By darkmage', c(1))
+    #    self.s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
+    #    self.s.addstr(3, 0, 'Press q to quit', c(3))
+    #    self.s.addstr(4, 0, 'Press n for new game', c(3))
+    #    self.s.refresh()
 
-    def draw_main_screen_border(self, game, pc):
+    def drawMainscreenBorder(self, game, pc):
         if game==None:
-            raise Exception("draw_main_screen_border: game cannot be None")
+            raise Exception("drawMainscreenBorder: game cannot be None")
         if pc==None:
-            raise Exception("draw_main_screen_border: pc cannot be None")
+            raise Exception("drawMainscreenBorder: pc cannot be None")
         y = 4
         x = 0
         rows, cols = self.s.getmaxyx()
@@ -60,12 +60,21 @@ class Renderer:
         self.s.addstr(y, x, line)
         y += 1
     
-    def draw_main_screen_pc_info(self, game):
+    def drawMainscreenPCInfo(self, game):
         rows, cols = self.s.getmaxyx()
-        y = rows-3
-        x = 0
+
+
+        offsetY = 0
+        offsetX = 1
+        rootY = rows-3
+        rootX = 0
+        y = rootY + offsetY
+        x = rootX + offsetX
         # draw pc info at bottom of screen
+        
         self.s.addstr(y, x, str(game.pc))
+        self.s.addstr(y+1, x, str(game.pc.abilityString()))
+
         # approximate the middle to drop a turn counter like T:999
         x = int( 24 * cols / 32 )
         
@@ -83,13 +92,15 @@ class Renderer:
         self.s.addstr(y, x, hungerStr, options )
 
         offset = len(hungerStr)+1
+        
         str0 = f"M:{game.currentMode} T:{game.currentTurnCount}"
         self.s.addstr(y,   x+offset, str0)
+        
         str1 = f"cy: {game.camera.y} cx: {game.camera.x} y:{game.pc.y} x:{game.pc.x}"
         self.s.addstr(y+1, x, str1)
 
         
-    def draw_main_screen_entity(self, game, e):
+    def drawMainscreenEntity(self, game, e):
         
         if not e.is_player:
             distToPC = self.getDistance( e.y, e.x, game.pc.y, game.pc.x )
@@ -123,7 +134,7 @@ class Renderer:
                 self.s.addstr(y + cy, x + cx, e.symbol, options )
 
 
-    def draw_main_screen_item(self, game, item):
+    def drawMainscreenItem(self, game, item):
         y = item.y + 5
         x = item.x + 1
         cx = game.camera.x
@@ -150,7 +161,7 @@ class Renderer:
         else:
             self.s.addstr(y, x, log)
 
-    def draw_main_screen_logs(self, game):
+    def drawMainscreenLogs(self, game):
         # only enough room for last 2 logs
         y, x = 1, 1
         a = len(game.logs)
@@ -189,7 +200,7 @@ class Renderer:
 
 
 
-    def draw_main_screen_dungeonFloor(self, game):
+    def drawMainscreenDungeonFloor(self, game):
         df = game.dungeonFloor
         rows, cols = self.s.getmaxyx()
         d_rows = game.dungeonFloor.rows
@@ -235,23 +246,23 @@ class Renderer:
 
 
 
-    def draw_main_screen_dungeonFloor_npcs(self, game):
+    def drawMainscreenDungeonFloorNpcs(self, game):
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
-            self.draw_main_screen_entity(game, npc)
+            self.drawMainscreenEntity(game, npc)
      
-    def draw_main_screen_dungeonFloor_items(self, game):
+    def drawMainscreenDungeonFloorItems(self, game):
         items = game.dungeonFloor.items
         for item in items:
-            self.draw_main_screen_item(game, item)
+            self.drawMainscreenItem(game, item)
            
-    def drawMainScreenDungeonFloorDoors(self, game):
+    def drawMainscreenDungeonFloorDoors(self, game):
         assert(game!=None)
         doors = game.dungeonFloor.doors
         for door in doors:
-            self.drawMainScreenDoor(game, door)
+            self.drawMainscreenDoor(game, door)
 
-    def drawMainScreenDoor(self, game, door):
+    def drawMainscreenDoor(self, game, door):
         assert(game!=None)
         assert(door!=None)
 
@@ -333,16 +344,17 @@ class Renderer:
         # 3. entities / NPCs
         # 4. border
         
-        self.draw_main_screen_logs(game)
-        self.draw_main_screen_pc_info(game)
-        self.draw_main_screen_dungeonFloor(game)
-
-        self.drawMainScreenDungeonFloorDoors(game)
+        self.drawMainscreenLogs(game)
         
+        self.drawMainscreenPCInfo(game)
 
-        self.draw_main_screen_dungeonFloor_items(game)
-        self.draw_main_screen_dungeonFloor_npcs(game)
-        self.draw_main_screen_entity(game, game.pc)
+        self.drawMainscreenDungeonFloor(game)
+
+        self.drawMainscreenDungeonFloorDoors(game)
+
+        self.drawMainscreenDungeonFloorItems(game)
+        self.drawMainscreenDungeonFloorNpcs(game)
+        self.drawMainscreenEntity(game, game.pc)
 
         if game.debugPanel:
             self.drawDebugPanel(game)
