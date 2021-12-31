@@ -1,17 +1,15 @@
 #from .NPC import NPC 
 from .Entity import Entity
 from random import randint
-
 from .Tile import Tile
 from .Door import Door 
 from .Doortype import Doortype
 from .Tiletype import Tiletype 
-
 from .Item import Item
 from .ItemClass import ItemClass
 from .Race import Race
 from .PersonalityTrait import PersonalityTrait
-
+from .NameGenerator import NameGenerator 
 import sys
 
 class DungeonFloor:
@@ -122,11 +120,14 @@ class DungeonFloor:
         self.npcs = [   ]
         #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         #self.npcs = [  npc0 ]
-        
+        ng = NameGenerator()
+
         for i in range(5):
             x = randint(2,6)
             y = randint(2,6)
-            npc = Entity( self.game, name="John", y=y, x=x )   
+
+            n = ng.generateName()
+            npc = Entity( self.game, name=n, y=y, x=x )   
             self.npcs.append(npc)
 
 
