@@ -3,6 +3,9 @@
 
 -----
 
+## 31-12-2021
+    - Re-did title screen as a Menu
+
 ## 28-12-2021
     - Opening doors with 'o' and then a direction no longer crashes (arrowkeys still wont work for this)
     - Hitting enter on an empty inventory screen no longer crashes the game

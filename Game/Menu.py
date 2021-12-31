@@ -46,6 +46,17 @@ class Menu(object):
         while True:
             self.window.refresh()
             curses.doupdate()
+
+
+            self.window.border('|','|','-','-','+','+','+','+')
+            offsetY = 1
+            offsetX = 1
+            self.window.addstr( offsetY, offsetX, self.title )
+            offsetX += 2
+            offsetY += 2
+
+
+
             for index, item in enumerate(self.items):
                 if index == self.position:
                     mode = curses.A_REVERSE
@@ -53,13 +64,13 @@ class Menu(object):
                     mode = curses.A_NORMAL
                 #msg = "%d. %s" % (index, item[0])
                 msg = f"{index}. {item[0]}"
-                self.window.addstr(1 + index, 1, msg, mode)
+                self.window.addstr(offsetY + index, offsetX, msg, mode)
             key = self.window.getch()
             if key in [curses.KEY_ENTER, ord("\n")]:
                 if self.position == len(self.items) - 1:
                     break
                 else:
-                    self.items[self.position][1]()
+                    self.items[self.position][1](self.items[self.position][2])
                     break
             elif key == curses.KEY_UP:
                 self.navigate(-1)
