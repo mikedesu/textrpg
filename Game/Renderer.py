@@ -8,6 +8,7 @@ from .Camera import Camera
 from .Tiletype import Tiletype
 from .ModTable import ModTable
 from math import sqrt
+from .EndgameScreen import EndgameScreen
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -288,19 +289,27 @@ class Renderer:
     
     def draw_quit_screen(self):
         self.s.clear()
-        a = None
-        rows, cols = self.s.getmaxyx()
-        filename="txt/quitscreen.txt"
-        with open(filename, "r") as infile:
-            a = infile.readlines()
-        y = 0
-        for y in range(len(a)):
-            line = a[y]
-            if y < rows:
-                self.s.addstr(y, 0, line, c(1))
-            #y += 1
-        self.s.refresh()
-        self.s.getkey()
+        
+        eg = EndgameScreen(self.s)
+        eg.display()
+
+
+        
+        #a = None
+        #rows, cols = self.s.getmaxyx()
+        #filename="txt/quitscreen.txt"
+        #with open(filename, "r") as infile:
+        #    a = infile.readlines()
+        #y = 0
+        #for y in range(len(a)):
+        #    line = a[y]
+        #    if y < rows:
+        #        self.s.addstr(y, 0, line, c(1))
+        #    #y += 1
+        #self.s.refresh()
+        #self.s.getkey()
+
+
 
 
 

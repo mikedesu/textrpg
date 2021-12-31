@@ -2,13 +2,11 @@
 
 ## Bugfixes Needed
 
-- Move the HUD to the right by 1 char
-- Eliminate right-side whitespace on the HUD
-- When you die, we need an intermediary screen before the "end game" credit screen
 - Opening doors diagonally does not work for some reason
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
+- When you die, we need an intermediary screen before the "end game" credit screen
 
 --------------------------------------------------------------------------------
 
