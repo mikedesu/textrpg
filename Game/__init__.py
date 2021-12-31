@@ -35,9 +35,9 @@ from .ModTable import ModTable
 from random import randint
 
 class Game:
-    def __init__(self, title='my game', renderer=None):
+    def __init__(self, title='darkhack', renderer=None):
         self.title = title
-        self.logs = []
+        self.logs = [f"Welcome to {title}!"]
         self.currentTurnCount = 0
         assert(renderer != None)
         self.renderer = renderer

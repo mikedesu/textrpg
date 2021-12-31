@@ -6,6 +6,7 @@
 ## 28-12-2021
     - Opening doors with 'o' and then a direction no longer crashes (arrowkeys still wont work for this)
     - Hitting enter on an empty inventory screen no longer crashes the game
+    - Can now open doors using arrow keys in addition to numpad movement keys
 
 ## 26-12-2021
     - Debug panel by pressing 'd'

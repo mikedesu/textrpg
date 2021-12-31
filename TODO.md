@@ -2,6 +2,8 @@
 
 ## Bugfixes Needed
 
+- Move the HUD to the right by 1 char
+- When you die, we need an intermediary screen before the "end game" credit screen
 - Opening doors diagonally does not work for some reason
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
@@ -20,8 +22,13 @@
 
 ## Medium
 
+- Be able to immediately equip items that might be on the floor
+- Tile-discovery so tiles stay "lit-up" after you "discover" them
+- Notes that you can pick-up and read
 - Kicking doors down / breaking doors down
     - How would I implement this?
+        - Similar to open door
+- Chests / storage containers
 - Shields
 - Equipping Shields
 - Basic NPC Movement
