@@ -7,6 +7,7 @@
     - Re-did title screen as a Menu
     - Re-named renderer methods to stand in defiance of PEP 8 :D 
     - Created an "EndgameScreen" to display credits, thanks, etc.
+    - Opening doors diagonally does NOW work because i fixed it :D 
 
 
 ## 28-12-2021

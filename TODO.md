@@ -2,7 +2,6 @@
 
 ## Bugfixes Needed
 
-- Opening doors diagonally does not work for some reason
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
