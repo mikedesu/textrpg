@@ -6,7 +6,8 @@
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
-- When you die, we need an intermediary screen before the "end game" credit screen
+- Escape should be able to close menus
+- Numpad movement in menus
 
 --------------------------------------------------------------------------------
 

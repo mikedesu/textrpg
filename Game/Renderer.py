@@ -9,6 +9,7 @@ from .Tiletype import Tiletype
 from .ModTable import ModTable
 from math import sqrt
 from .EndgameScreen import EndgameScreen
+from .ScoreScreen import ScoreScreen
 
 class Renderer:
     def __init__(self, name="Renderer", screen=None):
@@ -290,8 +291,14 @@ class Renderer:
     def draw_quit_screen(self):
         self.s.clear()
         
-        eg = EndgameScreen(self.s)
-        eg.display()
+        scoreItems = [
+            "Score Screen",
+            "",
+            "More here later"
+        ]
+
+        ss = ScoreScreen(scoreItems, self.s)
+        ss.display()
 
 
         

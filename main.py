@@ -25,7 +25,7 @@ def newGame(r):
     pc = quick_new_character(game, r.s)
     pc.y = 1
     pc.x = 1 # when drawing pc or anything in dungeon, have to account for offset of borders
-    pc.hunger = 1
+    #pc.hunger = 1
     game.pc = pc 
     game_loop(game)
 
