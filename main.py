@@ -30,16 +30,21 @@ def newGame(r):
     game_loop(game)
 
 
-def main(stdscr):
-    renderer = Renderer(screen=stdscr)
+def constructTitlescreenMenu(renderer):
     renderer.startup()
+    title = "darkhack"
+    version = "0.01a"
     menuItems=[
         ("New Game", newGame, renderer ),
         ("Exit", None )
     ]
-    version = "0.01a"
-    title = "darkhack"
     titlescreenMenu = TitlescreenMenu( f"{title} {version}", menuItems, renderer.s )
+    return titlescreenMenu
+
+
+def main(stdscr):
+    renderer = Renderer(screen=stdscr)
+    titlescreenMenu = constructTitlescreenMenu(renderer)
     titlescreenMenu.display()
     
 
