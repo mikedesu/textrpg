@@ -2,6 +2,8 @@
 
 ## Bugfixes Needed
 
+- Create food/rations
+- Enemies need to sometimes drop corpses, rations, and other items 
 - Options-menu on Title Screen
     - Controls
         - Left-hand VIM-like mode  ON/OFF
