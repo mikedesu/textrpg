@@ -6,7 +6,7 @@ from tools import quick_new_character
 import Game
 from Game.Renderer import Renderer
 from Game.TitlescreenMenu import TitlescreenMenu 
-
+from Game.OptionMenu import OptionMenu
 
 def game_loop(game):
     while True:
@@ -34,11 +34,7 @@ def constructTitlescreenMenu(renderer):
     renderer.startup()
     title = "darkhack"
     version = "0.01a"
-    menuItems=[
-        ("New Game", newGame, renderer ),
-        ("Exit", None )
-    ]
-    titlescreenMenu = TitlescreenMenu( f"{title} {version}", menuItems, renderer.s )
+    titlescreenMenu = TitlescreenMenu( f"{title} {version}", renderer, newGame )
     return titlescreenMenu
 
 

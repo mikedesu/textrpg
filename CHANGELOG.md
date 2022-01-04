@@ -3,6 +3,17 @@
 
 -----
 
+## 04-01-2021
+    - OptionMenu beginning
+    - Re-factored how TitleMenu and OptionMenu are constructed
+        - Menu-contents can largely be defined internally now
+    - Left and Right-hand VIM-like movement are temporarily enabled
+             r t  y u
+        a s d f    j k l ;
+             c v  b n
+        Left-hand VIM-mode has a key-conflict with the debugPanel
+    - Started a Pipfile for the project anticipating library-dependencies, but we have none :D
+
 ## 31-12-2021
     - Re-did title screen as a Menu
     - Re-named renderer methods to stand in defiance of PEP 8 :D 

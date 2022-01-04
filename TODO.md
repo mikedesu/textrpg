@@ -10,8 +10,6 @@
         - Right-hand VIM-like mode ON/OFF
 - Numpad movement in menus
 - Non-numpad movement in menus 
-- Right-hand VIM-like mode
-- Left-hand VIM-like mode
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door

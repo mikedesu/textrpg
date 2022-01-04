@@ -84,7 +84,10 @@ class Game:
         quit_key_1 = 'Q'
         camera_key = 'c'
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
-        movement_keys = ['a','s','d','f','KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', '1','2','3','4','5','6','7','8','9']
+        movement_keys = ['a','s','d','f','r','t','c','v',
+            'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 
+            'j','k','l',';','y','u','b','n',
+            '1','2','3','4','5','6','7','8','9']
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
@@ -93,7 +96,7 @@ class Game:
         logger_mode_switch_keys = ['l']
         display_inventory_key = ['i']
         display_equip_menu_key = ['e']
-        debugPanelKey=['d']
+        #debugPanelKey=['d']
         openKey=['o']
 
         retval = False
@@ -106,9 +109,9 @@ class Game:
             self.renderer.draw_main_screen(self)
             return self.handleOpen()
 
-        elif k in debugPanelKey:
-            self.debugPanel = not self.debugPanel 
-            return False
+        #elif k in debugPanelKey:
+        #    self.debugPanel = not self.debugPanel 
+        #    return False
         elif k == camera_key:
             if self.currentMode == "Player":
                 self.currentMode = "Camera"
@@ -381,13 +384,13 @@ class Game:
         y = 0
         x = 0
         lefts  = ['a','j','KEY_LEFT','4']
+        downs  = ['s','k','KEY_DOWN','2']
+        ups    = ['d','l','KEY_UP','8']
         rights = ['f',';','KEY_RIGHT','6']
-        ups    = ['s','k','KEY_UP','8']
-        downs  = ['d','l','KEY_DOWN','2']
-        ul     = ['7']
-        ur     = ['9']
-        dl     = ['1']
-        dr     = ['3']
+        ul     = ['r','y','7']
+        ur     = ['t','u','9']
+        dl     = ['c','b','1']
+        dr     = ['v','n','3']
         if k in lefts:
             x = -1
         elif k in ups:
