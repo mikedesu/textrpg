@@ -3,18 +3,44 @@ from curses import panel
 from .getLongestItemLength import getLongestItemLength 
 
 class OptionMenu(object):
+
+    def loadConfigFile(self):
+        with open("config.txt", 'r') as infile:
+            lines = infile.readlines()
+            for line in lines:
+                splitLine = line.split('=')
+                varName = splitLine[0]
+                value = splitLine[1]
+                if varName == 'leftHandVim':
+                    if value[:-1] == 'True':
+                        self.leftHandVim = True
+                    else:
+                        self.leftHandVim = False
+                if varName == 'rightHandVim':
+                    if value[:-1] == 'True':
+                        self.rightHandVim = True
+                    else:
+                        self.rightHandVim = False
+
+
     def __init__(self, title, stdscreen):
         maxY, maxX = stdscreen.getmaxyx()
         self.title = title
+        self.leftHandVim = True
+        self.rightHandVim = True
+        self.loadConfigFile()
+        leftHandVimStr = f"Left-hand Vim-like {self.leftHandVim} "
+        rightHandVimStr = f"Right-hand Vim-like {self.rightHandVim} "
         self.items = [
-            ("Coming Soon", None),
-            ("Exit", None)
+            [leftHandVimStr, None],
+            [rightHandVimStr, None],
+            ["Exit", None]
         ]
         self.position = 0
         rowPad = 6
         colPad = 20
         rows = len(self.items) + rowPad
-        cols = max(len(title) + colPad, getLongestItemLength(self.items) + colPad)
+        cols = len(rightHandVimStr) + colPad
         y = maxY // 2 - (rows//2)
         x = maxX // 2 - (cols//2)
         self.window = stdscreen.subwin(rows, cols , y, x)
@@ -58,12 +84,28 @@ class OptionMenu(object):
                 selectedItem = self.items[self.position][0]
                 if "Exit" in selectedItem:
                     break
+                elif "Left-hand Vim-like" in selectedItem:
+                    self.leftHandVim = not self.leftHandVim 
+                    self.items[self.position][0] = f"Left-hand Vim-like {self.leftHandVim} "
+                elif "Right-hand Vim-like" in selectedItem:
+                    self.rightHandVim = not self.rightHandVim 
+                    self.items[self.position][0] = f"Right-hand Vim-like {self.rightHandVim} "
             elif key == curses.KEY_UP:
                 self.navigate(-1)
             elif key == curses.KEY_DOWN:
                 self.navigate(1)
+
+        self.writeOptionsToFile()
+
         self.window.clear()
         self.panel.hide()
         panel.update_panels()
         curses.doupdate()
+
+    def writeOptionsToFile(self):
+        with open('config.txt','w') as outfile:
+            outfile.write(f"leftHandVim={self.leftHandVim}\n")
+            outfile.write(f"rightHandVim={self.rightHandVim}\n")
+
+
 

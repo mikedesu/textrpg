@@ -33,7 +33,6 @@
 
 ## Medium
 
-- Actually-Good Name Generator
 - Be able to immediately equip items that might be on the floor
 - Notes that you can pick-up and read
 - Kicking doors down / breaking doors down
@@ -69,4 +68,5 @@
         - etc
     - weight
         - actually manage the weight in a game-balancing way so that you can't just pick up infinite items
+- Actually-Good Name Generator
 

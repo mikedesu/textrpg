@@ -6,6 +6,9 @@
 ## 05-01-2021
     - MessageWindow (using the Menu class)
     - NameGenerator generating totally random names lol
+    - Initial config file options available via OptionMenu at start (config.txt)
+        - leftHandVim=True
+        - rightHandVim=True
 
 ## 04-01-2021
     - OptionMenu beginning

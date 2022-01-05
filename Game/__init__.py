@@ -35,6 +35,28 @@ from .ModTable import ModTable
 
 
 class Game:
+
+    def loadConfigFile(self):
+        with open("config.txt", 'r') as infile:
+            lines = infile.readlines()
+            for line in lines:
+                splitLine = line.split('=')
+                varName = splitLine[0]
+                value = splitLine[1]
+                if varName == 'leftHandVim':
+                    if value[:-1] == 'True':
+                        self.leftHandVim = True
+                    else:
+                        self.leftHandVim = False
+                if varName == 'rightHandVim':
+                    if value[:-1] == 'True':
+                        self.rightHandVim = True
+                    else:
+                        self.rightHandVim = False
+
+
+
+
     def __init__(self, title='darkhack', renderer=None):
         self.title = title
         self.logs = [f"Welcome to {title}!"]
@@ -43,6 +65,12 @@ class Game:
         self.renderer = renderer
         #rows = randint(15,25)
         #cols = randint(15,25)
+
+        self.leftHandVim = True
+        self.rightHandVim = True
+
+        self.loadConfigFile()
+
         rows = 20
         cols = 100
         self.dungeonFloor = DungeonFloor(self, rows, cols)
@@ -86,16 +114,25 @@ class Game:
         quit_key_1 = 'Q'
         camera_key = 'c'
         input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
-        movement_keys = ['a','s','d','f','r','t','c','v',
+        
+        movement_keys = [
             'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 
-            'j','k','l',';','y','u','b','n',
             '1','2','3','4','5','6','7','8','9']
+        if self.leftHandVim:
+            for c in ['a','s','d','f','r','t','c','v']:
+                movement_keys.append(c)
+        if self.rightHandVim:
+            for c in ['j','k','l',';','y','u','b','n']:
+                movement_keys.append(c)
+
+
+
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
         down_keys = ['d','l','KEY_DOWN']
         right_keys = ['f',';','KEY_RIGHT']
-        logger_mode_switch_keys = ['l']
+        #logger_mode_switch_keys = ['l']
         display_inventory_key = ['i']
         display_equip_menu_key = ['e']
         #debugPanelKey=['d']
@@ -131,13 +168,13 @@ class Game:
             elif self.currentMode == "Logger":
                 self.handle_logger_movement(k)
                 return False
-        elif k in logger_mode_switch_keys:
-            if self.currentMode != "Logger":
-                self.currentMode = "Logger"
-                self.logger_offset = 0
-            else:
-                self.currentMode = "Player"
-            return False
+        #elif k in logger_mode_switch_keys:
+        #    if self.currentMode != "Logger":
+        #        self.currentMode = "Logger"
+        #        self.logger_offset = 0
+        #    else:
+        #        self.currentMode = "Player"
+        #    return False
         elif k == "KEY_RESIZE":
             if self.debug_mode:
                 self.addLog("handle_resize")
@@ -389,14 +426,35 @@ class Game:
     def handle_movement(self, entity, k, doLog):
         y = 0
         x = 0
-        lefts  = ['a','j','KEY_LEFT','4']
-        downs  = ['s','k','KEY_DOWN','2']
-        ups    = ['d','l','KEY_UP','8']
-        rights = ['f',';','KEY_RIGHT','6']
-        ul     = ['r','y','7']
-        ur     = ['t','u','9']
-        dl     = ['c','b','1']
-        dr     = ['v','n','3']
+        lefts  = ['KEY_LEFT','4']
+        downs  = ['KEY_DOWN','2']
+        ups    = ['KEY_UP','8']
+        rights = ['KEY_RIGHT','6']
+        ul     = ['7']
+        ur     = ['9']
+        dl     = ['1']
+        dr     = ['3']
+        if self.leftHandVim:
+            #left hand vim
+            lefts.append('a')
+            downs.append('s')
+            ups.append('d')
+            rights.append('f')
+            ul.append('r')
+            ur.append('t')
+            dl.append('c')
+            dr.append('v')
+        if self.rightHandVim:
+            #right hand vim
+            lefts.append('j')
+            downs.append('k')
+            ups.append('l')
+            rights.append(';')
+            ul.append('y')
+            ur.append('u')
+            dl.append('b')
+            dr.append('n')
+
         if k in lefts:
             x = -1
         elif k in ups:

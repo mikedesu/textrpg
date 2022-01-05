@@ -1,0 +1,2 @@
+leftHandVim=False
+rightHandVim=True
