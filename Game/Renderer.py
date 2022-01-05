@@ -27,7 +27,6 @@ class Renderer:
         init_pair(4, COLOR_RED,   -1)
         init_pair(5, COLOR_MAGENTA, -1)
         init_pair(6, COLOR_BLUE, -1)
-
         init_pair(7, COLOR_GREEN, -1)
         self.s.keypad(True)
         curs_set(False)
@@ -184,7 +183,6 @@ class Renderer:
             self.process_log(y+1, x, game.logs[a-3+b])
             self.process_log(y+2, x, game.logs[a-2+b])
             self.process_log(y+3, x, game.logs[a-1+b])
-
 
 
 
@@ -357,40 +355,29 @@ class Renderer:
             f"Your Light Radius: {game.pc.lightradius}",
             "-"*(cols//8),
         ]
-
         for line in debugPanel:
             self.s.addstr(y, x, line)
             y += 1
-
 
 
     #def draw_main_screen(self,game,pc):
     def draw_main_screen(self,game):
         # experimental main-game drawing
         self.s.clear()
-
         self.s.border('|','|','-','-','+','+','+','+')
-
         # order of drawing matters
         # 1. dungeonFloor
         # 2. in-game loot / dropped-objects
         # 3. entities / NPCs
         # 4. border
-        
-        self.drawMainscreenLogs(game)
-        
+        #self.drawMainscreenLogs(game)
         self.drawMainscreenPCInfo(game)
-
         self.drawMainscreenDungeonFloor(game)
-
         self.drawMainscreenDungeonFloorDoors(game)
-
         self.drawMainscreenDungeonFloorItems(game)
         self.drawMainscreenDungeonFloorNpcs(game)
         self.drawMainscreenEntity(game, game.pc)
-
         if game.debugPanel:
             self.drawDebugPanel(game)
-
         self.s.refresh()
      

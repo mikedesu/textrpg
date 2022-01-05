@@ -3,14 +3,15 @@ from random import randint
 
 class NameGenerator:
     def __init__(self):
-        # basic start
-        self.names = [
-            "Mike",
-            "John",
-            "Satan",
-            "Jesus",
-            "God"
-        ]
-
+        pass
+            
     def generateName(self):
-        return self.names[ randint( 0,len(self.names)-1 ) ]
+        alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        randomLenMin = 3
+        randomLenMax = 20
+        randomLen = randint(randomLenMin, randomLenMax)
+        randomName = ""
+        for j in range(randomLen):
+            randomName += alphabet[ randint(0, len(alphabet)-1) ]
+        return randomName 
+

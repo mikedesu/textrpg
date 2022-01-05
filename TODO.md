@@ -9,19 +9,18 @@
         - Left-hand VIM-like mode  ON/OFF
         - Right-hand VIM-like mode ON/OFF
 - VIM-like movement for menus and door-opening
-- Numpad movement in menus
 - Non-numpad movement in menus 
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
 - Escape should be able to close menus (can't do right now)
     - Python curses handles escape key differently
+- Numpad movement in menus
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- MessageWindow (using the Menu class)
 - Maybe get rid of the whole left/right-hand concept entirely? 
     - Make it like: Free hands?
         - Free hand 1

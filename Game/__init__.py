@@ -18,6 +18,7 @@ from curses import KEY_UP
 from curses import KEY_DOWN 
 from curses import resizeterm 
 from curses import is_term_resized
+from random import randint
 
 from .DungeonFloor import DungeonFloor 
 from .Tiletype import Tiletype
@@ -29,10 +30,9 @@ from .InventoryMenu import InventoryMenu
 from .EquipMenu import EquipMenu
 from .Subequipmenu import Subequipmenu
 from .Bodypart import Bodypart
-
+from .MessageWindow import MessageWindow
 from .ModTable import ModTable
 
-from random import randint
 
 class Game:
     def __init__(self, title='darkhack', renderer=None):
@@ -63,6 +63,8 @@ class Game:
         if log==None or log=="":
             raise Exception("Log is empty or none")
         self.logs.append(f"{log}")
+        msgwin = MessageWindow(f"{log}", self.renderer.s)
+        msgwin.display()
 
     def incrTurns(self):
         self.currentTurnCount += 1
@@ -112,12 +114,14 @@ class Game:
         #elif k in debugPanelKey:
         #    self.debugPanel = not self.debugPanel 
         #    return False
-        elif k == camera_key:
-            if self.currentMode == "Player":
-                self.currentMode = "Camera"
-            elif self.currentMode == "Camera":
-                self.currentMode = "Player"
-            return False
+        
+        #elif k == camera_key:
+        #    if self.currentMode == "Player":
+        #        self.currentMode = "Camera"
+        #    elif self.currentMode == "Camera":
+        #        self.currentMode = "Player"
+        #    return False
+
         elif k in movement_keys: #and not self.itemSelectionMode:
             if self.currentMode == "Player":
                 result = self.handle_movement(pc, k, True)
@@ -169,6 +173,8 @@ class Game:
             return False
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
+
+
             return False
         return True
 
@@ -481,8 +487,9 @@ class Game:
                 entity.y += y
                 entity.x += x
                 #if doLog:
-                if doLog and entity.is_player:
-                    self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
+                
+                #if doLog and entity.is_player:
+                #    self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
 
                 #doorCollision = self.checkEntityDoorCollision(entity)
                 #if doorCollision:

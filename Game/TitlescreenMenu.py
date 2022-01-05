@@ -2,6 +2,7 @@ import curses
 from curses import panel
 from Game.OptionMenu import OptionMenu
 from .getLongestItemLength import getLongestItemLength 
+from Game.MessageWindow import MessageWindow
 
 class TitlescreenMenu(object):
     def __init__(self, title, renderer, newGameFunction):
@@ -65,9 +66,16 @@ class TitlescreenMenu(object):
                     optionMenu.display()
                     #break # this is what actually kills the menu
                 elif "New Game" in selectedItem:
+                    
+
+                    msgWin = MessageWindow("Starting a new game...", self.renderer.s)
+                    msgWin.display()
+
                     newGameFunction = self.items[self.position][1]
                     renderer = self.items[self.position][2]
                     newGameFunction(renderer)
+                    
+
                     break
             
             elif key == curses.KEY_UP:

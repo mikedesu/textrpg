@@ -3,6 +3,10 @@
 
 -----
 
+## 05-01-2021
+    - MessageWindow (using the Menu class)
+    - NameGenerator generating totally random names lol
+
 ## 04-01-2021
     - OptionMenu beginning
     - Re-factored how TitleMenu and OptionMenu are constructed

@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 import unittest
 import Game
-from Game import NPC
-from Game.NPC import ZeroLevelException
-from Game.NPC import NegativeLevelException 
-from Game.NPC import NegativeAttributeException  
+from Game import Entity
+from Game.Entity import ZeroLevelException
+from Game.Entity import NegativeLevelException 
+from Game.Entity import NegativeAttributeException  
 from Game.Race import Race
 from Game.Job import Job
-import Renderer 
+from Game.Renderer import Renderer 
 from random import randint
 
 class TestGame(unittest.TestCase):

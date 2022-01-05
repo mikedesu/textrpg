@@ -7,6 +7,7 @@ import Game
 from Game.Renderer import Renderer
 from Game.TitlescreenMenu import TitlescreenMenu 
 from Game.OptionMenu import OptionMenu
+from Game.MessageWindow import MessageWindow
 
 def game_loop(game):
     while True:
@@ -40,9 +41,10 @@ def constructTitlescreenMenu(renderer):
 
 def main(stdscr):
     renderer = Renderer(screen=stdscr)
+
+
     titlescreenMenu = constructTitlescreenMenu(renderer)
     titlescreenMenu.display()
-    
 
 if __name__=='__main__':
     wrapper(main) # needed for curses
