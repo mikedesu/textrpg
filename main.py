@@ -19,7 +19,6 @@ def game_loop(game):
             game.decrOneHungerUnitPC()
             game.incrTurns()
 
-
 def newGame(r):
     assert(r!=None)
     game = Game.Game(renderer=r)
@@ -30,7 +29,6 @@ def newGame(r):
     game.pc = pc 
     game_loop(game)
 
-
 def constructTitlescreenMenu(renderer):
     renderer.startup()
     title = "darkhack"
@@ -38,11 +36,8 @@ def constructTitlescreenMenu(renderer):
     titlescreenMenu = TitlescreenMenu( f"{title} {version}", renderer, newGame )
     return titlescreenMenu
 
-
 def main(stdscr):
     renderer = Renderer(screen=stdscr)
-
-
     titlescreenMenu = constructTitlescreenMenu(renderer)
     titlescreenMenu.display()
 

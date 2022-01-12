@@ -1,0 +1,16 @@
+{
+    "name":"Some Elf", 
+    "level":1, 
+    "race":"Race.ELF", 
+    "job":"Job.FIGHTER", 
+    "abilities":[10,12,8,10,10,12], 
+    "gender":"Gender.MALE", 
+    "alignment":"Alignment.LAWFUL_GOOD", 
+    "is_player":false, 
+    "symbol":"@", 
+    "hd":[1,6], 
+    "baseAC":10, 
+    "personalityTraits":["PersonalityTrait.NORMAL"],
+    "lightradius":2, 
+    "baseAttack":0
+}

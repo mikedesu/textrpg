@@ -3,14 +3,23 @@
 
 -----
 
-## 05-01-2021
+## 11-01-2022
+    - Entity.loadFromFile
+        - allows us to define monster templates in monsters/ folder
+    - UI/UX tweaks
+        - No longer need to press 'numpad' to USE the numpad
+        - Can open doors in any direction with numpad or otherwise
+        - Can 'q' or 'esc' to exit Menus
+        - Can navigate up/down using numpad on Menus 
+
+## 05-01-2022
     - MessageWindow (using the Menu class)
     - NameGenerator generating totally random names lol
     - Initial config file options available via OptionMenu at start (config.txt)
         - leftHandVim=True
         - rightHandVim=True
 
-## 04-01-2021
+## 04-01-2022
     - OptionMenu beginning
     - Re-factored how TitleMenu and OptionMenu are constructed
         - Menu-contents can largely be defined internally now

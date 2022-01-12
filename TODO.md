@@ -4,18 +4,9 @@
 
 - Create food/rations
 - Enemies need to sometimes drop corpses, rations, and other items 
-- Options-menu on Title Screen
-    - Controls
-        - Left-hand VIM-like mode  ON/OFF
-        - Right-hand VIM-like mode ON/OFF
-- VIM-like movement for menus and door-opening
-- Non-numpad movement in menus 
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
-- Escape should be able to close menus (can't do right now)
-    - Python curses handles escape key differently
-- Numpad movement in menus
 
 --------------------------------------------------------------------------------
 
@@ -33,6 +24,8 @@
 
 ## Medium
 
+- Fatalities (thx b-rex for the suggestion!)
+    - limb-targeting (ala Vagrant Story-style)
 - Be able to immediately equip items that might be on the floor
 - Notes that you can pick-up and read
 - Kicking doors down / breaking doors down

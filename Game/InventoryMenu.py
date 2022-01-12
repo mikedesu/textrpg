@@ -3,7 +3,6 @@ from curses import panel
 from .Menu import Menu
 
 class InventoryMenu(Menu):
- #   def __init__(self, title, items, stdscreen):
     def display(self):
             self.panel.top()
             self.panel.show()
@@ -13,14 +12,12 @@ class InventoryMenu(Menu):
             while True:
                 self.window.refresh()
                 curses.doupdate()
-                #self.window.addstr( 0, 0, self.title )
                 self.window.border('|','|','-','-','+','+','+','+')
                 offsetY = 2
                 offsetX = 2
                 self.window.addstr( offsetY, offsetX, self.title )
                 offsetX += 2
                 offsetY += 2
-
                 for index, item in enumerate(self.items):
                     if index == self.position:
                         mode = curses.A_REVERSE
@@ -29,17 +26,17 @@ class InventoryMenu(Menu):
                     msg = "%d. %s" % (index, item[0])
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
-                if key in [curses.KEY_ENTER, ord("\n")]:
-                    if len(self.items)==0:
+                if key in [curses.KEY_ENTER, ord("\n"), 113, 27 ]:
+                    if self.position == len(self.items) - 1 or key == 113 or key == 27:
                         break
                     elif self.position == len(self.items) - 1:
                         break
                     else:
                         self.items[self.position][1](self.position)
                         break
-                elif key == curses.KEY_UP:
+                elif key == curses.KEY_UP or key == 56:
                     self.navigate(-1)
-                elif key == curses.KEY_DOWN:
+                elif key == curses.KEY_DOWN or key == 50:
                     self.navigate(1)
             self.window.clear()
             self.panel.hide()

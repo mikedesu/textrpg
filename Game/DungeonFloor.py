@@ -1,6 +1,7 @@
 #from .NPC import NPC 
-from .Entity import Entity
 from random import randint
+import sys
+from .Entity import Entity
 from .Tile import Tile
 from .Door import Door 
 from .Doortype import Doortype
@@ -10,7 +11,6 @@ from .ItemClass import ItemClass
 from .Race import Race
 from .PersonalityTrait import PersonalityTrait
 from .NameGenerator import NameGenerator 
-import sys
 
 class DungeonFloor:
     def __init__(self, game=None, rows=0, cols=0):
@@ -26,7 +26,6 @@ class DungeonFloor:
         self.doors = []
         self.superBasicDungeon1(rows, cols)
 
-
     def addDoor(self, y, x):
         d = Door(name="Door1", y=y, x=x, doortype=Doortype.Wooden)
         self.doors.append(d)
@@ -34,8 +33,6 @@ class DungeonFloor:
     def updateRowOfTilesYX(self, y, x, cols, tiletype):
         for i in range(cols):
             self.map_[y][x + i].tiletype = tiletype
-
-   
 
     def addRowOfTiles(self, cols, tiletype):
         assert(tiletype != None)
@@ -70,12 +67,8 @@ class DungeonFloor:
         assert(rows >= 0)
         assert(isinstance(cols,int))
         assert(cols >= 0)
-
         for row in range(rows):
             self.addRowOfTiles(cols, tiletype)
-        
-
-
 
     def superBasicDungeon1(self, rows, cols):
         self.map_ = []
@@ -86,7 +79,6 @@ class DungeonFloor:
         h=10
         w=10
         self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-        
         h=6
         w=6
         y = 1
@@ -95,13 +87,11 @@ class DungeonFloor:
             #y += w + 5
             x += (2*w)
             self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-
         y = 3
         x = 11
         h = 1
         w = 7*8
         self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-        
         y = 2
         x = 1
         item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,6,0) )
@@ -114,28 +104,29 @@ class DungeonFloor:
             item2,
             item3
         ]
-
         self.addDoor(3,11)
-
         self.npcs = [   ]
         #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         #self.npcs = [  npc0 ]
         ng = NameGenerator()
-
+        #npc = Entity( self.game, name=n, y=y, x=x )   
+        filenames = [
+            #"monsters/weak-human-fighter.json",
+            #"monsters/weak-elf-fighter.json",
+            #"monsters/strong-human-fighter.json",
+            "monsters/weak-goblin-fighter.json"
+        ]
         for i in range(5):
             x = randint(2,6)
             y = randint(2,6)
-
-            n = ng.generateName()
-            npc = Entity( self.game, name=n, y=y, x=x )   
+            randomFilename = filenames[ randint(0, len(filenames)-1) ]
+            npc = Entity.loadFromFile(randomFilename)
+            npc.x = x
+            npc.y = y
+            npc.name = ng.generateName()
+            npc.is_player = False
+            npc.game = self.game
             self.npcs.append(npc)
-
-
-
-
-
-
-
 
     def superBasicDungeon0(self, rows, cols):
         self.map_ = []
@@ -145,7 +136,6 @@ class DungeonFloor:
             self.addRowOfTiles(cols, Tiletype.GRASS)
         self.addRowOfTiles(cols, Tiletype.STONE_FLOOR)
         self.addRowOfTiles(cols, Tiletype.STONE_FLOOR)
-
         random_y = 1
         random_x = 0
         npc0 = NPC( self.game, name="John", y=5, x=5 )   

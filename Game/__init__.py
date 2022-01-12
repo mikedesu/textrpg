@@ -33,8 +33,36 @@ from .Bodypart import Bodypart
 from .MessageWindow import MessageWindow
 from .ModTable import ModTable
 
-
 class Game:
+
+    def __init__(self, title='darkhack', renderer=None):
+        self.title = title
+        self.logs = [f"Welcome to {title}!"]
+        self.currentTurnCount = 0
+        assert(renderer != None)
+        self.renderer = renderer
+        #rows = randint(15,25)
+        #cols = randint(15,25)
+        self.hasShownStarvingMessage = False
+        self.hasShownHungerMessage = False
+        self.leftHandVim = True
+        self.rightHandVim = True
+        self.loadConfigFile()
+        rows = 20
+        cols = 100
+        self.dungeonFloor = DungeonFloor(self, rows, cols)
+        self.currentMode = "Player"
+        self.logger_offset = 0
+        self.camera = Camera()
+        self.debug_mode = False
+        self.testMenu = None
+        self.equipMenu = None
+        self.subequipMenu = None
+        self.debugPanel = False
+        self.modTable = ModTable()
+
+    def __str__(self):
+        return self.title
 
     def loadConfigFile(self):
         with open("config.txt", 'r') as infile:
@@ -54,39 +82,6 @@ class Game:
                     else:
                         self.rightHandVim = False
 
-
-
-
-    def __init__(self, title='darkhack', renderer=None):
-        self.title = title
-        self.logs = [f"Welcome to {title}!"]
-        self.currentTurnCount = 0
-        assert(renderer != None)
-        self.renderer = renderer
-        #rows = randint(15,25)
-        #cols = randint(15,25)
-
-        self.leftHandVim = True
-        self.rightHandVim = True
-
-        self.loadConfigFile()
-
-        rows = 20
-        cols = 100
-        self.dungeonFloor = DungeonFloor(self, rows, cols)
-        self.currentMode = "Player"
-        self.logger_offset = 0
-        self.camera = Camera()
-        self.debug_mode = False
-        self.testMenu = None
-        self.equipMenu = None
-        self.subequipMenu = None
-        self.debugPanel = False
-        self.modTable = ModTable()
-
-    def __str__(self):
-        return self.title
-
     def addLog(self,log):
         if log==None or log=="":
             raise Exception("Log is empty or none")
@@ -105,7 +100,6 @@ class Game:
         assert(isinstance(v,bool))
         self._debugPanel = v
     
-    
     def handleInput(self, pc, k):
         rows, cols = self.renderer.s.getmaxyx()
         # Help Menu
@@ -113,52 +107,53 @@ class Game:
         quit_key_0 = 'q'
         quit_key_1 = 'Q'
         camera_key = 'c'
-        input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, quit_key_1, help_key, camera_key ]
-        
+        input_keys = [ 'a', 's', 'd', 'f', 'j', 'k', 'l', ';', 'KEY_DOWN', 
+            'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 'KEY_RESIZE', quit_key_0, 
+            quit_key_1, help_key, camera_key , 
+            'KEY_HOME', 'KEY_PPAGE', 'KEY_NPAGE', 'KEY_END', 'KEY_B2'
+        ]
         movement_keys = [
             'KEY_DOWN', 'KEY_UP', 'KEY_RIGHT', 'KEY_LEFT', 
-            '1','2','3','4','5','6','7','8','9']
+            '1','2','3','4','5','6','7','8','9',
+            'KEY_HOME', 'KEY_PPAGE', 'KEY_NPAGE', 'KEY_END', 'KEY_B2'
+        ]
         if self.leftHandVim:
             for c in ['a','s','d','f','r','t','c','v']:
                 movement_keys.append(c)
         if self.rightHandVim:
             for c in ['j','k','l',';','y','u','b','n']:
                 movement_keys.append(c)
-
-
-
         selection_keys = ['1','2','3','4','5','6','7','8','9','0']
         left_keys = ['a','j','KEY_LEFT']
         up_keys =   ['s','k','KEY_UP']
         down_keys = ['d','l','KEY_DOWN']
         right_keys = ['f',';','KEY_RIGHT']
+        up_left_keys = ['7','KEY_HOME']
+        up_right_keys = ['9','KEY_PPAGE']
+        down_right_keys = ['3','KEY_NPAGE']
+        down_left_keys = ['1','KEY_END']
         #logger_mode_switch_keys = ['l']
         display_inventory_key = ['i']
         display_equip_menu_key = ['e']
         #debugPanelKey=['d']
         openKey=['o']
-
         retval = False
         if k == help_key:
             self.help_menu()
             return False
         elif k in openKey:
             self.addLog(f"Open in which direction?")
-
             self.renderer.draw_main_screen(self)
             return self.handleOpen()
-
         #elif k in debugPanelKey:
         #    self.debugPanel = not self.debugPanel 
         #    return False
-        
         #elif k == camera_key:
         #    if self.currentMode == "Player":
         #        self.currentMode = "Camera"
         #    elif self.currentMode == "Camera":
         #        self.currentMode = "Player"
         #    return False
-
         elif k in movement_keys: #and not self.itemSelectionMode:
             if self.currentMode == "Player":
                 result = self.handle_movement(pc, k, True)
@@ -188,9 +183,6 @@ class Game:
         elif k in display_equip_menu_key:
             return self.display_equip_menu()
             #return False
-
-
-
         # exit game
         elif k == quit_key_0 or k == quit_key_1:
             #self.renderer.draw_quit_screen()
@@ -202,72 +194,64 @@ class Game:
         elif k == ".":
             return True # more to implement later...
         elif k == 'm':
-
             # experimenting with drawing windows on top of the dungeon
-            
-
-
             return False
         else:
             self.addLog(f"Unimplemented key pressed: {k}")
-
-
             return False
         return True
-
-
 
     def handleOpenDirection(self, key):
         assert(key!=None)
         #assert(key in ['1','2','3','4','5','6','7','8','9'])
         #self.addLog(f"{key}")
-        
         y=0
         x=0
         dirs = { 
-                'KEY_LEFT':(0,-1),
-                'KEY_RIGHT':(0,1),
-                'KEY_UP':(-1,0),
-                'KEY_DOWN':(1,0),
-                
-                '1':(1,-1),
-                '2':(1,0),
-                '3':(1,1),
-                
-                '4':(0,-1),
-                '5':(0,0),
-                '6':(0,1),
-                
-                '7':(-1,-1),
-                '8':(-1,0),
-                '9':(-1,1)
-                }
-        
+            'KEY_LEFT':(0,-1),
+            'KEY_RIGHT':(0,1),
+            'KEY_UP':(-1,0),
+            'KEY_DOWN':(1,0),
+            '1':(1,-1),
+            'KEY_END':(1,-1),
+            '2':(1,0),
+            '3':(1,1),
+            'KEY_NPAGE':(1,1),
+            '4':(0,-1),
+            '5':(0,0),
+            '6':(0,1),
+            '7':(-1,-1),
+            'KEY_HOME':(-1,-1),
+            '8':(-1,0),
+            '9':(-1,1),
+            'KEY_PPAGE':(-1,1),
+        }
         try:
             y = dirs[key][0]
             x = dirs[key][1]
-
             newX = self.pc.x + x
             newY = self.pc.y + y
-            
             for i in range(len(self.dungeonFloor.doors)):
                 door = self.dungeonFloor.doors[i]
                 if door.x==newX and door.y==newY:
+                    prevState = door.isClosed
+                    log = ''
+                    if prevState:
+                        log='Opened door'
+                    else:
+                        log='Closed door'
+                    self.addLog(log)
                     door.isClosed = not door.isClosed
-                    self.addLog("Opened door")
                     return True
             self.addLog("No door to open")
             return True
         except:
             return False
 
-
-
     def handleOpen(self):
         #self.addLog("Open in which direction?")
         key = self.renderer.s.getkey() 
         return self.handleOpenDirection(key)
-
 
     def removeItemFromDungeonFloor(self, item):
         # find the real item in the dungeonFloor items list and remove it
@@ -276,7 +260,6 @@ class Game:
             if item == item_:
                 self.dungeonFloor.items.pop(x)
                 break
-
 
     def handle_item_pickup_main(self, pc, k):
         # get all items on current tile
@@ -288,19 +271,26 @@ class Game:
         self.addLog(f"{self.currentTurnCount}: {pc.name} picked up a {item.name}")
         self.itemSelectionMode = False
 
-
     def decrOneHungerUnitPC(self):
         self.pc.hunger -= 1
         if self.pc.hunger <= 0:
             self.addLog(f"{self.pc.name} died of hunger! Game over!")
             self.renderer.draw_quit_screen()
             exit(0)
-    
+        elif self.pc.hunger < (self.pc.maxhunger / 4):
+            if not self.hasShownStarvingMessage:
+                self.addLog(f"{self.pc.name} is fkn dyin of hunger!")
+                self.hasShownStarvingMessage = True
+                self.hasShownHungerMessage = True
+        elif self.pc.hunger < (self.pc.maxhunger / 2):
+            if not self.hasShownHungerMessage:
+                self.addLog(f"{self.pc.name} starts to get hongreh")
+                self.hasShownHungerMessage = True
+
     def incrOneHungerUnitPC(self):
         self.pc.hunger += 1 
         if self.pc.hunger >= self.pc.maxhunger:
             self.pc.hunger = self.pc.maxhunger 
-
 
     def process_npc_turn(self):
         # for right now, lets make them move randomly
@@ -311,8 +301,8 @@ class Game:
                 # select a random keypress
                 random_index = randint(0, len(movement_keys)-1)
                 random_key = movement_keys[ random_index ] 
-                #self.handle_movement( npc , random_key, False ) 
-                self.handle_movement( npc , random_key, True ) 
+                self.handle_movement( npc , random_key, False ) 
+                #self.handle_movement( npc , random_key, True ) 
             except Exception as e:
                 pass
 
@@ -336,12 +326,10 @@ class Game:
                 return True
         # should never get here...
 
-
     def handle_item_pickup(self, pc):
         x = pc.x
         y = pc.y
         items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
-
         # single-item case
         if len(items)==1:
             pc.items.append( items[0] )
@@ -352,18 +340,16 @@ class Game:
         elif len(items) > 1:
             menuItems=[(items[i].name, self.handleItemPickupHelper, i ) for i in range(len(items))]
             menuItems.append( ("Exit", self.handleItemPickupHelper, len(items) ) )
-
             self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s )
+            #self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s, self )
             return self.testMenu.display()
         else:
             # do nothing
             self.addLog(f"{self.currentTurnCount}: There is nothing here!")
             pass
 
-
     def displayInventoryHelper(self, i):
         pass
-    
 
     def displaySubequipmenuHelper(self, bodypart, item):
         # actually perform the equipping
@@ -386,7 +372,6 @@ class Game:
             self.addLog(f"{self.pc.name} equipped a {item.name} on their {bodypart}")
         return success
 
-
     def displayEquipMenuHelper(self, bodypart):
         items = self.pc.items
         menuItems=[(bodypart, items[i], self.displaySubequipmenuHelper) for i in range(len(items))]
@@ -397,7 +382,6 @@ class Game:
             menuItems.append( ("Exit", None) )
         self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s )
         return self.subequipMenu.display()
-
 
     def display_inventory(self, pc):
         items = pc.items
@@ -415,8 +399,6 @@ class Game:
         self.equipMenu = EquipMenu( "Which body part are you equipping on?", menuItems, self.renderer.s )
         return self.equipMenu.display()
 
-
-
     def handle_resize(self):
         rows, cols = self.renderer.s.getmaxyx()
         self.renderer.s.clear()
@@ -430,10 +412,11 @@ class Game:
         downs  = ['KEY_DOWN','2']
         ups    = ['KEY_UP','8']
         rights = ['KEY_RIGHT','6']
-        ul     = ['7']
-        ur     = ['9']
-        dl     = ['1']
-        dr     = ['3']
+        ul     = ['7','KEY_HOME']
+        ur     = ['9','KEY_PPAGE']
+        dl     = ['1','KEY_END']
+        dr     = ['3','KEY_NPAGE']
+        noMove = ['5','KEY_B2']
         if self.leftHandVim:
             #left hand vim
             lefts.append('a')
@@ -475,6 +458,9 @@ class Game:
         elif k in dr:
             x = 1
             y = 1
+        elif k in noMove:
+            x = 0
+            y = 0
         return self.check_movement(entity, y, x, doLog)
 
     def handle_logger_movement(self, k):
@@ -485,7 +471,6 @@ class Game:
         elif k == 'KEY_DOWN':
             if self.logger_offset < 0:
                 self.logger_offset += 1
-
 
     def handle_camera_movement(self, k):
         if self.debug_mode:
@@ -498,7 +483,6 @@ class Game:
             self.camera.y += 1
         elif k == 'f' or k == ';' or k == 'KEY_RIGHT': # right
             self.camera.x += 1
-
 
     def check_movement(self, entity, y, x, doLog):
         assert(entity != None)
@@ -523,50 +507,36 @@ class Game:
             dir_ = "southwest"
         elif y==1 and x==1:
             dir_ = "southeast"
-        result = self.check_pc_next_tile(entity, y, x)
-        if not result:
-            if doLog and entity.is_player:
-                self.addLog(f"{self.currentTurnCount}: {entity.name} tried to walk {dir_} but cannot!")
-            retval = False
-        else:
-            result = self.check_pc_npc_collision(entity, y, x ) 
-
+        elif y==0 and x==0:
+            dir_ = "no direction"
+            retval = True
+        if dir_ != "no direction":
+            result = self.check_pc_next_tile(entity, y, x)
             if not result:
-
-                doorCollision = self.checkEntityDoorCollision(entity, y, x)
-                if doorCollision:
-                    for d in self.dungeonFloor.doors:
-                        if d.x==doorCollision.x and d.y==doorCollision.y:
-                            if doLog and entity.is_player:
-                                self.addLog(f"There is a {d.doortype} door here")
-                            return False
-
-
-                entity.y += y
-                entity.x += x
-                #if doLog:
-                
-                #if doLog and entity.is_player:
-                #    self.addLog(f"{self.currentTurnCount}: {entity.name} walked {dir_}")
-
-                #doorCollision = self.checkEntityDoorCollision(entity)
-                #if doorCollision:
-                #    for d in self.dungeonFloor.doors:
-                #        if d.x==doorCollision.x and d.y==doorCollision.y:
-                #            if doLog and entity.is_player:
-                #                self.addLog(f"There is a {d.doortype} door here")
-                #                return False
-
-                item_collision = self.check_pc_item_collision(entity)
-                if item_collision:
-                    for item in self.dungeonFloor.items:
-                        if item.x == item_collision.x and item.y == item_collision.y:
-                            if doLog and entity.is_player:
-                                self.addLog(f"There is a {item.name} here")
+                if doLog and entity.is_player:
+                    self.addLog(f"{self.currentTurnCount}: {entity.name} tried to walk {dir_} but cannot!")
+                retval = False
             else:
-                self.handle_pc_npc_collision(entity, result, doLog)
+                result = self.check_pc_npc_collision(entity, y, x ) 
+                if not result:
+                    doorCollision = self.checkEntityDoorCollision(entity, y, x)
+                    if doorCollision:
+                        for d in self.dungeonFloor.doors:
+                            if d.x==doorCollision.x and d.y==doorCollision.y:
+                                if doLog and entity.is_player:
+                                    self.addLog(f"There is a {d.doortype} door here")
+                                return False
+                    entity.y += y
+                    entity.x += x
+                    item_collision = self.check_pc_item_collision(entity)
+                    if item_collision:
+                        for item in self.dungeonFloor.items:
+                            if item.x == item_collision.x and item.y == item_collision.y:
+                                if doLog and entity.is_player:
+                                    self.addLog(f"There is a {item.name} here")
+                else:
+                    self.handle_pc_npc_collision(entity, result, doLog)
         return retval
-
 
     def check_pc_next_tile(self, pc, y, x):
         assert(pc != None)
@@ -589,7 +559,6 @@ class Game:
         return retval
 
     def handle_pc_npc_collision(self, pc, npc, doLog):
-        #if type(npc) == Entity:
         if isinstance(npc, Entity):
             pc.attack(npc, doLog)
             if npc.hp <= 0:
@@ -600,7 +569,6 @@ class Game:
                     # just add 1 xp for now lol
                     pc.xp += 1
                     pc.killcount += 1
-
                 # test
                     #pc.lightradius += 1
                 else:
@@ -608,7 +576,6 @@ class Game:
                     self.addLog(f"{npc.name} died! Game over!")
                     self.renderer.draw_quit_screen()
                     exit(0)
-
 
     def check_pc_item_collision(self, pc):
         for item in self.dungeonFloor.items:
@@ -622,8 +589,6 @@ class Game:
                 if d.isClosed:
                     return d
         return None
-
-
 
     def check_pc_npc_collision(self, entity, y, x):
         # check NPC against player
@@ -639,7 +604,6 @@ class Game:
         # otherwise, return nothing
         return None
 
-
     def check_pc_dungeon_bounds(self, pc, y, x):
         retval = True 
         rows = self.dungeonFloor.rows
@@ -647,7 +611,6 @@ class Game:
         if pc.x+x < 0 or pc.y+y < 0 or pc.y+y > rows or pc.x+x > cols:
             retval = False
         return retval
-
 
     def help_menu(self):
         self.renderer.s.clear()

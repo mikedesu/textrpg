@@ -1,0 +1,16 @@
+{
+    "name":"John Doe", 
+    "level":1, 
+    "race":"Race.HUMAN", 
+    "job":"Job.FIGHTER", 
+    "abilities":[10,10,10,10,10,10], 
+    "gender":"Gender.MALE", 
+    "alignment":"Alignment.LAWFUL_GOOD", 
+    "is_player":false, 
+    "symbol":"@", 
+    "hd":[2,20], 
+    "baseAC":10, 
+    "personalityTraits":["PersonalityTrait.NORMAL"],
+    "lightradius":2, 
+    "baseAttack":0
+}

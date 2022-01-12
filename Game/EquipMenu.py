@@ -24,22 +24,20 @@ class EquipMenu(Menu):
                         mode = curses.A_REVERSE
                     else:
                         mode = curses.A_NORMAL
-                    #msg = "%d. %s" % (index, item[0])
                     msg = f"{index}. {item[0]}"
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
-                if key in [curses.KEY_ENTER, ord("\n")]:
-                    if self.position == len(self.items) - 1:
+                if key in [curses.KEY_ENTER, ord("\n"), 113, 27 ]:
+                    if self.position == len(self.items) - 1 or key == 113 or key == 27:
                         break
                     else:
                         bodypart = self.items[self.position][0]
                         helperFunction = self.items[self.position][1]
-                        #self.items[self.position][1](bodypart)
                         success = helperFunction(bodypart)
                         break
-                elif key == curses.KEY_UP:
+                elif key == curses.KEY_UP or key == 56:
                     self.navigate(-1)
-                elif key == curses.KEY_DOWN:
+                elif key == curses.KEY_DOWN or key == 50:
                     self.navigate(1)
             self.window.clear()
             self.panel.hide()

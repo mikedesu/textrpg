@@ -1,0 +1,16 @@
+{
+    "name":"Some Goblin", 
+    "level":1, 
+    "race":"Race.GOBLIN", 
+    "job":"Job.FIGHTER", 
+    "abilities":[10,10,8,10,10,8], 
+    "gender":"Gender.MALE", 
+    "alignment":"Alignment.CHAOTIC_EVIL", 
+    "is_player":false, 
+    "symbol":"@", 
+    "hd":[1,4], 
+    "baseAC":10, 
+    "personalityTraits":["PersonalityTrait.NORMAL"],
+    "lightradius":2, 
+    "baseAttack":0
+}
