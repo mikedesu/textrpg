@@ -165,26 +165,39 @@ class Renderer:
 
     def drawMainscreenLogs(self, game):
         # only enough room for last 2 logs
+        maxLen = 40
         y, x = 1, 1
-        a = len(game.logs)
-        b = game.logger_offset 
-        if a == 1:
-            # only 1 log
-            self.process_log(y,   x, game.logs[a-1])
-        elif a == 2:
-            self.process_log(y,   x, game.logs[a-2])
-            self.process_log(y+1, x, game.logs[a-1])
-        elif a == 3:
-            self.process_log(y,   x, game.logs[a-3])
-            self.process_log(y+1, x, game.logs[a-2])
-            self.process_log(y+2, x, game.logs[a-1])
-        elif a >= 4:
-            self.process_log(y,   x, game.logs[a-4+b])
-            self.process_log(y+1, x, game.logs[a-3+b])
-            self.process_log(y+2, x, game.logs[a-2+b])
-            self.process_log(y+3, x, game.logs[a-1+b])
+        c = 0
+        rows, cols = self.s.getmaxyx()
 
+        offset = 0
 
+        #bottomLogs = game.logs[ : row-4 ]
+        maxRows = rows-5
+
+        if len(game.logs) > maxRows:
+            bottomLogs = game.logs[ -(maxRows):: ]
+        else:
+            bottomLogs = game.logs
+
+#a[-(row-4)::]
+
+        while c < maxRows:
+            log = " "
+            try:
+                log = bottomLogs[c]
+            except:
+                pass
+
+            # handles line-wrapping at a length of 40
+            for i in range(0, len(log), maxLen):
+                try:
+                    self.s.addstr(y, x, f"{log[i:i+maxLen]:40}|")
+                except:
+                    pass
+                y += 1
+            #y += 1
+            c += 1
 
 
 
@@ -370,7 +383,7 @@ class Renderer:
         # 2. in-game loot / dropped-objects
         # 3. entities / NPCs
         # 4. border
-        #self.drawMainscreenLogs(game)
+        self.drawMainscreenLogs(game)
         self.drawMainscreenPCInfo(game)
         self.drawMainscreenDungeonFloor(game)
         self.drawMainscreenDungeonFloorDoors(game)

@@ -53,7 +53,10 @@ class Game:
         self.dungeonFloor = DungeonFloor(self, rows, cols)
         self.currentMode = "Player"
         self.logger_offset = 0
-        self.camera = Camera()
+        
+        self.camera = Camera(0,51)
+        
+
         self.debug_mode = False
         self.testMenu = None
         self.equipMenu = None

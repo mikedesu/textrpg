@@ -299,7 +299,7 @@ def generate_random_stats():
 #    new_character_display(s, pc)
 #    return pc 
 
-def quick_new_character(game, s):
+def quickNewCharacter(game, s):
     name = "Darkmage"
     stats = generate_random_stats()
     race = Race.HUMAN 
