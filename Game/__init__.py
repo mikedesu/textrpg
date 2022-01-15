@@ -89,8 +89,8 @@ class Game:
         if log==None or log=="":
             raise Exception("Log is empty or none")
         self.logs.append(f"{log}")
-        msgwin = MessageWindow(f"{log}", self.renderer.s)
-        msgwin.display()
+        #msgwin = MessageWindow(f"{log}", self.renderer.s)
+        #msgwin.display()
 
     def incrTurns(self):
         self.currentTurnCount += 1

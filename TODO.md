@@ -9,15 +9,12 @@
     - We should not be able to see what is behind a closed door
 - New logging system needs to push old messages off-screen
     - calc # of log-lines on-screen
+- Turn off all the addLog windows for now
 
 --------------------------------------------------------------------------------
 
 ## Easy 
 
-- Maybe get rid of the whole left/right-hand concept entirely? 
-    - Make it like: Free hands?
-        - Free hand 1
-        - Free hand 2
 - Actually make equipped-shields matter during attacks
 - Weapon-classes (Blunt, Cutting, Poking)
 - Kicking ('k')
