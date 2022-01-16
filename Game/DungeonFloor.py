@@ -98,11 +98,19 @@ class DungeonFloor:
         item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,  damage=(1,8,0) )
         item2 = Item( "Mace", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,4,0) )
         item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,1,0) )
+
+        x += 1
+        item4 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1)
+        item5 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1)
+
+
         self.items = [ 
             item0,
             item1,
             item2,
-            item3
+            item3,
+            item4,
+            item5
         ]
         self.addDoor(3,11)
         self.npcs = [   ]

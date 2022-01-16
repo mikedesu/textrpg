@@ -2,8 +2,13 @@ from enum import Enum
 
 class ItemClass(Enum):
     WEAPON = 1
+    FOOD = 2
 
     def __str__(self):
-        if self.value == 1:
-            return "WEAPON"
+        a = [
+            '',
+            'WEAPON',
+            'FOOD'
+            ]
+        return a[ self.value ]
  

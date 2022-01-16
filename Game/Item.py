@@ -35,7 +35,8 @@ class Item:
     def updateSymbol(self):
         assert(self.itemclass!=None)
         symDict = {
-            ItemClass.WEAPON : ')'
+            ItemClass.WEAPON : ')',
+            ItemClass.FOOD   : '%'
         }
         self.symbol = symDict[ self.itemclass ] 
 
