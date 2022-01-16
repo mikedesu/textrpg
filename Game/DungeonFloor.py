@@ -100,8 +100,8 @@ class DungeonFloor:
         item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,1,0) )
 
         x += 1
-        item4 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1)
-        item5 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1)
+        item4 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1, hungerpoints=50)
+        #item5 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1, hungerpoints=50)
 
 
         self.items = [ 
@@ -109,8 +109,7 @@ class DungeonFloor:
             item1,
             item2,
             item3,
-            item4,
-            item5
+            item4
         ]
         self.addDoor(3,11)
         self.npcs = [   ]

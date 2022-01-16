@@ -2,13 +2,13 @@ import curses
 from curses import panel
 
 class Menu(object):
-    def __init__(self, title, items, stdscreen ):
-    #def __init__(self, title, items, stdscreen, game):
+    #def __init__(self, title, items, stdscreen ):
+    def __init__(self, title, items, stdscreen, game):
         maxY, maxX = stdscreen.getmaxyx()
         self.title = title
         self.items = items
         self.position = 0
-        #self.game = game
+        self.game = game
         rowPad = 6
         colPad = 20
         rows = len(items) + rowPad

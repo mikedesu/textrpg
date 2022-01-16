@@ -32,6 +32,7 @@ from .Subequipmenu import Subequipmenu
 from .Bodypart import Bodypart
 from .MessageWindow import MessageWindow
 from .ModTable import ModTable
+from .ItemClass import ItemClass 
 
 class Game:
 
@@ -92,6 +93,7 @@ class Game:
         #msgwin = MessageWindow(f"{log}", self.renderer.s)
         #msgwin.display()
 
+
     def incrTurns(self):
         self.currentTurnCount += 1
 
@@ -146,7 +148,7 @@ class Game:
             return False
         elif k in openKey:
             self.addLog(f"Open in which direction?")
-            self.renderer.draw_main_screen(self)
+            self.renderer.drawMainscreen(self)
             return self.handleOpen()
         #elif k in debugPanelKey:
         #    self.debugPanel = not self.debugPanel 
@@ -321,11 +323,15 @@ class Game:
         # add the item to the pc's items
         self.pc.items.append( item )
         self.addLog(f"{self.currentTurnCount}: {self.pc.name} picked up a {item.name}")
+        
         # find the real item in the dungeonFloor items list and remove it
-        for x in range(len(self.dungeonFloor.items)):
-            item_ = self.dungeonFloor.items[x]
-            if item == item_:
-                self.dungeonFloor.items.pop(x)
+        for c in range(len(self.dungeonFloor.items)):
+            item_ = self.dungeonFloor.items[c]
+            #self.addLog(f"Looping...{item_.name}")
+            if item_.x == item.x and item_.y == item.y:
+                #self.addLog(f"Removing item from dungeon: {item_.name}")
+                #self.dungeonFloor.items.pop(x)
+                del self.dungeonFloor.items[c]
                 return True
         # should never get here...
 
@@ -334,25 +340,46 @@ class Game:
         y = pc.y
         items = [item for item in self.dungeonFloor.items if item.x==x and item.y==y]
         # single-item case
-        if len(items)==1:
-            pc.items.append( items[0] )
-            self.addLog(f"{self.currentTurnCount}: Picked up {items[0].name}")
-            self.dungeonFloor.items.pop(0)
-            return True
+        #if len(items)==1:
+        #    pc.items.append( items[0] )
+        #    self.addLog(f"{self.currentTurnCount}: Picked up {items[0].name}")
+        #    self.dungeonFloor.items.pop(0)
+        #    return True
         # multiple-items case
-        elif len(items) > 1:
+        if len(items) >= 1:
             menuItems=[(items[i].name, self.handleItemPickupHelper, i ) for i in range(len(items))]
-            menuItems.append( ("Exit", self.handleItemPickupHelper, len(items) ) )
-            self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s )
+            #menuItems.append( ("Exit", self.handleItemPickupHelper, len(items) ) )
+            self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s, self )
             #self.testMenu = ItemPickupMenu( "Which item would you like to pick up?", menuItems, self.renderer.s, self )
             return self.testMenu.display()
-        else:
-            # do nothing
-            self.addLog(f"{self.currentTurnCount}: There is nothing here!")
-            pass
+        # do nothing
+        self.addLog(f"{self.currentTurnCount}: There is nothing here!")
+        pass
+
+
+    def eatFood(self, item):
+        # get hunger points on item
+        self.pc.hunger += item.hungerpoints 
+        if self.pc.hunger > self.pc.maxhunger:
+            self.pc.hunger = self.pc.maxhunger 
+        self.addLog(f"{self.pc.name} ate a {item.name}")
+
+
 
     def displayInventoryHelper(self, i):
+        item = self.pc.items[i]
+        if item.itemclass == ItemClass.FOOD:
+            # eat food
+            self.eatFood(item)
+            # remove item
+            del self.pc.items[i] 
+        else:
+            self.addLog(f"Cannot use item {item} yet")
         pass
+
+
+
+
 
     def displaySubequipmenuHelper(self, bodypart, item):
         # actually perform the equipping
@@ -383,13 +410,13 @@ class Game:
             title = "You have nothing to equip!"
         else:
             menuItems.append( ("Exit", None) )
-        self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s )
+        self.subequipMenu = Subequipmenu( title, menuItems, self.renderer.s, self )
         return self.subequipMenu.display()
 
     def display_inventory(self, pc):
         items = pc.items
         menuItems=[(items[i].name, self.displayInventoryHelper, i ) for i in range(len(items))]
-        self.testMenu = InventoryMenu( "Inventory", menuItems, self.renderer.s )
+        self.testMenu = InventoryMenu( "Inventory", menuItems, self.renderer.s, self )
         self.testMenu.display()
 
     def display_equip_menu(self):
@@ -399,7 +426,7 @@ class Game:
             (Bodypart.Lefthand,  myfun),
             ("Exit",             None)
         ]
-        self.equipMenu = EquipMenu( "Which body part are you equipping on?", menuItems, self.renderer.s )
+        self.equipMenu = EquipMenu( "Which body part are you equipping on?", menuItems, self.renderer.s, self )
         return self.equipMenu.display()
 
     def handle_resize(self):

@@ -7,6 +7,7 @@ class Item:
             y=0, 
             weight=0, 
             damage=(1,4,0),
+            hungerpoints=0,
             symbol='*' 
         ):
         assert(name != "")
@@ -20,7 +21,16 @@ class Item:
         # future items will have unique symbols based on itemclass and other factors
         self.symbol = symbol
         self.damage = damage
+        self.hungerpoints = hungerpoints
         self.updateSymbol()
+
+    @property
+    def hungerpoints(self):
+        return self._hungerpoints
+    @hungerpoints.setter
+    def hungerpoints(self,v):
+        self._hungerpoints=v
+        
 
     @property 
     def damage(self):

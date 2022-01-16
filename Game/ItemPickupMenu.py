@@ -28,7 +28,7 @@ class ItemPickupMenu(Menu):
                 key = self.window.getch()
                 #self.game.addLog(key)
                 if key in [curses.KEY_ENTER, ord("\n"), 113, 27 ]:
-                    if self.position == len(self.items) - 1 or key == 113 or key == 27:
+                    if key == 113 or key == 27:
                         break
                     else:
                         retval = self.items[self.position][1](self.position)

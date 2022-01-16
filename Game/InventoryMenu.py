@@ -26,10 +26,18 @@ class InventoryMenu(Menu):
                     msg = "%d. %s" % (index, item[0])
                     self.window.addstr(offsetY + index, offsetX, msg, mode)
                 key = self.window.getch()
-                if key in [curses.KEY_ENTER, ord("\n"), 113, 27 ]:
-                    if self.position == len(self.items) - 1 or key == 113 or key == 27:
+                #self.game.addLog(f"Key pressed: {key}")
+                numberKeysList = [x+48 for x in range(11)]
+
+                if key in [curses.KEY_ENTER, ord("\n"), 113, 27, 
+                        *numberKeysList ]:
+
+                    # q or escape
+                    if key == 113 or key == 27:
                         break
-                    elif self.position == len(self.items) - 1:
+                    # 0 or higher
+                    elif key >= 48 and key < 58:
+                        self.items[key-48][1](self.position)
                         break
                     else:
                         self.items[self.position][1](self.position)
