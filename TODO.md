@@ -2,14 +2,10 @@
 
 ## Bugfixes Needed
 
-- Create food/rations
 - Enemies need to sometimes drop corpses, rations, and other items 
 - Light radius issue(s):
     - The distance formula seems to be off-by-one vertically
     - We should not be able to see what is behind a closed door
-- New logging system needs to push old messages off-screen
-    - calc # of log-lines on-screen
-- Turn off all the addLog windows for now
 
 --------------------------------------------------------------------------------
 

@@ -5,6 +5,10 @@
 
 ## 15-01-2022
     - New log presentation. No more MessageWindow spamming!
+    - Food
+        - Ration
+        - hungerpoints
+    - Numeric entry on the InventoryMenu
 
 ## 11-01-2022
     - Entity.loadFromFile
