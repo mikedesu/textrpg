@@ -29,6 +29,7 @@ class DungeonFloor:
     def addDoor(self, y, x):
         d = Door(name="Door1", y=y, x=x, doortype=Doortype.Wooden)
         self.doors.append(d)
+        self.map_[y][x].tiletype = Tiletype.STONE_FLOOR
 
     def updateRowOfTilesYX(self, y, x, cols, tiletype):
         for i in range(cols):
@@ -70,48 +71,67 @@ class DungeonFloor:
         for row in range(rows):
             self.addRowOfTiles(cols, tiletype)
 
-    def superBasicDungeon1(self, rows, cols):
-        self.map_ = []
+
+    def fleshOutMap(self,rows,cols,tiletype):
         for i in range(rows):
-            self.addRowOfTiles(cols, Tiletype.STONE_WALL)
-        y=1
-        x=1
-        h=10
-        w=10
-        self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-        h=6
-        w=6
-        y = 1
-        x = 6
-        for i in range(0,5):
-            #y += w + 5
-            x += (2*w)
-            self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
-        y = 3
-        x = 11
-        h = 1
-        w = 7*8
-        self.drawBasicRoom(Tiletype.STONE_FLOOR, y, x, h, w)
+            self.addRowOfTiles(cols, tiletype)
+
+    def constructRooms(self, y, x, h, w, walltype, floortype):
+        self.drawBasicRoom(walltype, y, x, h, w)
+        self.drawBasicRoom(floortype, y+1, x+1, h-2, w-2)
+
+    def addRandomDoor(self, y, x, h, w):
+        side = randint(0,3)
+        if side == 0:
+            myy = randint(y+1, y+h-2)
+            myx = x
+        elif side == 1:
+            myy = y
+            myx = randint(x+1, x+w-2)
+        elif side == 2:
+            myy = randint(y+1, y+h-2)
+            myx = x + w - 1
+        elif side == 3:
+            myy = y + h - 1
+            myx = randint(x+1, x+w-2)
+        self.addDoor( myy , myx)
+
+
+    def superBasicDungeon1Helper(self,rows,cols):
+        self.map_ = []
+        # 1. flesh out the map with a base tile
+        self.fleshOutMap(rows,cols,Tiletype.STONE_FLOOR)
+        # 2. construct rooms
+
+        # a hard-coded room at (0,0) of size (12,12)
+        y, x = 0, 0
+        h, w = 12, 12
+        self.constructRooms(y, x, h, w, Tiletype.STONE_WALL, Tiletype.STONE_FLOOR)
+        self.addDoor(3,11)
+
+        # a randomly-placed room at (y,x) of size (5,5)
+        for i in range(3):
+            h, w = randint(5,8), randint(5,8)
+            y, x = 0, 0
+            y = randint( y + w + 1, len(self.map_) - h)
+            x = randint( x + h + 1, len(self.map_[0]) - w)
+            self.constructRooms(y, x, h, w, Tiletype.STONE_WALL, Tiletype.STONE_FLOOR)
+            # adds a door to a random side at a random point on that side
+            self.addRandomDoor(y, x, h, w)
+        
+
+    def superBasicDungeon1(self, rows, cols):
+        self.superBasicDungeon1Helper(rows, cols)
         y = 2
         x = 1
-        item0 = Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,6,0) )
-        item1 = Item( "Long Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,  damage=(1,8,0) )
-        item2 = Item( "Mace", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,4,0) )
-        item3 = Item( "Wand", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1,        damage=(1,1,0) )
-
         x += 1
-        item4 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1, hungerpoints=50)
-        #item5 = Item( "Ration", itemclass=ItemClass.FOOD, y=y, x=x, weight=1, hungerpoints=50)
-
-
         self.items = [ 
-            item0,
-            item1,
-            item2,
-            item3,
-            item4
+            Item( "Short Sword", itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,6,0) ),
+            Item( "Long Sword",  itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,8,0) ),
+            Item( "Mace",        itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,4,0) ),
+            Item( "Wand",        itemclass=ItemClass.WEAPON, y=y, x=x, weight=1, damage=(1,1,0) ),
+            Item( "Ration",      itemclass=ItemClass.FOOD,   y=y, x=x, weight=1, hungerpoints=50)
         ]
-        self.addDoor(3,11)
         self.npcs = [   ]
         #npc0 = Entity( self.game, name="John", y=5, x=5 )   
         #self.npcs = [  npc0 ]
