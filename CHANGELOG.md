@@ -3,6 +3,9 @@
 
 -----
 
+## 15-01-2022
+    - New log presentation. No more MessageWindow spamming!
+
 ## 11-01-2022
     - Entity.loadFromFile
         - allows us to define monster templates in monsters/ folder

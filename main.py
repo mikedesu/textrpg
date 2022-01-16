@@ -11,7 +11,7 @@ from Game.MessageWindow import MessageWindow
 
 def gameLoop(game):
     while True:
-        game.renderer.draw_main_screen(game)
+        game.renderer.drawMainscreen(game)
         key = game.renderer.s.getkey()
         do_incr_turns = game.handleInput(game.pc, key)
         if do_incr_turns:

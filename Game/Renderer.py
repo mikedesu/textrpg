@@ -31,13 +31,6 @@ class Renderer:
         self.s.keypad(True)
         curs_set(False)
 
-    #def draw_titlescreen(self):
-    #    self.s.addstr(0, 0, 'Welcome to the RPG', c(1))
-    #    self.s.addstr(1, 0, 'By darkmage', c(1))
-    #    self.s.addstr(2, 0, 'This is error text', c(2) | A_BOLD)
-    #    self.s.addstr(3, 0, 'Press q to quit', c(3))
-    #    self.s.addstr(4, 0, 'Press n for new game', c(3))
-    #    self.s.refresh()
 
     def drawMainscreenBorder(self, game, pc):
         if game==None:
@@ -63,8 +56,6 @@ class Renderer:
     
     def drawMainscreenPCInfo(self, game):
         rows, cols = self.s.getmaxyx()
-
-
         offsetY = 0
         offsetX = 1
         rootY = rows-3
@@ -72,13 +63,10 @@ class Renderer:
         y = rootY + offsetY
         x = rootX + offsetX
         # draw pc info at bottom of screen
-        
         self.s.addstr(y, x, str(game.pc))
         self.s.addstr(y+1, x, str(game.pc.abilityString()))
-
         # approximate the middle to drop a turn counter like T:999
         x = int( 24 * cols / 32 )
-        
         # handle hunger string
         hunger = game.pc.hunger
         maxhunger = game.pc.maxhunger
@@ -91,21 +79,16 @@ class Renderer:
         else:
             options = c(7) | A_BOLD
         self.s.addstr(y, x, hungerStr, options )
-
         offset = len(hungerStr)+1
-        
         str0 = f"M:{game.currentMode} T:{game.currentTurnCount}"
         self.s.addstr(y,   x+offset, str0)
-        
         str1 = f"cy: {game.camera.y} cx: {game.camera.x} y:{game.pc.y} x:{game.pc.x}"
         self.s.addstr(y+1, x, str1)
 
         
     def drawMainscreenEntity(self, game, e):
-        
         if not e.is_player:
             distToPC = self.getDistance( e.y, e.x, game.pc.y, game.pc.x )
-
         if e.is_player or distToPC <= game.pc.lightradius:
             rows, cols = self.s.getmaxyx()
             mapRowOffset = 5
@@ -146,14 +129,10 @@ class Renderer:
         mapRowOffset = 5
         beginDisplayX = 1
         endDisplayX = cols-1
-        #options = None
-        #if npc.is_player:
-        #    options = c(4) | A_BOLD 
-        #else:
-        #    options = c(5) | A_BOLD 
-        if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
+        check1 = y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay  
+        check2 = x+cx >= beginDisplayX and x+cx <= endDisplayX 
+        if check1 and check2  :
             self.s.addstr(y + cy, x + cx, item.symbol )
-
 
 
     def process_log(self, y, x, log):
@@ -204,6 +183,35 @@ class Renderer:
         return sqrt((x0 - x)**2) + ((y0 - y)**2)
 
 
+    def drawMainscreenDungeonFloorTile(self, game, tileToDraw, i, j):
+        mapRowOffset = 5
+        cx = game.camera.x
+        cy = game.camera.y 
+        rows, cols = self.s.getmaxyx()
+        beginDisplayX = 1
+        endDisplayX = cols-1
+        endOfDungeonDisplay = rows - 4
+        options = None
+        distToPC = self.getDistance( i, j, game.pc.y, game.pc.x )
+        
+        if distToPC <= game.pc.lightradius:
+            tileToDraw.isDiscovered = True
+        if tileToDraw.isDiscovered:
+            if tileToDraw.tiletype == Tiletype.GRASS:
+                options = c(7)
+            if distToPC <= game.pc.lightradius:
+                options = A_BOLD
+            tileToDrawStr = str( tileToDraw )
+            y = i + mapRowOffset + cy
+            x = j + 1 + cx
+            check1 = y >= mapRowOffset and y <= endOfDungeonDisplay 
+            check2 = x >= beginDisplayX and x <= endDisplayX
+            
+            if check1 and check2:
+                if options:
+                    self.s.addstr( y, x, tileToDrawStr, options )
+                else:
+                    self.s.addstr( y, x, tileToDrawStr )
 
 
 
@@ -213,59 +221,19 @@ class Renderer:
         d_rows = game.dungeonFloor.rows
         d_cols = game.dungeonFloor.cols
         # camera offsets
-        cx = game.camera.x
-        cy = game.camera.y 
         # this is always 9 to accomodate for the 4 rows of logs,
         # 2 rows of dungeon window border
         # and 5 of the text on the bottom i believe
         # same w/ mapRowOffset
         numRowsToSubtract = 9
-        mapRowOffset = 5
-        endOfDungeonDisplay = rows - 4
-
         beginDisplayX = 1
         endDisplayX = cols-1
-        # y index
         for i in range( len(df.map_) ):
             rowToDraw = df.map_[i]
-            # to draw using tiles now...
-            # x index
+            
             for j in range( len(rowToDraw) ):
                 tileToDraw = rowToDraw[j]
-                options = None
-                
-                distToPC = self.getDistance( i, j, game.pc.y, game.pc.x )
-                
-                if distToPC <= game.pc.lightradius or tileToDraw.isDiscovered:
-                    tileToDraw.isDiscovered = True
-                
-                #if tileToDraw.isDiscovered:
-                    if tileToDraw.tiletype == Tiletype.GRASS:
-                        options = c(7)
-                    tileToDrawStr = str( tileToDraw )
- 
-
-
-                    y = i + mapRowOffset + cy
-                    x = j + 1 + cx
-                    if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
-                        if options:
-                            self.s.addstr( y, x, tileToDrawStr, c(7) )
-                        else:
-                            self.s.addstr( y, x, tileToDrawStr )
-
-                #if tileToDraw.tiletype == Tiletype.GRASS:
-                #    options = c(7)
-                #tileToDrawStr = str( tileToDraw )
-                # the actual tile (y,x) is (i, j) in the dungeon
-                
-                #    y = i + mapRowOffset + cy
-                #    x = j + 1 + cx
-                #    if y >= mapRowOffset and y <= endOfDungeonDisplay and x >= beginDisplayX and x <= endDisplayX :
-                #        if options:
-                #            self.s.addstr( y, x, tileToDrawStr, c(7) )
-                #        else:
-                #            self.s.addstr( y, x, tileToDrawStr )
+                self.drawMainscreenDungeonFloorTile(game, tileToDraw, i, j)
 
 
 
@@ -288,7 +256,6 @@ class Renderer:
     def drawMainscreenDoor(self, game, door):
         assert(game!=None)
         assert(door!=None)
-
         distToPC = self.getDistance( door.y, door.x, game.pc.y, game.pc.x )
         if distToPC <= game.pc.lightradius:
             y = door.y + 5
@@ -301,44 +268,23 @@ class Renderer:
             beginDisplayX = 1
             endDisplayX = cols-1
             symbol = '+' # if isClosed
+            
             if not door.isClosed:
                 symbol = '-'
+            
             if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
                 self.s.addstr(y + cy, x + cx, symbol )
-
-
 
     
     def draw_quit_screen(self):
         self.s.clear()
-        
         scoreItems = [
             "Score Screen",
             "",
             "More here later"
         ]
-
         ss = ScoreScreen(scoreItems, self.s)
         ss.display()
-
-
-        
-        #a = None
-        #rows, cols = self.s.getmaxyx()
-        #filename="txt/quitscreen.txt"
-        #with open(filename, "r") as infile:
-        #    a = infile.readlines()
-        #y = 0
-        #for y in range(len(a)):
-        #    line = a[y]
-        #    if y < rows:
-        #        self.s.addstr(y, 0, line, c(1))
-        #    #y += 1
-        #self.s.refresh()
-        #self.s.getkey()
-
-
-
 
 
     def drawDebugPanel(self, game):
@@ -367,7 +313,7 @@ class Renderer:
 
 
     #def draw_main_screen(self,game,pc):
-    def draw_main_screen(self,game):
+    def drawMainscreen(self,game):
         # experimental main-game drawing
         self.s.clear()
         self.s.border('|','|','-','-','+','+','+','+')
