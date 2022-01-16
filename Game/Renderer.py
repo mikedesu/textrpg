@@ -169,37 +169,30 @@ class Renderer:
         y, x = 1, 1
         c = 0
         rows, cols = self.s.getmaxyx()
-
         offset = 0
-
         #bottomLogs = game.logs[ : row-4 ]
-        maxRows = rows-5
-
+        maxRows = rows-4
         if len(game.logs) > maxRows:
             bottomLogs = game.logs[ -(maxRows):: ]
         else:
             bottomLogs = game.logs
 
-#a[-(row-4)::]
-
-        while c < maxRows:
-            log = " "
+        c = len(bottomLogs)-1
+        while c >= 0 and y < maxRows:
+            log = ""
             try:
                 log = bottomLogs[c]
             except:
                 pass
-
             # handles line-wrapping at a length of 40
             for i in range(0, len(log), maxLen):
                 try:
-                    self.s.addstr(y, x, f"{log[i:i+maxLen]:40}|")
+                    line = f"{log[i:i+maxLen]:40}|"
+                    self.s.addstr(y, x, line)
                 except:
                     pass
                 y += 1
-            #y += 1
-            c += 1
-
-
+            c -= 1
 
 
 
