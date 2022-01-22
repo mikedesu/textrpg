@@ -1,15 +1,16 @@
 from enum import Enum
 
+
 class Alignment(Enum):
-    LAWFUL_GOOD    = 1 
+    LAWFUL_GOOD = 1
     LAWFUL_NEUTRAL = 2
-    LAWFUL_EVIL    = 3
+    LAWFUL_EVIL = 3
     NEUTRAL_GOOD = 4
     TRUE_NEUTRAL = 5
     NEUTRAL_EVIL = 6
-    CHAOTIC_GOOD    = 7
+    CHAOTIC_GOOD = 7
     CHAOTIC_NEUTRAL = 8
-    CHAOTIC_EVIL    = 9
+    CHAOTIC_EVIL = 9
 
     def __str__(self):
         a = "Undefined"
