@@ -5,7 +5,7 @@ from .Job import Job
 from .Attribs import Attribs as a
 from .Gender import Gender
 from .Alignment import Alignment
-from .PersonalityTrait import PersonalityTrait 
+from .PersonalityTrait import PersonalityTrait
 from .Item import Item
 from .ModTable import ModTable
 
@@ -17,21 +17,21 @@ class NegativeAttributeException(Exception):
     pass
 
 class Entity:
-    def __init__(self, game=None, name="Unnamed", level=1, race=Race.HUMAN, 
-        job=Job.FIGHTER, abilities=[10,10,10,10,10,10], y=0, x=0, 
-        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False, 
+    def __init__(self, game=None, name="Unnamed", level=1, race=Race.HUMAN,
+        job=Job.FIGHTER, abilities=[10,10,10,10,10,10], y=0, x=0,
+        gender=Gender.MALE, alignment=Alignment.LAWFUL_GOOD, is_player=False,
         symbol="@", hd=(1,4), ac=10, personalityTraits=[PersonalityTrait.NORMAL],
         lightradius=2, baseAttack=0):
         #if game == None:
         #    raise Exception("Game cannot be None")
         # basic checks on numeric input parameters
         if level == 0:
-            raise ZeroLevelException 
+            raise ZeroLevelException
         elif level < 0:
-            raise NegativeLevelException 
+            raise NegativeLevelException
         for a in abilities:
             if a < 0:
-                raise NegativeAttributeException 
+                raise NegativeAttributeException
         self.game = game
         self.name = name
         self.level = level
@@ -41,16 +41,16 @@ class Entity:
         self.y = y
         self.x = x
         self.gender = gender
-        self.alignment = alignment 
-        self.is_player = is_player 
-        self.symbol = symbol 
+        self.alignment = alignment
+        self.is_player = is_player
+        self.symbol = symbol
         self.baseAC = ac
         self.baseAttack = baseAttack
         self.hd = hd
         self.hunger = 255
         self.maxhunger = 255
         self.xp = 0
-        self.personalityTraits = personalityTraits 
+        self.personalityTraits = personalityTraits
         # construct maxhp by rolling 1d(hd[1]) die hd[0]-times
         self.maxhp = 0
         for i in range( self.hd[0] ):
@@ -101,7 +101,7 @@ class Entity:
     def righthand(self, item):
         #assert(item == None or isinstance(item,Item))
         #raise Exception(f"item is {type(item)}")
-        self._righthand = item 
+        self._righthand = item
 
     @property
     def lefthand(self):
@@ -110,11 +110,11 @@ class Entity:
     def lefthand(self, item):
         #assert(item == None or isinstance(item,Item))
         #raise Exception(f"item is {type(item)}")
-        self._lefthand = item 
+        self._lefthand = item
 
     @property
     def level(self):
-        return self._level 
+        return self._level
     @level.setter
     def level(self, a):
         self._level=a
@@ -254,7 +254,7 @@ class Entity:
     def items(self, v):
         assert(v!=None)
         self._items=v
-    
+
     @property
     def name(self):
         return self._name
@@ -279,7 +279,7 @@ class Entity:
         # make sure item isnt double-added
         if item not in self.items:
             self.items.append(item)
-    
+
     @property
     def baseDamage(self):
         weapon = self.righthand
@@ -313,7 +313,7 @@ class Entity:
         total = roll + self.baseAttack
         # if the roll is >= player's ac, attack hits
         if total >= target.ac:
-            # for right now, lets just subtract 1 hp until we come back to 
+            # for right now, lets just subtract 1 hp until we come back to
             # properly write the damage calc rules
             # damage roll
             damage = randint(1, weaponDie)
@@ -324,11 +324,11 @@ class Entity:
             if doLog:
                 self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack hit {target.name}!")
         else:
-            # we dont need to do anything but we should log both a hit or a 
+            # we dont need to do anything but we should log both a hit or a
             # miss so we need a way to pass msgs to the game log
             if doLog:
                 self.game.addLog(f"{self.game.currentTurnCount}: {self.name}'s attack missed {target.name}!")
-    
+
     def abilityString(self):
         s = ""
         s += f"Str: {self.abilities[0]} "
@@ -347,13 +347,13 @@ class Entity:
             #print(obj)
             e = Entity()
             for key in obj:
-                print(key)
+                # print(key)
                 try:
                     setattr(e, key, obj.get(key, None))
                 except AttributeError as exception:
                     print(exception)
                     continue
-            #print(e)
+            # print(e)
             return e
 
     def __str__(self):
@@ -361,5 +361,5 @@ class Entity:
         s += f"HP: {self.hp}/{self.maxhp} "
         s += f"XP: {self.xp} "
         #hungerStr = f"H:{self.hunger}/{self.maxhunger}"
-        #s += hungerStr 
+        #s += hungerStr
         return s

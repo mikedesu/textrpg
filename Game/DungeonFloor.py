@@ -25,9 +25,12 @@ class DungeonFloor:
 
     def __str__(self):
         s = ''
-        for row in self.map_:
-            for tile in row:
+        for i in range(len(self.map_)):
+            row = self.map_[i]
+            for j in range(len(row)):
+                tile = row[j]
                 s += str(tile)
+                # s += str('x')
             s += '\n'
         return s
 
@@ -110,7 +113,8 @@ class DungeonFloor:
                             Tiletype.STONE_FLOOR)
         self.addDoor(3, 11)
         # a randomly-placed room at (y,x) of size (5,5)
-        for i in range(3):
+        numRooms = 3
+        for i in range(numRooms):
             h, w = randint(5, 8), randint(5, 8)
             y, x = 0, 0
             y = randint(y+w+1, len(self.map_)-h)

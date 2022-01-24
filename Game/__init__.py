@@ -331,7 +331,7 @@ class Game:
             if item_.x == item.x and item_.y == item.y:
                 # self.addLog(f"Removing item from dungeon: {item_.name}")
                 # self.dungeonFloor.items.pop(x)
-                del self.dungeonFloor.items[c]
+                del self.dungeonFloor.items[k]
                 return True
         # should never get here...
 
