@@ -48,12 +48,13 @@ class Game:
         self.leftHandVim = True
         self.rightHandVim = True
         self.loadConfigFile()
-        rows = 20
-        cols = 100
+        rows = 21
+        cols = 50
         self.dungeonFloor = DungeonFloor(self, rows, cols)
         self.currentMode = "Player"
         self.logger_offset = 0
-        self.camera = Camera(0, 51)
+        # self.camera = Camera(0, 51)
+        self.camera = Camera(0, 42)
         self.debug_mode = False
         self.testMenu = None
         self.equipMenu = None

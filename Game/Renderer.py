@@ -16,7 +16,7 @@ class Renderer:
         self.name = name
         self.s = screen
         assert(screen!=None)
-    
+
     def startup(self):
         use_default_colors()
         start_color()
@@ -53,7 +53,7 @@ class Renderer:
         line = "-" * cols
         self.s.addstr(y, x, line)
         y += 1
-    
+
     def drawMainscreenPCInfo(self, game):
         rows, cols = self.s.getmaxyx()
         offsetY = 0
@@ -66,16 +66,16 @@ class Renderer:
         self.s.addstr(y, x, str(game.pc))
         self.s.addstr(y+1, x, str(game.pc.abilityString()))
         # approximate the middle to drop a turn counter like T:999
-        x = int( 24 * cols / 32 )
+        x = int( 23 * cols / 32 )
         # handle hunger string
         hunger = game.pc.hunger
         maxhunger = game.pc.maxhunger
         hungerStr = f"H:{hunger}/{maxhunger}"
         options = None
         if hunger < (maxhunger / 4):
-            options = c(4) | A_BOLD 
+            options = c(4) | A_BOLD
         elif hunger < (maxhunger / 2):
-            options = c(1) 
+            options = c(1)
         else:
             options = c(7) | A_BOLD
         self.s.addstr(y, x, hungerStr, options )
@@ -85,58 +85,58 @@ class Renderer:
         str1 = f"cy: {game.camera.y} cx: {game.camera.x} y:{game.pc.y} x:{game.pc.x}"
         self.s.addstr(y+1, x, str1)
 
-        
+
     def drawMainscreenEntity(self, game, e):
         if not e.is_player:
             distToPC = self.getDistance( e.y, e.x, game.pc.y, game.pc.x )
         if e.is_player or distToPC <= game.pc.lightradius:
             rows, cols = self.s.getmaxyx()
-            mapRowOffset = 5
+            mapRowOffset = 1
             beginDisplayX = 1
             y = e.y + mapRowOffset
             x = e.x + beginDisplayX
             endDisplayX = cols-1
             endDisplayY = rows-4
             cx = game.camera.x
-            cy = game.camera.y 
+            cy = game.camera.y
             options = None
             if e.is_player:
-                options = c(4) | A_BOLD 
+                options = c(4) | A_BOLD
             else:
-                options = c(5) | A_BOLD 
-            y_check0 = y+cy >= mapRowOffset 
-            y_check1 = y+cy <= endDisplayY 
+                options = c(5) | A_BOLD
+            y_check0 = y+cy >= mapRowOffset
+            y_check1 = y+cy <= endDisplayY
             #if not y_check0:
             #    game.addLog("Error: y_check0 failed")
             #if not y_check1:
             #    game.addLog("Error: y_check1 failed")
             y_check = y_check0 and y_check1
-            x_check0 = x+cx >= beginDisplayX 
+            x_check0 = x+cx >= beginDisplayX
             x_check1 = x+cx <= endDisplayX
             x_check = x_check0 and x_check1
-            all_checks = y_check and x_check 
+            all_checks = y_check and x_check
             if all_checks :
                 self.s.addstr(y + cy, x + cx, e.symbol, options )
 
 
     def drawMainscreenItem(self, game, item):
-        y = item.y + 5
+        mapRowOffset = 1
+        y = item.y + mapRowOffset
         x = item.x + 1
         cx = game.camera.x
-        cy = game.camera.y 
+        cy = game.camera.y
         rows, cols = self.s.getmaxyx()
         endOfDungeonDisplay = rows - 4
-        mapRowOffset = 5
         beginDisplayX = 1
         endDisplayX = cols-1
-        check1 = y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay  
-        check2 = x+cx >= beginDisplayX and x+cx <= endDisplayX 
+        check1 = y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay
+        check2 = x+cx >= beginDisplayX and x+cx <= endDisplayX
         if check1 and check2  :
             self.s.addstr(y + cy, x + cx, item.symbol )
 
 
     def process_log(self, y, x, log):
-        
+
         if "ERROR:" in log:
             self.s.addstr(y, x, log, c(2))
         else:
@@ -184,16 +184,16 @@ class Renderer:
 
 
     def drawMainscreenDungeonFloorTile(self, game, tileToDraw, i, j):
-        mapRowOffset = 5
+        mapRowOffset = 1
         cx = game.camera.x
-        cy = game.camera.y 
+        cy = game.camera.y
         rows, cols = self.s.getmaxyx()
         beginDisplayX = 1
         endDisplayX = cols-1
         endOfDungeonDisplay = rows - 4
         options = None
         distToPC = self.getDistance( i, j, game.pc.y, game.pc.x )
-        
+
         if distToPC <= game.pc.lightradius:
             tileToDraw.isDiscovered = True
         if tileToDraw.isDiscovered:
@@ -204,9 +204,9 @@ class Renderer:
             tileToDrawStr = str( tileToDraw )
             y = i + mapRowOffset + cy
             x = j + 1 + cx
-            check1 = y >= mapRowOffset and y <= endOfDungeonDisplay 
+            check1 = y >= mapRowOffset and y <= endOfDungeonDisplay
             check2 = x >= beginDisplayX and x <= endDisplayX
-            
+
             if check1 and check2:
                 if options:
                     self.s.addstr( y, x, tileToDrawStr, options )
@@ -230,7 +230,7 @@ class Renderer:
         endDisplayX = cols-1
         for i in range( len(df.map_) ):
             rowToDraw = df.map_[i]
-            
+
             for j in range( len(rowToDraw) ):
                 tileToDraw = rowToDraw[j]
                 self.drawMainscreenDungeonFloorTile(game, tileToDraw, i, j)
@@ -241,12 +241,12 @@ class Renderer:
         npcs = game.dungeonFloor.npcs
         for npc in npcs:
             self.drawMainscreenEntity(game, npc)
-     
+
     def drawMainscreenDungeonFloorItems(self, game):
         items = game.dungeonFloor.items
         for item in items:
             self.drawMainscreenItem(game, item)
-           
+
     def drawMainscreenDungeonFloorDoors(self, game):
         assert(game!=None)
         doors = game.dungeonFloor.doors
@@ -258,24 +258,24 @@ class Renderer:
         assert(door!=None)
         distToPC = self.getDistance( door.y, door.x, game.pc.y, game.pc.x )
         if distToPC <= game.pc.lightradius:
-            y = door.y + 5
+            mapRowOffset = 1
+            y = door.y + mapRowOffset
             x = door.x + 1
             cx = game.camera.x
-            cy = game.camera.y 
+            cy = game.camera.y
             rows, cols = self.s.getmaxyx()
             endOfDungeonDisplay = rows - 4
-            mapRowOffset = 5
             beginDisplayX = 1
             endDisplayX = cols-1
             symbol = '+' # if isClosed
-            
+
             if not door.isClosed:
                 symbol = '-'
-            
+
             if y+cy >= mapRowOffset and y+cy <= endOfDungeonDisplay and x+cx >= beginDisplayX and x+cx <= endDisplayX :
                 self.s.addstr(y + cy, x + cx, symbol )
 
-    
+
     def draw_quit_screen(self):
         self.s.clear()
         scoreItems = [
@@ -291,7 +291,7 @@ class Renderer:
         assert(game!=None)
         rows, cols = self.s.getmaxyx()
         rowOffset = 4
-        y = rows//4 - rowOffset 
+        y = rows//4 - rowOffset
         x = cols*3//4
         debugPanel = [
             "-"*(cols//8),
@@ -332,4 +332,4 @@ class Renderer:
         if game.debugPanel:
             self.drawDebugPanel(game)
         self.s.refresh()
-     
+

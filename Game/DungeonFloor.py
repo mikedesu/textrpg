@@ -104,25 +104,26 @@ class DungeonFloor:
     def superBasicDungeon1Helper(self, rows, cols):
         self.map_ = []
         # 1. flesh out the map with a base tile
-        self.fleshOutMap(rows, cols, Tiletype.STONE_FLOOR)
+        # self.fleshOutMap(rows, cols, Tiletype.STONE_FLOOR)
+        self.fleshOutMap(rows, cols, Tiletype.STONE_WALL)
         # 2. construct rooms
         # a hard-coded room at (0,0) of size (12,12)
-        y, x = 0, 0
-        h, w = 12, 12
-        self.constructRooms(y, x, h, w, Tiletype.STONE_WALL,
-                            Tiletype.STONE_FLOOR)
-        self.addDoor(3, 11)
-        # a randomly-placed room at (y,x) of size (5,5)
-        numRooms = 3
-        for i in range(numRooms):
-            h, w = randint(5, 8), randint(5, 8)
-            y, x = 0, 0
-            y = randint(y+w+1, len(self.map_)-h)
-            x = randint(x+h+1, len(self.map_[0])-w)
-            self.constructRooms(y, x, h, w, Tiletype.STONE_WALL,
-                                Tiletype.STONE_FLOOR)
-            # adds a door to a random side at a random point on that side
-            self.addRandomDoor(y, x, h, w)
+        numRooms = 5
+        numRows = 3
+        y = 1
+        x = 1
+        w = 5
+        h = 5
+        for j in range(numRows):
+            x = 1
+            for i in range(numRooms):
+                self.constructRooms(y, x, h, w, Tiletype.STONE_WALL,
+                                    Tiletype.STONE_FLOOR)
+                self.addRandomDoor(y, x, h, w)
+                x = x + w + 1
+            y = y + h + 1
+
+
 
     def superBasicDungeon1(self, rows, cols):
         self.superBasicDungeon1Helper(rows, cols)
